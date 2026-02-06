@@ -14,8 +14,8 @@ export default async function AdminBlogPage() {
 
   return (
     <div className="p-8">
-      <h1 className="font-display text-3xl text-white mb-2">Blog</h1>
-      <p className="text-white/60 mb-8">Gérer les articles</p>
+      <h1 className="font-display text-3xl text-gray-900 mb-2">Blog</h1>
+      <p className="text-gray-600 mb-8">Gérer les articles</p>
       <BlogManager initialPosts={posts} />
     </div>
   )

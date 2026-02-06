@@ -31,8 +31,8 @@ export default async function AdminCategoriesPage() {
 
   return (
     <div className="p-8">
-      <h1 className="font-display text-3xl text-white mb-2">Catégories</h1>
-      <p className="text-white/60 mb-8">
+      <h1 className="font-display text-3xl text-gray-900 mb-2">Catégories</h1>
+      <p className="text-gray-600 mb-8">
         Gérer les catégories et sous-catégories de produits
       </p>
       <CategoryManager initialCategories={categories} />

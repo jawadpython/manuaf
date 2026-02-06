@@ -13,7 +13,7 @@ export async function PUT(
 
   const { id } = await params
   const body = await request.json()
-  const { name, description, categoryId, image, features, order } = body
+  const { name, description, categoryId, image, features, order, sold } = body
 
   if (!name || !description || !categoryId) {
     return NextResponse.json(
@@ -46,6 +46,7 @@ export async function PUT(
         image: image || null,
         features: features || null,
         order: order ?? 0,
+        sold: sold ?? false,
       },
       include: {
         category: {

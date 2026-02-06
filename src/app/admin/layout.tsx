@@ -17,11 +17,11 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen bg-gray-50">
       {session ? (
         <div className="flex">
           <AdminNav />
-          <div className="flex-1 min-h-screen">
+          <div className="flex-1 min-h-screen bg-gray-50">
             {children}
           </div>
         </div>

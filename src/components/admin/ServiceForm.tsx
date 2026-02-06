@@ -112,9 +112,9 @@ export function ServiceForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#141414] border border-white/10 p-6 space-y-6 max-w-2xl"
+      className="bg-white border border-gray-200 p-6 space-y-6 max-w-2xl"
     >
-      <h3 className="font-display text-xl text-white">
+      <h3 className="font-display text-xl text-gray-900">
         {service ? 'Modifier le service' : 'Nouveau service'}
       </h3>
 
@@ -125,34 +125,34 @@ export function ServiceForm({
       )}
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Nom *</label>
+        <label className="block text-sm text-gray-900/70 mb-2">Nom *</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-200 px-4 py-2 text-gray-900"
         />
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Description *</label>
+        <label className="block text-sm text-gray-900/70 mb-2">Description *</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
           rows={3}
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-200 px-4 py-2 text-gray-900"
         />
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Catégorie *</label>
+        <label className="block text-sm text-gray-900/70 mb-2">Catégorie *</label>
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           required
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-200 px-4 py-2 text-gray-900"
         >
           <option value="maintenance">Maintenance</option>
           <option value="reconditionnement">Reconditionnement</option>
@@ -161,14 +161,14 @@ export function ServiceForm({
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Image</label>
+        <label className="block text-sm text-gray-900/70 mb-2">Image</label>
         <div className="flex gap-4 items-center">
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
             disabled={uploading}
-            className="text-white/70 text-sm"
+            className="text-gray-900/70 text-sm"
           />
           <input
             type="url"
@@ -178,7 +178,7 @@ export function ServiceForm({
               setUploadError(null)
             }}
             placeholder="Ou URL"
-            className="flex-1 bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+            className="flex-1 bg-white border border-gray-200 px-4 py-2 text-gray-900"
           />
         </div>
         {uploading && (
@@ -189,8 +189,8 @@ export function ServiceForm({
         )}
         {image && !uploading && !uploadError && (
           <div className="mt-3">
-            <p className="text-white/50 text-xs mb-2 truncate max-w-md">{image}</p>
-            <div className="relative w-32 h-32 bg-[#1a1a1a] border border-white/10 overflow-hidden">
+            <p className="text-gray-900/50 text-xs mb-2 truncate max-w-md">{image}</p>
+            <div className="relative w-32 h-32 bg-[#1a1a1a] border border-gray-200 overflow-hidden">
               <img
                 src={image}
                 alt="Preview"
@@ -203,7 +203,7 @@ export function ServiceForm({
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">
+        <label className="block text-sm text-gray-900/70 mb-2">
           Caractéristiques (une par ligne ou séparées par |)
         </label>
         <textarea
@@ -211,18 +211,18 @@ export function ServiceForm({
           onChange={(e) => setFeatures(e.target.value)}
           rows={4}
           placeholder={'Option A|Option B|Option C'}
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-200 px-4 py-2 text-gray-900"
         />
       </div>
 
       <div className="flex gap-6">
         <div>
-          <label className="block text-sm text-white/70 mb-2">Ordre</label>
+          <label className="block text-sm text-gray-900/70 mb-2">Ordre</label>
           <input
             type="number"
             value={order}
             onChange={(e) => setOrder(parseInt(e.target.value, 10) || 0)}
-            className="w-24 bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+            className="w-24 bg-white border border-gray-200 px-4 py-2 text-gray-900"
           />
         </div>
         <div className="flex items-center gap-2 pt-8">
@@ -233,7 +233,7 @@ export function ServiceForm({
             onChange={(e) => setPublished(e.target.checked)}
             className="w-4 h-4"
           />
-          <label htmlFor="published" className="text-sm text-white/70">
+          <label htmlFor="published" className="text-sm text-gray-900/70">
             Publié
           </label>
         </div>
@@ -243,14 +243,14 @@ export function ServiceForm({
         <button
           type="submit"
           disabled={loading}
-          className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] disabled:opacity-50"
+          className="bg-[var(--accent)] text-gray-900 px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] disabled:opacity-50"
         >
           {loading ? 'Enregistrement...' : 'Enregistrer'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="border border-white/20 text-white px-6 py-2 hover:bg-white/5"
+          className="border border-gray-300 text-gray-900 px-6 py-2 hover:bg-gray-50"
         >
           Annuler
         </button>

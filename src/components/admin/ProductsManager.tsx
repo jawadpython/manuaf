@@ -65,7 +65,7 @@ export function ProductsManager({
       <button
         type="button"
         onClick={() => setCreating(true)}
-        className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] transition-colors"
+        className="bg-[var(--accent)] text-gray-900 px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] transition-colors"
       >
         Nouveau produit
       </button>
@@ -78,42 +78,43 @@ export function ProductsManager({
             setCreating(false)
             setEditing(null)
           }}
+          categoryType="pieces"
         />
       )}
 
-      <div className="border border-white/10 overflow-hidden">
+      <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b border-white/10">
-              <th className="p-4 text-white/60 text-sm font-medium">Image</th>
-              <th className="p-4 text-white/60 text-sm font-medium">Nom</th>
-              <th className="p-4 text-white/60 text-sm font-medium">Catégorie</th>
-              <th className="p-4 text-white/60 text-sm font-medium">Actions</th>
+            <tr className="border-b border-gray-200">
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Image</th>
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Nom</th>
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Catégorie</th>
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Actions</th>
             </tr>
           </thead>
           <tbody>
             {products.map((product) => (
               <tr
                 key={product.id}
-                className="border-b border-white/5 hover:bg-white/5"
+                className="border-b border-gray-100 hover:bg-gray-50"
               >
                 <td className="p-4">
-                  <div className="relative w-16 h-12 bg-[#1a1a1a] overflow-hidden">
+                  <div className="relative w-20 h-20 bg-[#1a1a1a] border border-gray-200 rounded-lg overflow-hidden shadow-sm rounded">
                     {product.image ? (
                       <Image
                         src={product.image}
                         alt={product.name}
                         fill
                         className="object-cover"
-                        unoptimized={product.image.startsWith('http')}
+                        unoptimized={product.image.startsWith('http') || product.image.startsWith('/uploads')}
                       />
                     ) : (
-                      <span className="text-white/30 text-xs flex items-center justify-center h-full">—</span>
+                      <span className="text-gray-900/30 text-xs flex items-center justify-center h-full">Aucune image</span>
                     )}
                   </div>
                 </td>
-                <td className="p-4 text-white">{product.name}</td>
-                <td className="p-4 text-white/70">
+                <td className="p-4 text-gray-900">{product.name}</td>
+                <td className="p-4 text-gray-900/70">
                   {product.category?.parent 
                     ? `${product.category.parent.name} > ${product.category.name}`
                     : product.category?.name || '—'}
@@ -130,7 +131,7 @@ export function ProductsManager({
                     <button
                       type="button"
                       onClick={() => handleDelete(product.id)}
-                      className="text-red-400 text-sm hover:underline"
+                      className="text-red-600 text-sm hover:underline"
                     >
                       Supprimer
                     </button>

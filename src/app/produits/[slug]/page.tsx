@@ -31,7 +31,7 @@ export default async function ProductDetailPage({ params }: Props) {
       <section className="py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-6">
           <Link
-            href="/produits"
+            href="/produits/chariots"
             className="inline-flex items-center gap-2 text-[#666666] hover:text-[var(--accent)] text-sm mb-6 transition-colors"
           >
             <svg
@@ -64,7 +64,7 @@ export default async function ProductDetailPage({ params }: Props) {
                   className="object-contain"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   priority
-                  unoptimized={product.image?.startsWith('http')}
+                  unoptimized={product.image?.startsWith('http') || product.image?.startsWith('/uploads')}
                 />
               </div>
 

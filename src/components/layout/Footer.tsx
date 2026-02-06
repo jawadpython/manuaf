@@ -10,7 +10,7 @@ const contactInfo = {
 const footerLinks = {
   liens: [
     { href: '/', label: 'Accueil' },
-    { href: '/produits', label: 'Produits' },
+    { href: '/produits/chariots', label: 'Produits' },
     { href: '/services', label: 'Services' },
     { href: '/qui-sommes-nous', label: 'Qui sommes-nous' },
     { href: '/blog', label: 'Blog' },

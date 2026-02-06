@@ -104,91 +104,100 @@ export function BlogPostForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#141414] border border-white/10 p-6 space-y-6 max-w-2xl"
+      className="bg-white border border-gray-200 rounded-lg shadow-lg p-6 space-y-6 max-w-2xl"
     >
-      <h3 className="font-display text-xl text-white">
+      <h3 className="font-display text-xl text-gray-900">
         {post ? "Modifier l'article" : "Nouvel article"}
       </h3>
 
       {error && (
-        <div className="bg-red-500/20 border border-red-500/50 text-red-400 px-4 py-2 text-sm">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm rounded-lg">
           {error}
         </div>
       )}
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Titre *</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Titre *</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
         />
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Extrait *</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Extrait *</label>
         <textarea
           value={excerpt}
           onChange={(e) => setExcerpt(e.target.value)}
           required
           rows={2}
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
         />
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Contenu (HTML)</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Contenu (HTML)</label>
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={8}
           placeholder="<p>Paragraphe...</p>"
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white font-mono text-sm"
+          className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
         />
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Image</label>
-        <div className="flex gap-4 items-center">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            disabled={uploading}
-            className="text-white/70 text-sm"
-          />
-          <input
-            type="url"
-            value={image}
-            onChange={(e) => {
-              setImage(e.target.value)
-              setUploadError(null)
-            }}
-            placeholder="Ou URL"
-            className="flex-1 bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
-          />
-        </div>
-        {uploading && (
-          <p className="text-blue-400 text-xs mt-2">Téléchargement en cours...</p>
-        )}
-        {uploadError && (
-          <p className="text-red-400 text-xs mt-2">{uploadError}</p>
-        )}
-        {image && !uploading && !uploadError && (
-          <div className="mt-3">
-            <p className="text-white/50 text-xs mb-2 truncate max-w-md">{image}</p>
-            <div className="relative w-32 h-32 bg-[#1a1a1a] border border-white/10 overflow-hidden">
-              <img
-                src={image}
-                alt="Preview"
-                className="w-full h-full object-cover"
-                onError={() => setUploadError('Impossible de charger l\'image')}
+        <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <label className="cursor-pointer">
+              <span className="inline-block px-4 py-2 bg-[var(--accent)] text-white text-sm font-semibold hover:bg-[var(--accent-hover)] transition-colors rounded-lg shadow-md hover:shadow-lg">
+                {image ? 'Changer l\'image' : 'Sélectionner une image'}
+              </span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                disabled={uploading}
+                className="hidden"
               />
-            </div>
+            </label>
+            {uploading && (
+              <span className="text-blue-600 text-xs font-medium">Téléchargement en cours...</span>
+            )}
           </div>
-        )}
+          {uploadError && (
+            <p className="text-red-600 text-xs bg-red-50 border border-red-200 px-3 py-2 rounded-lg">
+              {uploadError}
+            </p>
+          )}
+          {image && !uploading && !uploadError && (
+            <div className="mt-3 space-y-2">
+              <p className="text-gray-600 text-xs font-medium">Aperçu de l'image:</p>
+              <div className="relative w-full max-w-xs h-48 bg-gray-100 border border-gray-300 overflow-hidden rounded-lg">
+                <img
+                  src={image}
+                  alt="Preview"
+                  className="w-full h-full object-contain"
+                  onError={() => setUploadError('Impossible de charger l\'image')}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setImage('')
+                  setUploadError(null)
+                }}
+                className="text-red-600 text-xs hover:text-red-700 hover:underline font-medium"
+              >
+                Supprimer l'image
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-3">
@@ -197,9 +206,9 @@ export function BlogPostForm({
           id="published"
           checked={published}
           onChange={(e) => setPublished(e.target.checked)}
-          className="w-4 h-4 accent-[var(--accent)]"
+          className="w-5 h-5 text-[var(--accent)] border-gray-300 rounded focus:ring-[var(--accent)] focus:ring-2"
         />
-        <label htmlFor="published" className="text-white/80 text-sm">
+        <label htmlFor="published" className="text-sm text-gray-700 font-medium">
           Publié
         </label>
       </div>
@@ -208,14 +217,14 @@ export function BlogPostForm({
         <button
           type="submit"
           disabled={loading}
-          className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] disabled:opacity-50"
+          className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] disabled:opacity-50 rounded-lg shadow-md hover:shadow-lg transition-all"
         >
           {loading ? 'Enregistrement...' : 'Enregistrer'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="border border-white/20 text-white px-6 py-2 hover:bg-white/5"
+          className="border border-gray-300 text-gray-700 px-6 py-2 hover:bg-gray-50 rounded-lg transition-colors"
         >
           Annuler
         </button>

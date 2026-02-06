@@ -91,62 +91,66 @@ export function CategoryManager({
   const chariotsTree = buildTree(chariotsCategories)
   const piecesTree = buildTree(piecesCategories)
 
-  const renderCategory = (category: Category, level: number = 0): React.ReactNode => {
-    return (
-      <div key={category.id}>
-        <tr className="border-b border-white/5 hover:bg-white/5">
-          <td className="p-4">
-            <div style={{ paddingLeft: `${level * 24}px` }} className="flex items-center gap-2">
-              {level > 0 && (
-                <span className="text-white/30">└─</span>
-              )}
-              <span className="text-white">{category.name}</span>
-            </div>
-          </td>
-          <td className="p-4 text-white/70 text-sm">
-            {category.parent?.name || '—'}
-          </td>
-          <td className="p-4 text-white/70 text-sm">
-            {category.children?.length || 0}
-          </td>
-          <td className="p-4 text-white/70 text-sm">
-            {category._count?.products || 0}
-          </td>
-          <td className="p-4">
-            <span
-              className={`text-xs px-2 py-1 ${
-                category.published
-                  ? 'bg-green-500/20 text-green-400'
-                  : 'bg-white/10 text-white/60'
-              }`}
+  const renderCategory = (category: Category, level: number = 0): React.ReactNode[] => {
+    const rows: React.ReactNode[] = [
+      <tr key={category.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+        <td className="p-4">
+          <div style={{ paddingLeft: `${level * 24}px` }} className="flex items-center gap-2">
+            {level > 0 && (
+              <span className="text-gray-400">└─</span>
+            )}
+            <span className="text-gray-900 font-medium">{category.name}</span>
+          </div>
+        </td>
+        <td className="p-4 text-gray-600 text-sm">
+          {category.parent?.name || '—'}
+        </td>
+        <td className="p-4 text-gray-600 text-sm">
+          {category.children?.length || 0}
+        </td>
+        <td className="p-4 text-gray-600 text-sm">
+          {category._count?.products || 0}
+        </td>
+        <td className="p-4">
+          <span
+            className={`text-xs px-2 py-1 rounded-full ${
+              category.published
+                ? 'bg-green-50 border border-green-200 text-green-700'
+                : 'bg-gray-100 border border-gray-200 text-gray-600'
+            }`}
+          >
+            {category.published ? 'Publié' : 'Brouillon'}
+          </span>
+        </td>
+        <td className="p-4">
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setEditing(category)}
+              className="text-[var(--accent)] text-sm hover:text-[var(--accent-hover)] font-medium hover:underline"
             >
-              {category.published ? 'Publié' : 'Brouillon'}
-            </span>
-          </td>
-          <td className="p-4">
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setEditing(category)}
-                className="text-[var(--accent)] text-sm hover:underline"
-              >
-                Modifier
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDelete(category.id)}
-                className="text-red-400 text-sm hover:underline"
-              >
-                Supprimer
-              </button>
-            </div>
-          </td>
-        </tr>
-        {category.children && category.children.map((child) => 
-          renderCategory(child as Category, level + 1)
-        )}
-      </div>
-    )
+              Modifier
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDelete(category.id)}
+              className="text-red-600 text-sm hover:text-red-700 font-medium hover:underline"
+            >
+              Supprimer
+            </button>
+          </div>
+        </td>
+      </tr>
+    ]
+
+    // Add children rows recursively
+    if (category.children && category.children.length > 0) {
+      category.children.forEach((child) => {
+        rows.push(...renderCategory(child as Category, level + 1))
+      })
+    }
+
+    return rows
   }
 
   return (
@@ -155,7 +159,7 @@ export function CategoryManager({
         <button
           type="button"
           onClick={() => setCreating(true)}
-          className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] transition-colors"
+          className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] transition-colors rounded-lg shadow-md hover:shadow-lg"
         >
           Nouvelle catégorie
         </button>
@@ -175,25 +179,25 @@ export function CategoryManager({
 
       {/* Chariots Categories */}
       <div className="mb-8">
-        <h2 className="text-xl text-white mb-4 font-display">Chariots</h2>
-        <div className="border border-white/10 overflow-hidden">
+        <h2 className="text-xl text-gray-900 mb-4 font-display">Chariots</h2>
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-white/10">
-                <th className="p-4 text-white/60 text-sm font-medium">Nom</th>
-                <th className="p-4 text-white/60 text-sm font-medium">Parent</th>
-                <th className="p-4 text-white/60 text-sm font-medium">Sous-catégories</th>
-                <th className="p-4 text-white/60 text-sm font-medium">Produits</th>
-                <th className="p-4 text-white/60 text-sm font-medium">Statut</th>
-                <th className="p-4 text-white/60 text-sm font-medium">Actions</th>
+              <tr className="border-b border-gray-200 bg-gray-50">
+                <th className="p-4 text-gray-700 text-sm font-semibold">Nom</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Parent</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Sous-catégories</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Produits</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Statut</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {chariotsTree.length > 0 ? (
-                chariotsTree.map((category) => renderCategory(category))
+                chariotsTree.flatMap((category) => renderCategory(category))
               ) : (
                 <tr>
-                  <td colSpan={6} className="p-4 text-white/50 text-center">
+                  <td colSpan={6} className="p-4 text-gray-500 text-center">
                     Aucune catégorie Chariots
                   </td>
                 </tr>
@@ -205,25 +209,25 @@ export function CategoryManager({
 
       {/* Pièces de rechange Categories */}
       <div>
-        <h2 className="text-xl text-white mb-4 font-display">Pièces de rechange</h2>
-        <div className="border border-white/10 overflow-hidden">
+        <h2 className="text-xl text-gray-900 mb-4 font-display">Pièces de rechange</h2>
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-white/10">
-                <th className="p-4 text-white/60 text-sm font-medium">Nom</th>
-                <th className="p-4 text-white/60 text-sm font-medium">Parent</th>
-                <th className="p-4 text-white/60 text-sm font-medium">Sous-catégories</th>
-                <th className="p-4 text-white/60 text-sm font-medium">Produits</th>
-                <th className="p-4 text-white/60 text-sm font-medium">Statut</th>
-                <th className="p-4 text-white/60 text-sm font-medium">Actions</th>
+              <tr className="border-b border-gray-200 bg-gray-50">
+                <th className="p-4 text-gray-700 text-sm font-semibold">Nom</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Parent</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Sous-catégories</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Produits</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Statut</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {piecesTree.length > 0 ? (
-                piecesTree.map((category) => renderCategory(category))
+                piecesTree.flatMap((category) => renderCategory(category))
               ) : (
                 <tr>
-                  <td colSpan={6} className="p-4 text-white/50 text-center">
+                  <td colSpan={6} className="p-4 text-gray-500 text-center">
                     Aucune catégorie Pièces de rechange
                   </td>
                 </tr>

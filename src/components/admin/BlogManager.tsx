@@ -66,7 +66,7 @@ export function BlogManager({
       <button
         type="button"
         onClick={() => setCreating(true)}
-        className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] transition-colors"
+        className="bg-[var(--accent)] text-gray-900 px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] transition-colors"
       >
         Nouvel article
       </button>
@@ -82,24 +82,24 @@ export function BlogManager({
         />
       )}
 
-      <div className="border border-white/10 overflow-hidden">
+      <div className="border border-gray-200 overflow-hidden">
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b border-white/10">
-              <th className="p-4 text-white/60 text-sm font-medium">Titre</th>
-              <th className="p-4 text-white/60 text-sm font-medium">Date</th>
-              <th className="p-4 text-white/60 text-sm font-medium">Statut</th>
-              <th className="p-4 text-white/60 text-sm font-medium">Actions</th>
+            <tr className="border-b border-gray-200">
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Titre</th>
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Date</th>
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Statut</th>
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Actions</th>
             </tr>
           </thead>
           <tbody>
             {posts.map((post) => (
               <tr
                 key={post.id}
-                className="border-b border-white/5 hover:bg-white/5"
+                className="border-b border-gray-100 hover:bg-gray-50"
               >
-                <td className="p-4 text-white">{post.title}</td>
-                <td className="p-4 text-white/70 text-sm">
+                <td className="p-4 text-gray-900">{post.title}</td>
+                <td className="p-4 text-gray-900/70 text-sm">
                   {formatDate(post.createdAt)}
                 </td>
                 <td className="p-4">
@@ -107,7 +107,7 @@ export function BlogManager({
                     className={`text-xs px-2 py-1 ${
                       post.published
                         ? 'bg-green-500/20 text-green-400'
-                        : 'bg-white/10 text-white/60'
+                        : 'bg-white/10 text-gray-900/60'
                     }`}
                   >
                     {post.published ? 'Publié' : 'Brouillon'}
@@ -125,7 +125,7 @@ export function BlogManager({
                     <button
                       type="button"
                       onClick={() => handleDelete(post.id)}
-                      className="text-red-400 text-sm hover:underline"
+                      className="text-red-600 text-sm hover:underline"
                     >
                       Supprimer
                     </button>

@@ -125,9 +125,18 @@ export async function getFeaturedProducts() {
 export async function getAllProducts() {
   try {
     const products = await prisma.product.findMany({
-      include: {
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        image: true,
+        features: true,
+        order: true,
+        sold: true,
+        categoryId: true,
         category: {
-          select: { id: true, name: true, slug: true, parent: { select: { id: true, name: true, slug: true } } },
+          select: { id: true, name: true, slug: true, type: true, parent: { select: { id: true, name: true, slug: true } } },
         },
       },
       orderBy: [{ order: 'asc' }, { name: 'asc' }],
@@ -135,14 +144,18 @@ export async function getAllProducts() {
     if (products.length > 0) {
       return products.map((p) => ({
         ...p,
-        // Keep backward compatibility with string category
-        category: p.category?.name || 'Non catégorisé',
+        // Keep both object and string for backward compatibility
+        category: p.category || { id: '', name: 'Non catégorisé', slug: '', type: '' },
       }))
     }
-  } catch {
+  } catch (error) {
+    console.error('Error fetching products:', error)
     // Fallback
   }
-  return fallbackProducts
+  return fallbackProducts.map(p => ({
+    ...p,
+    category: typeof p.category === 'string' ? { id: '', name: p.category, slug: '', type: '' } : p.category,
+  }))
 }
 
 export async function getProductsByCategory(categorySlug: string) {
@@ -202,23 +215,77 @@ export async function getAllCategories() {
   try {
     const categories = await prisma.category.findMany({
       where: { published: true },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        type: true,
+        parentId: true,
+        order: true,
+        published: true,
         parent: {
           select: { id: true, name: true, slug: true },
         },
         children: {
           where: { published: true },
-          select: { id: true, name: true, slug: true },
+          select: { id: true, name: true, slug: true, type: true, parentId: true, order: true },
           orderBy: { order: 'asc' },
-        },
-        _count: {
-          select: { products: true },
         },
       },
       orderBy: [{ parentId: 'asc' }, { order: 'asc' }, { name: 'asc' }],
+      take: 100, // Limit to prevent excessive data
     })
     return categories
-  } catch {
+  } catch (error) {
+    console.error('Error fetching categories:', error)
+    return []
+  }
+}
+
+// Optimized function to get products by type
+export async function getProductsByType(type: 'chariots' | 'pieces') {
+  try {
+    // First get category IDs of the specified type
+    const categoryIds = await prisma.category.findMany({
+      where: {
+        type,
+        published: true,
+      },
+      select: { id: true },
+    })
+    
+    const ids = categoryIds.map(c => c.id)
+    if (ids.length === 0) return []
+    
+    // Then get products in those categories
+    const products = await prisma.product.findMany({
+      where: {
+        categoryId: { in: ids },
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        image: true,
+        features: true,
+        order: true,
+        sold: true,
+        categoryId: true,
+        category: {
+          select: { id: true, name: true, slug: true, type: true, parent: { select: { id: true, name: true, slug: true } } },
+        },
+      },
+      orderBy: [{ order: 'asc' }, { name: 'asc' }],
+    })
+    
+    return products.map((p) => ({
+      ...p,
+      category: p.category || { id: '', name: 'Non catégorisé', slug: '', type: '' },
+    }))
+  } catch (error) {
+    console.error('Error fetching products by type:', error)
     return []
   }
 }

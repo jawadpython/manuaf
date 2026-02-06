@@ -2,22 +2,22 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { ProductsManager } from '@/components/admin/ProductsManager'
+import { ChariotsManager } from '@/components/admin/ChariotsManager'
 
-export default async function AdminProduitsPage() {
+export default async function AdminChariotsPage() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/admin/login')
 
-  // Get all Pièces de rechange categories
-  const piecesCategories = await prisma.category.findMany({
-    where: { type: 'pieces' },
+  // Get all Chariots categories
+  const chariotsCategories = await prisma.category.findMany({
+    where: { type: 'chariots' },
     select: { id: true },
   })
 
-  const categoryIds = piecesCategories.map(c => c.id)
+  const categoryIds = chariotsCategories.map(c => c.id)
 
-  // Get all products in Pièces de rechange categories only
-  const products = await prisma.product.findMany({
+  // Get all products in Chariots categories
+  const chariots = await prisma.product.findMany({
     where: {
       categoryId: { in: categoryIds },
     },
@@ -31,11 +31,11 @@ export default async function AdminProduitsPage() {
 
   return (
     <div className="p-8">
-      <h1 className="font-display text-3xl text-gray-900 mb-2">Pièces de rechange</h1>
+      <h1 className="font-display text-3xl text-gray-900 mb-2">Chariots</h1>
       <p className="text-gray-600 mb-8">
-        Gérer les pièces de rechange
+        Gérer les chariots élévateurs
       </p>
-      <ProductsManager initialProducts={products} />
+      <ChariotsManager initialChariots={chariots} />
     </div>
   )
 }

@@ -27,10 +27,12 @@ export function ProductForm({
   product,
   onSave,
   onCancel,
+  categoryType,
 }: {
   product?: Product
   onSave: (p: Product) => void
   onCancel: () => void
+  categoryType?: 'chariots' | 'pieces'
 }) {
   const [name, setName] = useState(product?.name ?? '')
   const [description, setDescription] = useState(product?.description ?? '')
@@ -51,8 +53,6 @@ export function ProductForm({
       .then((data) => setCategories(data))
       .catch((err) => console.error('Error fetching categories:', err))
   }, [])
-
-  const [uploadError, setUploadError] = useState<string | null>(null)
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -132,9 +132,9 @@ export function ProductForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#141414] border border-white/10 p-6 space-y-6 max-w-2xl"
+      className="bg-white border border-gray-200 p-6 space-y-6 max-w-2xl"
     >
-      <h3 className="font-display text-xl text-white">
+      <h3 className="font-display text-xl text-gray-900">
         {product ? 'Modifier le produit' : 'Nouveau produit'}
       </h3>
 
@@ -145,107 +145,129 @@ export function ProductForm({
       )}
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Nom *</label>
+        <label className="block text-sm text-gray-900/70 mb-2">Nom *</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-200 px-4 py-2 text-gray-900"
         />
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Description *</label>
+        <label className="block text-sm text-gray-900/70 mb-2">Description *</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
           rows={3}
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-200 px-4 py-2 text-gray-900"
         />
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Catégorie *</label>
+        <label className="block text-sm text-gray-900/70 mb-2">Catégorie *</label>
         <select
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
           required
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-200 px-4 py-2 text-gray-900"
         >
           <option value="">Sélectionner une catégorie</option>
-          {/* Group by type */}
-          <optgroup label="Chariots">
-            {categories
-              .filter((cat) => cat.type === 'chariots')
+          {categoryType ? (
+            // Show only categories of the specified type
+            categories
+              .filter((cat) => cat.type === categoryType)
               .map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.parent ? `${cat.parent.name} > ${cat.name}` : cat.name}
                 </option>
-              ))}
-          </optgroup>
-          <optgroup label="Pièces de rechange">
-            {categories
-              .filter((cat) => cat.type === 'pieces')
-              .map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.parent ? `${cat.parent.name} > ${cat.name}` : cat.name}
-                </option>
-              ))}
-          </optgroup>
+              ))
+          ) : (
+            // Show all categories grouped by type (default behavior)
+            <>
+              <optgroup label="Chariots">
+                {categories
+                  .filter((cat) => cat.type === 'chariots')
+                  .map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.parent ? `${cat.parent.name} > ${cat.name}` : cat.name}
+                    </option>
+                  ))}
+              </optgroup>
+              <optgroup label="Pièces de rechange">
+                {categories
+                  .filter((cat) => cat.type === 'pieces')
+                  .map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.parent ? `${cat.parent.name} > ${cat.name}` : cat.name}
+                    </option>
+                  ))}
+              </optgroup>
+            </>
+          )}
         </select>
         {categories.length === 0 && (
-          <p className="text-white/50 text-xs mt-1">
+          <p className="text-gray-900/50 text-xs mt-1">
             Aucune catégorie disponible. Créez d&apos;abord des catégories.
           </p>
         )}
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Image</label>
-        <div className="flex gap-4 items-center">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            disabled={uploading}
-            className="text-white/70 text-sm"
-          />
-          <input
-            type="url"
-            value={image}
-            onChange={(e) => {
-              setImage(e.target.value)
-              setUploadError(null)
-            }}
-            placeholder="Ou URL"
-            className="flex-1 bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
-          />
-        </div>
-        {uploading && (
-          <p className="text-blue-400 text-xs mt-2">Téléchargement en cours...</p>
-        )}
-        {uploadError && (
-          <p className="text-red-400 text-xs mt-2">{uploadError}</p>
-        )}
-        {image && !uploading && !uploadError && (
-          <div className="mt-3">
-            <p className="text-white/50 text-xs mb-2 truncate max-w-md">{image}</p>
-            <div className="relative w-32 h-32 bg-[#1a1a1a] border border-white/10 overflow-hidden">
-              <img
-                src={image}
-                alt="Preview"
-                className="w-full h-full object-cover"
-                onError={() => setUploadError('Impossible de charger l\'image')}
+        <label className="block text-sm text-gray-900/70 mb-2">Image *</label>
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <label className="cursor-pointer">
+              <span className="inline-block px-4 py-2 bg-[var(--accent)] text-gray-900 text-sm font-semibold hover:bg-[var(--accent-hover)] transition-colors">
+                {image ? 'Changer l\'image' : 'Sélectionner une image'}
+              </span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                disabled={uploading}
+                className="hidden"
               />
-            </div>
+            </label>
+            {uploading && (
+              <span className="text-blue-400 text-xs">Téléchargement en cours...</span>
+            )}
           </div>
-        )}
+          {uploadError && (
+            <p className="text-red-400 text-xs bg-red-500/10 border border-red-500/30 px-3 py-2 rounded">
+              {uploadError}
+            </p>
+          )}
+          {image && !uploading && !uploadError && (
+            <div className="mt-3 space-y-2">
+              <p className="text-gray-900/70 text-xs">Aperçu de l'image:</p>
+              <div className="relative w-full max-w-xs h-48 bg-[#1a1a1a] border border-gray-200 overflow-hidden rounded">
+                <img
+                  src={image}
+                  alt="Preview"
+                  className="w-full h-full object-contain"
+                  onError={() => setUploadError('Impossible de charger l\'image')}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setImage('')
+                  setUploadError(null)
+                }}
+                className="text-red-400 text-xs hover:text-red-300 hover:underline"
+              >
+                Supprimer l'image
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">
+        <label className="block text-sm text-gray-900/70 mb-2">
           Caractéristiques (une par ligne)
         </label>
         <textarea
@@ -253,17 +275,17 @@ export function ProductForm({
           onChange={(e) => setFeatures(e.target.value)}
           rows={4}
           placeholder={'Option A\nOption B\nOption C'}
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-200 px-4 py-2 text-gray-900"
         />
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Ordre</label>
+        <label className="block text-sm text-gray-900/70 mb-2">Ordre</label>
         <input
           type="number"
           value={order}
           onChange={(e) => setOrder(parseInt(e.target.value, 10) || 0)}
-          className="w-24 bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-24 bg-white border border-gray-200 px-4 py-2 text-gray-900"
         />
       </div>
 
@@ -271,14 +293,14 @@ export function ProductForm({
         <button
           type="submit"
           disabled={loading}
-          className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] disabled:opacity-50"
+          className="bg-[var(--accent)] text-gray-900 px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] disabled:opacity-50"
         >
           {loading ? 'Enregistrement...' : 'Enregistrer'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="border border-white/20 text-white px-6 py-2 hover:bg-white/5"
+          className="border border-gray-300 text-gray-900 px-6 py-2 hover:bg-gray-50"
         >
           Annuler
         </button>

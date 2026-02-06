@@ -19,8 +19,8 @@ export default async function AdminServicesPage() {
 
   return (
     <div className="p-8">
-      <h1 className="font-display text-3xl text-white mb-2">Services</h1>
-      <p className="text-white/60 mb-8">
+      <h1 className="font-display text-3xl text-gray-900 mb-2">Services</h1>
+      <p className="text-gray-600 mb-8">
         Gérer les services (maintenance, reconditionnement, location)
       </p>
       <ServicesManager initialServices={services} />

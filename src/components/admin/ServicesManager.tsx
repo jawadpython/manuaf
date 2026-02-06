@@ -71,7 +71,7 @@ export function ServicesManager({
       <button
         type="button"
         onClick={() => setCreating(true)}
-        className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] transition-colors"
+        className="bg-[var(--accent)] text-gray-900 px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] transition-colors"
       >
         Nouveau service
       </button>
@@ -87,22 +87,22 @@ export function ServicesManager({
         />
       )}
 
-      <div className="border border-white/10 overflow-hidden">
+      <div className="border border-gray-200 overflow-hidden">
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b border-white/10">
-              <th className="p-4 text-white/60 text-sm font-medium">Image</th>
-              <th className="p-4 text-white/60 text-sm font-medium">Nom</th>
-              <th className="p-4 text-white/60 text-sm font-medium">Catégorie</th>
-              <th className="p-4 text-white/60 text-sm font-medium">Statut</th>
-              <th className="p-4 text-white/60 text-sm font-medium">Actions</th>
+            <tr className="border-b border-gray-200">
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Image</th>
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Nom</th>
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Catégorie</th>
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Statut</th>
+              <th className="p-4 text-gray-900/60 text-sm font-medium">Actions</th>
             </tr>
           </thead>
           <tbody>
             {services.map((service) => (
               <tr
                 key={service.id}
-                className="border-b border-white/5 hover:bg-white/5"
+                className="border-b border-gray-100 hover:bg-gray-50"
               >
                 <td className="p-4">
                   <div className="relative w-16 h-12 bg-[#1a1a1a] overflow-hidden">
@@ -115,12 +115,12 @@ export function ServicesManager({
                         unoptimized={service.image.startsWith('http')}
                       />
                     ) : (
-                      <span className="text-white/30 text-xs flex items-center justify-center h-full">—</span>
+                      <span className="text-gray-900/30 text-xs flex items-center justify-center h-full">—</span>
                     )}
                   </div>
                 </td>
-                <td className="p-4 text-white">{service.name}</td>
-                <td className="p-4 text-white/70">
+                <td className="p-4 text-gray-900">{service.name}</td>
+                <td className="p-4 text-gray-900/70">
                   {categoryLabels[service.category] || service.category}
                 </td>
                 <td className="p-4">
@@ -128,7 +128,7 @@ export function ServicesManager({
                     className={`text-xs px-2 py-1 ${
                       service.published
                         ? 'bg-green-500/20 text-green-400'
-                        : 'bg-white/10 text-white/60'
+                        : 'bg-white/10 text-gray-900/60'
                     }`}
                   >
                     {service.published ? 'Publié' : 'Brouillon'}
@@ -146,7 +146,7 @@ export function ServicesManager({
                     <button
                       type="button"
                       onClick={() => handleDelete(service.id)}
-                      className="text-red-400 text-sm hover:underline"
+                      className="text-red-600 text-sm hover:underline"
                     >
                       Supprimer
                     </button>

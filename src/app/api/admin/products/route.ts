@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
   const body = await request.json()
-  const { name, description, categoryId, image, features, order } = body
+  const { name, description, categoryId, image, features, order, sold } = body
 
   if (!name || !description || !categoryId) {
     return NextResponse.json(
@@ -58,6 +58,7 @@ export async function POST(request: Request) {
         image: image || null,
         features: features || null,
         order: order ?? 0,
+        sold: sold ?? false,
       },
       include: {
         category: {

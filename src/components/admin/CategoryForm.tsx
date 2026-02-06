@@ -110,25 +110,25 @@ export function CategoryForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#141414] border border-white/10 p-6 space-y-6 max-w-2xl"
+      className="bg-white border border-gray-200 rounded-lg shadow-lg p-6 space-y-6 max-w-2xl"
     >
-      <h3 className="font-display text-xl text-white">
+      <h3 className="font-display text-xl text-gray-900">
         {category ? 'Modifier la catégorie' : 'Nouvelle catégorie'}
       </h3>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Nom *</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
         />
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Type *</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Type *</label>
         <select
           value={type}
           onChange={(e) => {
@@ -137,32 +137,32 @@ export function CategoryForm({
           }}
           required
           disabled={!!category} // Can't change type when editing
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white disabled:opacity-50"
+          className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent disabled:opacity-50 disabled:bg-gray-100"
         >
           <option value="chariots">Chariots</option>
           <option value="pieces">Pièces de rechange</option>
         </select>
-        <p className="text-white/50 text-xs mt-1">
+        <p className="text-gray-500 text-xs mt-1">
           {category ? 'Le type ne peut pas être modifié après création' : 'Choisissez le type de catégorie'}
         </p>
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Description</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
         />
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-2">Catégorie parente</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Catégorie parente</label>
         <select
           value={parentId}
           onChange={(e) => setParentId(e.target.value)}
-          className="w-full bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+          className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
         >
           {categoryOptions.map((option) => (
             <option key={option.id} value={option.id}>
@@ -171,19 +171,19 @@ export function CategoryForm({
             </option>
           ))}
         </select>
-        <p className="text-white/50 text-xs mt-1">
+        <p className="text-gray-500 text-xs mt-1">
           Laisser vide pour créer une catégorie principale (max 2 niveaux)
         </p>
       </div>
 
       <div className="flex gap-6">
         <div>
-          <label className="block text-sm text-white/70 mb-2">Ordre</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Ordre</label>
           <input
             type="number"
             value={order}
             onChange={(e) => setOrder(parseInt(e.target.value, 10) || 0)}
-            className="w-24 bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
+            className="w-24 bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
           />
         </div>
         <div className="flex items-center gap-2 pt-8">
@@ -192,9 +192,9 @@ export function CategoryForm({
             id="published"
             checked={published}
             onChange={(e) => setPublished(e.target.checked)}
-            className="w-4 h-4"
+            className="w-4 h-4 text-[var(--accent)] border-gray-300 rounded focus:ring-[var(--accent)]"
           />
-          <label htmlFor="published" className="text-sm text-white/70">
+          <label htmlFor="published" className="text-sm text-gray-700 font-medium">
             Publié
           </label>
         </div>
@@ -204,14 +204,14 @@ export function CategoryForm({
         <button
           type="submit"
           disabled={loading}
-          className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] disabled:opacity-50"
+          className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] disabled:opacity-50 rounded-lg shadow-md hover:shadow-lg transition-all"
         >
           {loading ? 'Enregistrement...' : 'Enregistrer'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="border border-white/20 text-white px-6 py-2 hover:bg-white/5"
+          className="border border-gray-300 text-gray-700 px-6 py-2 hover:bg-gray-50 rounded-lg transition-colors"
         >
           Annuler
         </button>

@@ -39,7 +39,7 @@ export function HeroSection() {
           <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl">
             {slide.subtitle}
           </p>
-          <Button href="/produits" size="lg">
+          <Button href="/produits/chariots" size="lg">
             En savoir plus
           </Button>
         </div>
