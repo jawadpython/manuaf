@@ -100,6 +100,11 @@ const fallbackProducts = [
 export async function getFeaturedProducts() {
   try {
     const products = await prisma.product.findMany({
+      include: {
+        category: {
+          select: { id: true, name: true, slug: true, parent: { select: { id: true, name: true, slug: true } } },
+        },
+      },
       orderBy: { order: 'asc' },
       take: 3,
     })
@@ -107,6 +112,8 @@ export async function getFeaturedProducts() {
       return products.map((p) => ({
         ...p,
         image: p.image || fallbackProducts[0]!.image,
+        // Keep backward compatibility with string category
+        category: p.category?.name || 'Non catégorisé',
       }))
     }
   } catch {
@@ -118,25 +125,131 @@ export async function getFeaturedProducts() {
 export async function getAllProducts() {
   try {
     const products = await prisma.product.findMany({
+      include: {
+        category: {
+          select: { id: true, name: true, slug: true, parent: { select: { id: true, name: true, slug: true } } },
+        },
+      },
       orderBy: [{ order: 'asc' }, { name: 'asc' }],
     })
-    if (products.length > 0) return products
+    if (products.length > 0) {
+      return products.map((p) => ({
+        ...p,
+        // Keep backward compatibility with string category
+        category: p.category?.name || 'Non catégorisé',
+      }))
+    }
   } catch {
     // Fallback
   }
   return fallbackProducts
 }
 
+export async function getProductsByCategory(categorySlug: string) {
+  try {
+    const category = await prisma.category.findUnique({
+      where: { slug: categorySlug },
+      include: { children: true },
+    })
+    if (!category) return []
+
+    // Get all category IDs to search (parent + children)
+    const categoryIds = [category.id, ...category.children.map((c) => c.id)]
+
+    const products = await prisma.product.findMany({
+      where: { categoryId: { in: categoryIds } },
+      include: {
+        category: {
+          select: { id: true, name: true, slug: true, parent: { select: { id: true, name: true, slug: true } } },
+        },
+      },
+      orderBy: [{ order: 'asc' }, { name: 'asc' }],
+    })
+
+    return products.map((p) => ({
+      ...p,
+      category: p.category?.name || 'Non catégorisé',
+    }))
+  } catch {
+    return []
+  }
+}
+
 export async function getProductBySlug(slug: string) {
   try {
     const product = await prisma.product.findUnique({
       where: { slug },
+      include: {
+        category: {
+          select: { id: true, name: true, slug: true, parent: { select: { id: true, name: true, slug: true } } },
+        },
+      },
     })
-    if (product) return product
+    if (product) {
+      return {
+        ...product,
+        // Keep backward compatibility
+        category: product.category?.name || 'Non catégorisé',
+      }
+    }
   } catch {
     // Fallback
   }
   return fallbackProducts.find((p) => p.slug === slug) || null
+}
+
+export async function getAllCategories() {
+  try {
+    const categories = await prisma.category.findMany({
+      where: { published: true },
+      include: {
+        parent: {
+          select: { id: true, name: true, slug: true },
+        },
+        children: {
+          where: { published: true },
+          select: { id: true, name: true, slug: true },
+          orderBy: { order: 'asc' },
+        },
+        _count: {
+          select: { products: true },
+        },
+      },
+      orderBy: [{ parentId: 'asc' }, { order: 'asc' }, { name: 'asc' }],
+    })
+    return categories
+  } catch {
+    return []
+  }
+}
+
+export async function getCategoryBySlug(slug: string) {
+  try {
+    const category = await prisma.category.findUnique({
+      where: { slug, published: true },
+      include: {
+        parent: {
+          select: { id: true, name: true, slug: true },
+        },
+        children: {
+          where: { published: true },
+          select: { id: true, name: true, slug: true },
+          orderBy: { order: 'asc' },
+        },
+        products: {
+          include: {
+            category: {
+              select: { id: true, name: true, slug: true },
+            },
+          },
+          orderBy: [{ order: 'asc' }, { name: 'asc' }],
+        },
+      },
+    })
+    return category
+  } catch {
+    return null
+  }
 }
 
 const fallbackPosts = [
@@ -195,4 +308,43 @@ export async function getBlogPostBySlug(slug: string) {
     //
   }
   return fallbackPosts.find((p) => p.slug === slug) || null
+}
+
+// Services
+export async function getAllServices() {
+  try {
+    const services = await prisma.service.findMany({
+      where: { published: true },
+      orderBy: [{ order: 'asc' }, { name: 'asc' }],
+    })
+    if (services.length > 0) return services
+  } catch {
+    // Fallback
+  }
+  return []
+}
+
+export async function getServicesByCategory(category: string) {
+  try {
+    const services = await prisma.service.findMany({
+      where: { category, published: true },
+      orderBy: [{ order: 'asc' }, { name: 'asc' }],
+    })
+    if (services.length > 0) return services
+  } catch {
+    // Fallback
+  }
+  return []
+}
+
+export async function getServiceBySlug(slug: string) {
+  try {
+    const service = await prisma.service.findUnique({
+      where: { slug, published: true },
+    })
+    if (service) return service
+  } catch {
+    // Fallback
+  }
+  return null
 }

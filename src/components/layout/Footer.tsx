@@ -11,13 +11,22 @@ const footerLinks = {
   liens: [
     { href: '/', label: 'Accueil' },
     { href: '/produits', label: 'Produits' },
+    { href: '/services', label: 'Services' },
+    { href: '/qui-sommes-nous', label: 'Qui sommes-nous' },
     { href: '/blog', label: 'Blog' },
     { href: '/contact', label: 'Contact' },
   ],
   produits: [
-    { href: '/produits', label: 'Chariots électriques' },
-    { href: '/produits', label: 'Chariots Thermiques' },
-    { href: '/produits', label: 'Pièces de rechange' },
+    { href: '/produits/chariots/location', label: 'Location de chariots' },
+    { href: '/produits/chariots/occasion', label: 'Chariots d\'occasion' },
+    { href: '/produits/pieces/batteries', label: 'Batteries' },
+    { href: '/produits/pieces/accessoires', label: 'Accessoires' },
+    { href: '/produits/pieces/commandes', label: 'Pièces de rechange' },
+  ],
+  services: [
+    { href: '/services/maintenance', label: 'Maintenance' },
+    { href: '/services/reconditionnement', label: 'Reconditionnement' },
+    { href: '/services/location', label: 'Location' },
   ],
 }
 
@@ -25,9 +34,9 @@ export function Footer() {
   return (
     <footer className="bg-[#2d2d2d]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Logo & Contact */}
-          <div className="sm:col-span-2 lg:col-span-1">
+          <div className="sm:col-span-2 lg:col-span-2">
             <Link
               href="/"
               className="text-xl sm:text-2xl font-bold text-[var(--accent)] inline-block mb-3 sm:mb-4"
@@ -92,6 +101,25 @@ export function Footer() {
             </h4>
             <ul className="space-y-2">
               {footerLinks.produits.map((link, idx) => (
+                <li key={idx}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-400 hover:text-white text-xs sm:text-sm transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Services */}
+          <div>
+            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-3 sm:mb-4">
+              Nos Services
+            </h4>
+            <ul className="space-y-2">
+              {footerLinks.services.map((link, idx) => (
                 <li key={idx}>
                   <Link
                     href={link.href}

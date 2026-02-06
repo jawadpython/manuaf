@@ -28,20 +28,48 @@ export function BlogPostForm({
   const [published, setPublished] = useState(post?.published ?? true)
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Veuillez sélectionner un fichier image')
+      return
+    }
+
+    const maxSize = 10 * 1024 * 1024
+    if (file.size > maxSize) {
+      setUploadError('Fichier trop volumineux (max 10MB)')
+      return
+    }
+
     setUploading(true)
-    const formData = new FormData()
-    formData.append('file', file)
-    const res = await fetch('/api/admin/upload', {
-      method: 'POST',
-      body: formData,
-    })
-    const data = await res.json()
-    if (data.url) setImage(data.url)
-    setUploading(false)
+    setUploadError(null)
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+      
+      if (res.ok && data.url) {
+        setImage(data.url)
+        setUploadError(null)
+      } else {
+        setUploadError(data.error || 'Erreur lors du téléchargement')
+      }
+    } catch (error) {
+      setUploadError('Erreur de connexion lors du téléchargement')
+      console.error('Upload error:', error)
+    } finally {
+      setUploading(false)
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -64,7 +92,12 @@ export function BlogPostForm({
     })
 
     const saved = await res.json()
-    if (res.ok) onSave({ ...saved, createdAt: saved.createdAt ? new Date(saved.createdAt) : new Date() })
+    if (res.ok) {
+      onSave({ ...saved, createdAt: saved.createdAt ? new Date(saved.createdAt) : new Date() })
+      setError(null)
+    } else {
+      setError(saved.error || 'Erreur lors de l\'enregistrement')
+    }
     setLoading(false)
   }
 
@@ -76,6 +109,12 @@ export function BlogPostForm({
       <h3 className="font-display text-xl text-white">
         {post ? "Modifier l'article" : "Nouvel article"}
       </h3>
+
+      {error && (
+        <div className="bg-red-500/20 border border-red-500/50 text-red-400 px-4 py-2 text-sm">
+          {error}
+        </div>
+      )}
 
       <div>
         <label className="block text-sm text-white/70 mb-2">Titre *</label>
@@ -123,11 +162,33 @@ export function BlogPostForm({
           <input
             type="url"
             value={image}
-            onChange={(e) => setImage(e.target.value)}
+            onChange={(e) => {
+              setImage(e.target.value)
+              setUploadError(null)
+            }}
             placeholder="Ou URL"
             className="flex-1 bg-[#0a0a0a] border border-white/10 px-4 py-2 text-white"
           />
         </div>
+        {uploading && (
+          <p className="text-blue-400 text-xs mt-2">Téléchargement en cours...</p>
+        )}
+        {uploadError && (
+          <p className="text-red-400 text-xs mt-2">{uploadError}</p>
+        )}
+        {image && !uploading && !uploadError && (
+          <div className="mt-3">
+            <p className="text-white/50 text-xs mb-2 truncate max-w-md">{image}</p>
+            <div className="relative w-32 h-32 bg-[#1a1a1a] border border-white/10 overflow-hidden">
+              <img
+                src={image}
+                alt="Preview"
+                className="w-full h-full object-cover"
+                onError={() => setUploadError('Impossible de charger l\'image')}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex items-center gap-3">

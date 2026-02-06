@@ -2,15 +2,7 @@ import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-
-function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-}
+import { slugify } from '@/lib/utils'
 
 export async function GET() {
   const session = await getServerSession(authOptions)
@@ -40,16 +32,24 @@ export async function POST(request: Request) {
   const existing = await prisma.blogPost.findUnique({ where: { slug } })
   const finalSlug = existing ? `${slug}-${Date.now()}` : slug
 
-  const post = await prisma.blogPost.create({
-    data: {
-      title,
-      slug: finalSlug,
-      excerpt: excerpt || '',
-      content: content || '',
-      image: image || null,
-      published: published ?? true,
-    },
-  })
+  try {
+    const post = await prisma.blogPost.create({
+      data: {
+        title,
+        slug: finalSlug,
+        excerpt: excerpt || '',
+        content: content || '',
+        image: image || null,
+        published: published ?? true,
+      },
+    })
 
-  return NextResponse.json(post)
+    return NextResponse.json(post)
+  } catch (error) {
+    console.error('Error creating blog post:', error)
+    return NextResponse.json(
+      { error: 'Erreur lors de la création de l\'article' },
+      { status: 500 }
+    )
+  }
 }

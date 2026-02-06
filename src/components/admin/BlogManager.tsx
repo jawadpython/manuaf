@@ -25,8 +25,18 @@ export function BlogManager({
 
   async function handleDelete(id: string) {
     if (!confirm('Supprimer cet article ?')) return
-    const res = await fetch(`/api/admin/blog/${id}`, { method: 'DELETE' })
-    if (res.ok) setPosts((p) => p.filter((x) => x.id !== id))
+    try {
+      const res = await fetch(`/api/admin/blog/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        setPosts((p) => p.filter((x) => x.id !== id))
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Erreur lors de la suppression')
+      }
+    } catch (error) {
+      alert('Erreur de connexion')
+      console.error('Delete error:', error)
+    }
   }
 
   function handleSaved(post: { id: string; title: string; slug: string; excerpt: string; content: string; image: string | null; published: boolean; createdAt?: Date | string }) {

@@ -9,7 +9,8 @@ interface Product {
   name: string
   slug: string
   description: string
-  category: string
+  categoryId: string
+  category?: { id: string; name: string; slug: string; parent?: { id: string; name: string; slug: string } | null }
   image: string | null
   features: string | null
   order: number
@@ -26,8 +27,18 @@ export function ProductsManager({
 
   async function handleDelete(id: string) {
     if (!confirm('Supprimer ce produit ?')) return
-    const res = await fetch(`/api/admin/products/${id}`, { method: 'DELETE' })
-    if (res.ok) setProducts((p) => p.filter((x) => x.id !== id))
+    try {
+      const res = await fetch(`/api/admin/products/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        setProducts((p) => p.filter((x) => x.id !== id))
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Erreur lors de la suppression')
+      }
+    } catch (error) {
+      alert('Erreur de connexion')
+      console.error('Delete error:', error)
+    }
   }
 
   function handleSaved(product: Product) {
@@ -38,6 +49,15 @@ export function ProductsManager({
       setProducts((p) => [...p, product])
       setCreating(false)
     }
+    // Refresh the list to ensure consistency
+    fetch('/api/admin/products')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setProducts(data)
+        }
+      })
+      .catch((err) => console.error('Error refreshing products:', err))
   }
 
   return (
@@ -85,14 +105,19 @@ export function ProductsManager({
                         alt={product.name}
                         fill
                         className="object-cover"
+                        unoptimized={product.image.startsWith('http')}
                       />
                     ) : (
-                      <span className="text-white/30 text-xs">—</span>
+                      <span className="text-white/30 text-xs flex items-center justify-center h-full">—</span>
                     )}
                   </div>
                 </td>
                 <td className="p-4 text-white">{product.name}</td>
-                <td className="p-4 text-white/70">{product.category}</td>
+                <td className="p-4 text-white/70">
+                  {product.category?.parent 
+                    ? `${product.category.parent.name} > ${product.category.name}`
+                    : product.category?.name || '—'}
+                </td>
                 <td className="p-4">
                   <div className="flex gap-2">
                     <button

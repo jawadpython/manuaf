@@ -2,15 +2,7 @@ import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-
-function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-}
+import { slugify } from '@/lib/utils'
 
 export async function PUT(
   request: Request,
@@ -32,19 +24,27 @@ export async function PUT(
 
   const slug = slugify(title)
 
-  const post = await prisma.blogPost.update({
-    where: { id },
-    data: {
-      title,
-      slug,
-      excerpt: excerpt || '',
-      content: content || '',
-      image: image || null,
-      published: published ?? true,
-    },
-  })
+  try {
+    const post = await prisma.blogPost.update({
+      where: { id },
+      data: {
+        title,
+        slug,
+        excerpt: excerpt || '',
+        content: content || '',
+        image: image || null,
+        published: published ?? true,
+      },
+    })
 
-  return NextResponse.json(post)
+    return NextResponse.json(post)
+  } catch (error) {
+    console.error('Error updating blog post:', error)
+    return NextResponse.json(
+      { error: 'Erreur lors de la mise à jour de l\'article' },
+      { status: 500 }
+    )
+  }
 }
 
 export async function DELETE(

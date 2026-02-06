@@ -64,13 +64,14 @@ export default async function ProductDetailPage({ params }: Props) {
                   className="object-contain"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   priority
+                  unoptimized={product.image?.startsWith('http')}
                 />
               </div>
 
               {/* Content */}
               <div className="p-8 lg:p-12 border-l border-gray-100">
                 <p className="text-[#999999] uppercase tracking-wider text-xs mb-2">
-                  {product.category}
+                  {(product as any).category?.name || product.category || 'Non catégorisé'}
                 </p>
                 <h1 className="text-2xl md:text-3xl font-bold text-[#333333] mb-4">
                   {product.name}

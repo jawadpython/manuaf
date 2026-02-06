@@ -1,7 +1,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { getAllProducts } from '@/lib/data'
+import { getAllProducts, getAllCategories } from '@/lib/data'
 import type { Metadata } from 'next'
+
+// Helper to get category name from product
+function getCategoryName(product: any): string {
+  return product.category?.name || product.category || 'Non catégorisé'
+}
 
 export const metadata: Metadata = {
   title: 'Produits',
@@ -11,10 +16,91 @@ export const metadata: Metadata = {
 
 export default async function ProduitsPage() {
   const products = await getAllProducts()
+  const categories = await getAllCategories()
   
-  // Separate products by category
-  const electricProducts = products.filter(p => p.category === 'Électrique')
-  const thermalProducts = products.filter(p => p.category === 'Thermique')
+  // Separate by type: Chariots and Pièces de rechange
+  const chariotsCategories = categories.filter(c => c.type === 'chariots' && c.published)
+  const piecesCategories = categories.filter(c => c.type === 'pieces' && c.published)
+  
+  // Get root categories for each type
+  const chariotsRoot = chariotsCategories.filter(c => !c.parentId)
+  const piecesRoot = piecesCategories.filter(c => !c.parentId)
+
+  // Helper to render category section
+  const renderCategorySection = (category: any, allCategories: any[], allProducts: any[]) => {
+    // Get products in this category or its subcategories
+    const categoryProducts = allProducts.filter((p) => {
+      const productCategoryId = (p as any).category?.id || (p as any).categoryId
+      return productCategoryId === category.id || 
+             category.children?.some((child: any) => child.id === productCategoryId)
+    })
+
+    if (categoryProducts.length === 0) return null
+
+    return (
+      <div key={category.id} className="mb-12 md:mb-20">
+        <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-10">
+          <span className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--accent)] rounded-full flex items-center justify-center flex-shrink-0">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </span>
+          <div>
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#333333]">
+              {category.name}
+            </h2>
+            {category.description && (
+              <p className="text-[#666666] text-xs sm:text-sm md:text-base">{category.description}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Subcategories */}
+        {category.children && category.children.length > 0 && (
+          <div className="mb-6">
+            {category.children.map((subcategory: any) => {
+              const subcategoryProducts = allProducts.filter((p) => {
+                const productCategoryId = (p as any).category?.id || (p as any).categoryId
+                return productCategoryId === subcategory.id
+              })
+              if (subcategoryProducts.length === 0) return null
+
+              return (
+                <div key={subcategory.id} className="mb-8">
+                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-[#333333] mb-4">
+                    {subcategory.name}
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+                    {subcategoryProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        {/* Products in root category (no subcategory) */}
+        {(() => {
+          const directProducts = categoryProducts.filter((p) => {
+            const productCategoryId = (p as any).category?.id || (p as any).categoryId
+            return productCategoryId === category.id
+          })
+          
+          if (directProducts.length === 0) return null
+
+          return (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+              {directProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )
+        })()}
+      </div>
+    )
+  }
 
   return (
     <div className="bg-[#f5f5f5] min-h-screen pt-[56px] md:pt-[96px]">
@@ -32,7 +118,7 @@ export default async function ProduitsPage() {
           </h1>
           <div className="w-16 sm:w-20 h-1 bg-[var(--accent)] mx-auto mb-4 sm:mb-6"></div>
           <p className="text-white/80 max-w-2xl mx-auto text-sm sm:text-base md:text-lg px-4">
-            Découvrez notre gamme complète d&apos;équipements de manutention électriques et thermiques
+            Découvrez notre gamme complète d&apos;équipements de manutention
           </p>
         </div>
       </section>
@@ -40,54 +126,46 @@ export default async function ProduitsPage() {
       {/* Products Section */}
       <section className="py-10 md:py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          
-          {/* Electric Products */}
-          <div className="mb-12 md:mb-20">
-            <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-10">
-              <span className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--accent)] rounded-full flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </span>
-              <div>
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#333333]">
-                  Engins de manutention électriques
+          {/* Chariots Section */}
+          {chariotsRoot.length > 0 && (
+            <div className="mb-16">
+              <div className="text-center mb-12">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#333333] mb-4">
+                  Chariots
                 </h2>
-                <p className="text-[#666666] text-xs sm:text-sm md:text-base">Solutions écologiques et performantes</p>
+                <div className="w-20 h-1 bg-[var(--accent)] mx-auto mb-6"></div>
+                <p className="text-[#666666] max-w-2xl mx-auto">
+                  Location et vente de chariots élévateurs électriques et thermiques
+                </p>
               </div>
+              {chariotsRoot.map((category) => renderCategorySection(category, chariotsCategories, products))}
             </div>
-            
+          )}
+
+          {/* Pièces de rechange Section */}
+          {piecesRoot.length > 0 && (
+            <div>
+              <div className="text-center mb-12">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#333333] mb-4">
+                  Pièces de rechange
+                </h2>
+                <div className="w-20 h-1 bg-[var(--accent)] mx-auto mb-6"></div>
+                <p className="text-[#666666] max-w-2xl mx-auto">
+                  Batteries, accessoires et éléments de commande pour vos équipements
+                </p>
+              </div>
+              {piecesRoot.map((category) => renderCategorySection(category, piecesCategories, products))}
+            </div>
+          )}
+
+          {/* Fallback: Display all products if no categories */}
+          {chariotsRoot.length === 0 && piecesRoot.length === 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-              {electricProducts.map((product) => (
+              {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-          </div>
-
-          {/* Thermal Products */}
-          <div>
-            <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-10">
-              <span className="w-10 h-10 sm:w-12 sm:h-12 bg-[#333333] rounded-full flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
-                </svg>
-              </span>
-              <div>
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#333333]">
-                  Engins de manutention thermiques
-                </h2>
-                <p className="text-[#666666] text-xs sm:text-sm md:text-base">Puissance et robustesse pour vos besoins intensifs</p>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-              {thermalProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-
+          )}
         </div>
       </section>
 
@@ -115,7 +193,9 @@ export default async function ProduitsPage() {
   )
 }
 
-function ProductCard({ product }: { product: { id: string; name: string; slug: string; category: string; image: string | null; description: string } }) {
+function ProductCard({ product }: { product: { id: string; name: string; slug: string; category: string; image: string | null; description: string; category?: { name: string; parent?: { name: string } | null } } }) {
+  const categoryName = getCategoryName(product)
+  
   return (
     <Link
       href={`/produits/${product.slug}`}
@@ -129,12 +209,13 @@ function ProductCard({ product }: { product: { id: string; name: string; slug: s
           fill
           className="object-contain p-3 sm:p-4 md:p-6 transition-transform duration-500 group-hover:scale-110"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
+          unoptimized={product.image?.startsWith('http')}
         />
         {/* Overlay */}
         <div className="absolute inset-0 bg-[var(--accent)]/0 group-hover:bg-[var(--accent)]/10 transition-all duration-300"></div>
         {/* Category Badge */}
         <span className="absolute top-2 left-2 sm:top-4 sm:left-4 px-2 sm:px-3 py-1 bg-[var(--accent)] text-white text-[10px] sm:text-xs font-semibold uppercase tracking-wider">
-          {product.category}
+          {categoryName}
         </span>
       </div>
       

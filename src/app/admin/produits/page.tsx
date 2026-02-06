@@ -9,6 +9,11 @@ export default async function AdminProduitsPage() {
   if (!session) redirect('/admin/login')
 
   const products = await prisma.product.findMany({
+    include: {
+      category: {
+        select: { id: true, name: true, slug: true, parent: { select: { id: true, name: true, slug: true } } },
+      },
+    },
     orderBy: [{ order: 'asc' }, { name: 'asc' }],
   })
 

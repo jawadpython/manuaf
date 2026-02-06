@@ -2,15 +2,7 @@ import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-
-function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-}
+import { slugify } from '@/lib/utils'
 
 export async function PUT(
   request: Request,
@@ -21,31 +13,55 @@ export async function PUT(
 
   const { id } = await params
   const body = await request.json()
-  const { name, description, category, image, features, order } = body
+  const { name, description, categoryId, image, features, order } = body
 
-  if (!name || !description || !category) {
+  if (!name || !description || !categoryId) {
     return NextResponse.json(
       { error: 'Nom, description et catégorie requis' },
       { status: 400 }
     )
   }
 
+  // Validate category exists
+  const category = await prisma.category.findUnique({
+    where: { id: categoryId },
+  })
+  if (!category) {
+    return NextResponse.json(
+      { error: 'Catégorie introuvable' },
+      { status: 400 }
+    )
+  }
+
   const slug = slugify(name)
 
-  const product = await prisma.product.update({
-    where: { id },
-    data: {
-      name,
-      slug,
-      description,
-      category,
-      image: image || null,
-      features: features || null,
-      order: order ?? 0,
-    },
-  })
+  try {
+    const product = await prisma.product.update({
+      where: { id },
+      data: {
+        name,
+        slug,
+        description,
+        categoryId,
+        image: image || null,
+        features: features || null,
+        order: order ?? 0,
+      },
+      include: {
+        category: {
+          select: { id: true, name: true, slug: true, parent: { select: { id: true, name: true, slug: true } } },
+        },
+      },
+    })
 
-  return NextResponse.json(product)
+    return NextResponse.json(product)
+  } catch (error) {
+    console.error('Error updating product:', error)
+    return NextResponse.json(
+      { error: 'Erreur lors de la mise à jour du produit' },
+      { status: 500 }
+    )
+  }
 }
 
 export async function DELETE(
