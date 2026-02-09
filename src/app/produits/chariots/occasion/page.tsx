@@ -14,7 +14,9 @@ export default async function ChariotsOccasionPage() {
   
   // Filter products available as used/refurbished
   const usedProducts = products.filter(p => {
-    const categoryName = (p as any).category?.name?.toLowerCase() || p.category?.toLowerCase() || ''
+    const categoryName = (p.category && typeof p.category === 'object' && 'name' in p.category)
+      ? p.category.name.toLowerCase()
+      : ''
     return categoryName.includes('électrique') || 
            categoryName.includes('thermique') ||
            categoryName.includes('chariot')
@@ -118,7 +120,7 @@ export default async function ChariotsOccasionPage() {
   )
 }
 
-function ProductCard({ product }: { product: { id: string; name: string; slug: string; category: string; image: string | null; description: string } }) {
+function ProductCard({ product }: { product: { id: string; name: string; slug: string; category: { name: string } | string; image: string | null; description: string } }) {
   return (
     <Link
       href={`/produits/${product.slug}`}
@@ -135,7 +137,7 @@ function ProductCard({ product }: { product: { id: string; name: string; slug: s
         />
         <div className="absolute inset-0 bg-[var(--accent)]/0 group-hover:bg-[var(--accent)]/10 transition-all duration-300"></div>
         <span className="absolute top-2 left-2 sm:top-4 sm:left-4 px-2 sm:px-3 py-1 bg-[var(--accent)] text-white text-[10px] sm:text-xs font-semibold uppercase tracking-wider">
-          {product.category}
+          {typeof product.category === 'object' ? product.category.name : product.category}
         </span>
       </div>
       <div className="p-3 sm:p-4 md:p-5 border-t-4 border-[var(--accent)]">

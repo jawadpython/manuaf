@@ -10,6 +10,7 @@ interface Category {
   slug: string
   type: string
   parentId: string | null
+  published?: boolean
   children?: Category[]
 }
 

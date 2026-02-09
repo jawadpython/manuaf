@@ -94,7 +94,7 @@ export default async function ChariotsPage() {
   )
 }
 
-function ProductCard({ product }: { product: { id: string; name: string; slug: string; category: string; image: string | null; description: string; sold?: boolean; category?: { name: string; parent?: { name: string } | null } } }) {
+function ProductCard({ product }: { product: { id: string; name: string; slug: string; category: { id: string; name: string; slug: string; type: string; parent?: { id: string; name: string; slug: string } | null } | string; image: string | null; description: string; sold?: boolean } }) {
   const isSold = (product as any).sold || false
   
   return (
