@@ -129,7 +129,8 @@ export function Header() {
             type="button"
             className="md:hidden p-2 text-white"
             onClick={() => setOpen(!open)}
-            aria-label="Menu"
+            aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+            aria-expanded={open}
           >
             <svg
               className="w-6 h-6"
