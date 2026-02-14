@@ -11,7 +11,7 @@ export default function BatteriesPage() {
   return (
     <div className="bg-[#f5f5f5] min-h-screen pt-[56px] md:pt-[96px]">
       {/* Hero Section */}
-      <section className="relative py-12 md:py-16 lg:py-24 bg-[#4a4a4a] overflow-hidden">
+      <section className="relative py-12 md:py-16 lg:py-24 bg-[var(--grey)] overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.4%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
         </div>
@@ -37,7 +37,7 @@ export default function BatteriesPage() {
               <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
                 Batteries pour chariots électriques
               </h2>
-              <p className="text-[#666666] mb-6">
+              <p className="text-[var(--grey)] mb-6">
                 Nous proposons une large gamme de batteries pour chariots élévateurs électriques, 
                 toutes marques confondues. Nos batteries sont garanties et testées pour assurer 
                 une performance optimale.
@@ -47,25 +47,25 @@ export default function BatteriesPage() {
                   <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-[#666666]">Batteries plomb-acide 24V, 36V, 48V, 72V</span>
+                  <span className="text-[var(--grey)]">Batteries plomb-acide 24V, 36V, 48V, 72V</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-[#666666]">Batteries lithium-ion (nouvelles technologies)</span>
+                  <span className="text-[var(--grey)]">Batteries lithium-ion (nouvelles technologies)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-[#666666]">Toutes capacités : de 200Ah à 1000Ah</span>
+                  <span className="text-[var(--grey)]">Toutes capacités : de 200Ah à 1000Ah</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-[#666666]">Compatible toutes marques : Toyota, Jungheinrich, Yale, etc.</span>
+                  <span className="text-[var(--grey)]">Compatible toutes marques : Toyota, Jungheinrich, Yale, etc.</span>
                 </li>
               </ul>
             </div>
@@ -73,7 +73,7 @@ export default function BatteriesPage() {
               <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
                 Chargeurs de batteries
               </h2>
-              <p className="text-[#666666] mb-6">
+              <p className="text-[var(--grey)] mb-6">
                 Chargeurs professionnels pour maintenir vos batteries en parfait état. 
                 Nos chargeurs sont équipés de systèmes de protection avancés.
               </p>
@@ -82,25 +82,25 @@ export default function BatteriesPage() {
                   <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-[#666666]">Chargeurs automatiques avec égalisation</span>
+                  <span className="text-[var(--grey)]">Chargeurs automatiques avec égalisation</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-[#666666]">Chargeurs rapides et standard</span>
+                  <span className="text-[var(--grey)]">Chargeurs rapides et standard</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-[#666666]">Protection contre les surcharges et décharges</span>
+                  <span className="text-[var(--grey)]">Protection contre les surcharges et décharges</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-[#666666]">Service de réparation et maintenance</span>
+                  <span className="text-[var(--grey)]">Service de réparation et maintenance</span>
                 </li>
               </ul>
             </div>
@@ -119,7 +119,7 @@ export default function BatteriesPage() {
                   </svg>
                 </div>
                 <h3 className="font-bold text-[#333333] mb-2">Garantie</h3>
-                <p className="text-[#666666] text-sm">
+                <p className="text-[var(--grey)] text-sm">
                   Toutes nos batteries sont garanties avec certificat de conformité
                 </p>
               </div>
@@ -131,7 +131,7 @@ export default function BatteriesPage() {
                   </svg>
                 </div>
                 <h3 className="font-bold text-[#333333] mb-2">Installation</h3>
-                <p className="text-[#666666] text-sm">
+                <p className="text-[var(--grey)] text-sm">
                   Installation professionnelle par nos techniciens certifiés
                 </p>
               </div>
@@ -142,7 +142,7 @@ export default function BatteriesPage() {
                   </svg>
                 </div>
                 <h3 className="font-bold text-[#333333] mb-2">Maintenance</h3>
-                <p className="text-[#666666] text-sm">
+                <p className="text-[var(--grey)] text-sm">
                   Service de maintenance et réparation de batteries et chargeurs
                 </p>
               </div>

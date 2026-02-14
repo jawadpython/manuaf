@@ -290,6 +290,96 @@ export async function getProductsByType(type: 'chariots' | 'pieces') {
   }
 }
 
+// Get products for Chariots de location page (category slug: chariots-location)
+export async function getProductsForChariotsLocation() {
+  try {
+    const categories = await prisma.category.findMany({
+      where: {
+        type: 'chariots',
+        published: true,
+        OR: [
+          { slug: 'chariots-de-location' },
+          { parent: { slug: 'chariots-de-location' } },
+        ],
+      },
+      select: { id: true },
+    })
+    const ids = categories.map((c) => c.id)
+    if (ids.length === 0) return []
+
+    const products = await prisma.product.findMany({
+      where: { categoryId: { in: ids } },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        image: true,
+        features: true,
+        order: true,
+        sold: true,
+        categoryId: true,
+        category: {
+          select: { id: true, name: true, slug: true, type: true, parent: { select: { id: true, name: true, slug: true } } },
+        },
+      },
+      orderBy: [{ order: 'asc' }, { name: 'asc' }],
+    })
+    return products.map((p) => ({
+      ...p,
+      category: p.category || { id: '', name: 'Non catégorisé', slug: '', type: '' },
+    }))
+  } catch (error) {
+    console.error('Error fetching products for chariots location:', error)
+    return []
+  }
+}
+
+// Get products for Chariots d'occasion page (category slug: chariots-occasion)
+export async function getProductsForChariotsOccasion() {
+  try {
+    const categories = await prisma.category.findMany({
+      where: {
+        type: 'chariots',
+        published: true,
+        OR: [
+          { slug: 'chariots-d-occasion' },
+          { parent: { slug: 'chariots-d-occasion' } },
+        ],
+      },
+      select: { id: true },
+    })
+    const ids = categories.map((c) => c.id)
+    if (ids.length === 0) return []
+
+    const products = await prisma.product.findMany({
+      where: { categoryId: { in: ids } },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        image: true,
+        features: true,
+        order: true,
+        sold: true,
+        categoryId: true,
+        category: {
+          select: { id: true, name: true, slug: true, type: true, parent: { select: { id: true, name: true, slug: true } } },
+        },
+      },
+      orderBy: [{ order: 'asc' }, { name: 'asc' }],
+    })
+    return products.map((p) => ({
+      ...p,
+      category: p.category || { id: '', name: 'Non catégorisé', slug: '', type: '' },
+    }))
+  } catch (error) {
+    console.error("Error fetching products for chariots occasion:", error)
+    return []
+  }
+}
+
 export async function getCategoryBySlug(slug: string) {
   try {
     const category = await prisma.category.findUnique({

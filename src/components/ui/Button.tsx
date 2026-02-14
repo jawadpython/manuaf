@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { ButtonHTMLAttributes, AnchorHTMLAttributes } from 'react'
 
 type BaseProps = {
-  variant?: 'primary' | 'outline' | 'ghost'
-  size?: 'sm' | 'md' | 'lg'
+  variant?: 'primary' | 'grey' | 'outline' | 'ghost'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
   children: React.ReactNode
   className?: string
 }
@@ -25,15 +25,18 @@ type ButtonProps = ButtonAsButton | ButtonAsLink
 const variants = {
   primary:
     'bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] border-transparent',
+  grey:
+    'bg-[var(--grey)] text-white hover:bg-[var(--grey)]/90 border-transparent',
   outline:
-    'border-2 border-white text-white hover:bg-white hover:text-[#333333]',
-  ghost: 'text-[#333333] hover:text-[var(--accent)] hover:bg-gray-50',
+    'border-2 border-white text-white hover:bg-white hover:text-[var(--grey)]',
+  ghost: 'text-[var(--grey)] hover:text-[var(--accent)] hover:bg-gray-50',
 }
 
 const sizes = {
   sm: 'px-5 py-2 text-sm',
   md: 'px-6 py-3 text-sm',
   lg: 'px-8 py-3 text-base',
+  xl: 'px-10 py-4 text-lg sm:px-12 sm:py-5 sm:text-xl',
 }
 
 export function Button({

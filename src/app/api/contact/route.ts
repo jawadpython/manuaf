@@ -14,7 +14,10 @@ export async function POST(request: Request) {
 
     // En production : envoyer l'email via un service (Resend, SendGrid, etc.)
     // Pour l'instant, on simule un envoi réussi
-    console.log('Contact form:', { name, email, company, phone, message })
+    // In production, replace this with actual email sending service
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Contact form submission:', { name, email, company, phone, message })
+    }
 
     return NextResponse.json({ success: true })
   } catch {

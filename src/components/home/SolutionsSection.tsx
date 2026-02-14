@@ -55,7 +55,7 @@ function ProductCard({ title, image, href }: { title: string; image: string; hre
       href={href}
       className="group block bg-white overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-[#f8f8f8]">
+      <div className="relative w-full h-[420px] sm:h-[480px] md:h-[540px] overflow-hidden bg-[#f8f8f8]">
         <Image
           src={image}
           alt={title}
@@ -67,7 +67,7 @@ function ProductCard({ title, image, href }: { title: string; image: string; hre
         <div className="absolute inset-0 bg-[var(--accent)]/0 group-hover:bg-[var(--accent)]/10 transition-all duration-300"></div>
       </div>
       <div className="p-3 sm:p-5 text-center border-t-4 border-[var(--accent)]">
-        <h3 className="text-[#333333] text-xs sm:text-sm font-semibold mb-2 sm:mb-3 group-hover:text-[var(--accent)] transition-colors leading-tight min-h-[32px] sm:min-h-[48px] flex items-center justify-center">
+        <h3 className="text-[var(--grey)] text-xs sm:text-sm font-semibold mb-2 sm:mb-3 group-hover:text-[var(--accent)] transition-colors leading-tight min-h-[32px] sm:min-h-[48px] flex items-center justify-center">
           {title}
         </h3>
         <span className="inline-flex items-center gap-1 sm:gap-2 text-[var(--accent)] text-[10px] sm:text-sm font-semibold uppercase tracking-wider group-hover:gap-2 sm:group-hover:gap-3 transition-all">
@@ -90,7 +90,7 @@ export function SolutionsSection() {
           <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-2 sm:mb-3">
             Notre catalogue
           </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#333333] mb-3 sm:mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--grey)] mb-3 sm:mb-4">
             Nos produits
           </h2>
           <div className="w-16 sm:w-20 h-1 bg-[var(--accent)] mx-auto"></div>
@@ -99,7 +99,7 @@ export function SolutionsSection() {
         {/* Electric Products */}
         <div className="mb-10 md:mb-16">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
-            <h3 className="text-base sm:text-xl font-bold text-[#333333] uppercase tracking-wide flex items-center gap-2 sm:gap-3">
+            <h3 className="text-base sm:text-xl font-bold text-[var(--grey)] uppercase tracking-wide flex items-center gap-2 sm:gap-3">
               <span className="w-8 h-8 sm:w-10 sm:h-10 bg-[var(--accent)] rounded-full flex items-center justify-center flex-shrink-0">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -124,8 +124,8 @@ export function SolutionsSection() {
         {/* Thermal Products */}
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
-            <h3 className="text-base sm:text-xl font-bold text-[#333333] uppercase tracking-wide flex items-center gap-2 sm:gap-3">
-              <span className="w-8 h-8 sm:w-10 sm:h-10 bg-[#333333] rounded-full flex items-center justify-center flex-shrink-0">
+            <h3 className="text-base sm:text-xl font-bold text-[var(--grey)] uppercase tracking-wide flex items-center gap-2 sm:gap-3">
+              <span className="w-8 h-8 sm:w-10 sm:h-10 bg-[var(--grey)] rounded-full flex items-center justify-center flex-shrink-0">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />

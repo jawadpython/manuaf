@@ -11,7 +11,7 @@ export default function ReconditionnementPage() {
   return (
     <div className="bg-[#f5f5f5] min-h-screen pt-[56px] md:pt-[96px]">
       {/* Hero Section */}
-      <section className="relative py-12 md:py-16 lg:py-24 bg-[#4a4a4a] overflow-hidden">
+      <section className="relative py-12 md:py-16 lg:py-24 bg-[var(--grey)] overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.4%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
         </div>
@@ -37,12 +37,12 @@ export default function ReconditionnementPage() {
               <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
                 Qu&apos;est-ce que le reconditionnement ?
               </h2>
-              <p className="text-[#666666] mb-6">
+              <p className="text-[var(--grey)] mb-6">
                 Le reconditionnement est un processus complet de remise à neuf de votre chariot élévateur. 
                 Cette opération permet de restaurer les performances d&apos;origine de votre équipement 
                 tout en prolongeant sa durée de vie de plusieurs années.
               </p>
-              <p className="text-[#666666] mb-6">
+              <p className="text-[var(--grey)] mb-6">
                 Contrairement à une simple réparation, le reconditionnement implique un démontage complet, 
                 une inspection approfondie de tous les composants, le remplacement des pièces usées, 
                 et une remise en état conforme aux standards du constructeur.
@@ -61,7 +61,7 @@ export default function ReconditionnementPage() {
                   </div>
                   <div>
                     <h3 className="font-bold text-[#333333] mb-2">Diagnostic complet</h3>
-                    <p className="text-[#666666] text-sm">
+                    <p className="text-[var(--grey)] text-sm">
                       Inspection approfondie de tous les systèmes : moteur, transmission, hydraulique, électrique
                     </p>
                   </div>
@@ -74,7 +74,7 @@ export default function ReconditionnementPage() {
                   </div>
                   <div>
                     <h3 className="font-bold text-[#333333] mb-2">Démontage et nettoyage</h3>
-                    <p className="text-[#666666] text-sm">
+                    <p className="text-[var(--grey)] text-sm">
                       Démontage complet, nettoyage et préparation de toutes les pièces
                     </p>
                   </div>
@@ -87,7 +87,7 @@ export default function ReconditionnementPage() {
                   </div>
                   <div>
                     <h3 className="font-bold text-[#333333] mb-2">Remplacement des pièces</h3>
-                    <p className="text-[#666666] text-sm">
+                    <p className="text-[var(--grey)] text-sm">
                       Remplacement de toutes les pièces usées par des pièces d&apos;origine neuves
                     </p>
                   </div>
@@ -100,7 +100,7 @@ export default function ReconditionnementPage() {
                   </div>
                   <div>
                     <h3 className="font-bold text-[#333333] mb-2">Remontage et tests</h3>
-                    <p className="text-[#666666] text-sm">
+                    <p className="text-[var(--grey)] text-sm">
                       Remontage professionnel et tests de conformité selon les standards constructeur
                     </p>
                   </div>
@@ -122,7 +122,7 @@ export default function ReconditionnementPage() {
                   </svg>
                 </div>
                 <h3 className="font-bold text-[#333333] mb-2">Économique</h3>
-                <p className="text-[#666666] text-sm">
+                <p className="text-[var(--grey)] text-sm">
                   Coût jusqu&apos;à 60% inférieur à l&apos;achat d&apos;un équipement neuf
                 </p>
               </div>
@@ -133,7 +133,7 @@ export default function ReconditionnementPage() {
                   </svg>
                 </div>
                 <h3 className="font-bold text-[#333333] mb-2">Garantie</h3>
-                <p className="text-[#666666] text-sm">
+                <p className="text-[var(--grey)] text-sm">
                   Garantie complète sur le reconditionnement et les pièces installées
                 </p>
               </div>
@@ -144,7 +144,7 @@ export default function ReconditionnementPage() {
                   </svg>
                 </div>
                 <h3 className="font-bold text-[#333333] mb-2">Performance</h3>
-                <p className="text-[#666666] text-sm">
+                <p className="text-[var(--grey)] text-sm">
                   Performances restaurées aux standards d&apos;origine du constructeur
                 </p>
               </div>

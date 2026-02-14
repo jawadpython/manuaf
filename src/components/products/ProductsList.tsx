@@ -301,7 +301,7 @@ function ProductCard({ product }: { product: Product }) {
       className={`group block bg-white overflow-hidden transition-shadow duration-300 hover:shadow-xl ${isSold ? 'opacity-75' : ''}`}
     >
       {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-[#f8f8f8]">
+      <div className="relative w-full h-[420px] sm:h-[480px] md:h-[540px] overflow-hidden bg-[#f8f8f8]">
         <Image
           src={product.image || '/images/products/chr5-min-276x300.jpg'}
           alt={product.name}
@@ -328,10 +328,10 @@ function ProductCard({ product }: { product: Product }) {
 
       {/* Content */}
       <div className="p-3 sm:p-4 md:p-5 border-t-4 border-[var(--accent)]">
-        <h3 className="text-[#333333] text-xs sm:text-sm md:text-base font-bold mb-1 sm:mb-2 group-hover:text-[var(--accent)] transition-colors duration-200 leading-tight line-clamp-2">
+        <h3 className="text-[var(--grey)] text-xs sm:text-sm md:text-base font-bold mb-1 sm:mb-2 group-hover:text-[var(--accent)] transition-colors duration-200 leading-tight line-clamp-2">
           {product.name}
         </h3>
-        <p className="text-[#666666] text-[10px] sm:text-xs md:text-sm mb-2 sm:mb-4 line-clamp-2 hidden sm:block">
+        <p className="text-[var(--grey)] text-[10px] sm:text-xs md:text-sm mb-2 sm:mb-4 line-clamp-2 hidden sm:block">
           {product.description}
         </p>
         <span className="inline-flex items-center gap-1 sm:gap-2 text-[var(--accent)] text-[10px] sm:text-xs md:text-sm font-semibold uppercase tracking-wider group-hover:gap-2 sm:group-hover:gap-3 transition-all duration-200">

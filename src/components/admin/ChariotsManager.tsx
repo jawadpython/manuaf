@@ -88,6 +88,7 @@ export function ChariotsManager({
             <tr className="border-b border-gray-200 bg-gray-50">
               <th className="p-4 text-gray-700 text-sm font-semibold">Image</th>
               <th className="p-4 text-gray-700 text-sm font-semibold">Nom</th>
+              <th className="p-4 text-gray-700 text-sm font-semibold">Page</th>
               <th className="p-4 text-gray-700 text-sm font-semibold">Statut</th>
               <th className="p-4 text-gray-700 text-sm font-semibold">Actions</th>
             </tr>
@@ -114,6 +115,9 @@ export function ChariotsManager({
                   </div>
                 </td>
                 <td className="p-4 text-gray-900 font-medium">{chariot.name}</td>
+                <td className="p-4 text-gray-600 text-sm">
+                  {chariot.category?.name ?? '—'}
+                </td>
                 <td className="p-4">
                   {chariot.sold ? (
                     <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-50 border border-red-200 text-red-700 text-xs font-semibold rounded-full">

@@ -4,9 +4,10 @@
   --background: #ffffff;
   --background-alt: #f8f9fa;
   --foreground: #1a1a1a;
-  --muted: #6b7280;
-  --accent: #F5A623;
-  --accent-hover: #E09000;
+  --muted: #3C464B;
+  --grey: #3C464B;
+  --accent: #ffb900;
+  --accent-hover: #e6a700;
   --accent-dark: #2d3748;
   --border: #e5e7eb;
   --card: #ffffff;
@@ -20,6 +21,7 @@
   --color-background-alt: var(--background-alt);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
+  --color-grey: var(--grey);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-dark: var(--accent-dark);
@@ -50,6 +52,6 @@ body {
 }
 
 ::selection {
-  background: rgba(245, 166, 35, 0.3);
+  background: rgba(255, 185, 0, 0.3);
   color: #1a1a1a;
 }

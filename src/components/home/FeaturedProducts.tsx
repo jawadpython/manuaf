@@ -60,11 +60,11 @@ export async function FeaturedProducts() {
             <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-2 sm:mb-3">
               Ce que nous offrons
             </p>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#333333] mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--grey)] mb-3 sm:mb-4">
               Nos services
             </h2>
             <div className="w-16 sm:w-20 h-1 bg-[var(--accent)] mx-auto mb-4 sm:mb-6"></div>
-            <p className="text-[#666666] max-w-2xl mx-auto text-sm sm:text-base px-4">
+            <p className="text-[var(--grey)] max-w-2xl mx-auto text-sm sm:text-base px-4">
               Des solutions complètes pour tous vos besoins en manutention et intralogistique
             </p>
           </div>
@@ -80,14 +80,14 @@ export async function FeaturedProducts() {
                 <div className="absolute top-0 left-0 w-full h-1 bg-[var(--accent)] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
                 
                 {/* Icon */}
-                <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 bg-[var(--accent)] rounded-full flex items-center justify-center text-white group-hover:bg-[#333333] transition-colors duration-300">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 bg-[var(--accent)] rounded-full flex items-center justify-center text-white group-hover:bg-[var(--grey)] transition-colors duration-300">
                   {service.icon}
                 </div>
                 
-                <h3 className="font-bold text-[#333333] text-base sm:text-lg mb-2 sm:mb-3 group-hover:text-[var(--accent)] transition-colors">
+                <h3 className="font-bold text-[var(--grey)] text-base sm:text-lg mb-2 sm:mb-3 group-hover:text-[var(--accent)] transition-colors">
                   {service.title}
                 </h3>
-                <p className="text-[#666666] text-xs sm:text-sm leading-relaxed mb-4 sm:mb-5">
+                <p className="text-[var(--grey)] text-xs sm:text-sm leading-relaxed mb-4 sm:mb-5">
                   {service.description}
                 </p>
                 
@@ -111,11 +111,11 @@ export async function FeaturedProducts() {
             <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-2 sm:mb-3">
               Actualités & Conseils
             </p>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#333333] mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--grey)] mb-3 sm:mb-4">
               Blogs
             </h2>
             <div className="w-16 sm:w-20 h-1 bg-[var(--accent)] mx-auto mb-4 sm:mb-6"></div>
-            <p className="text-[#666666] max-w-2xl mx-auto text-sm sm:text-base px-4">
+            <p className="text-[var(--grey)] max-w-2xl mx-auto text-sm sm:text-base px-4">
               Restez informé des dernières tendances et conseils en intralogistique
             </p>
           </div>
@@ -128,7 +128,7 @@ export async function FeaturedProducts() {
                 className="group block bg-[#f5f5f5] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
               >
                 {/* Blog Image */}
-                <div className="relative h-40 sm:h-48 md:h-52 overflow-hidden bg-[#f8f8f8]">
+                <div className="relative h-[320px] sm:h-[380px] md:h-[420px] overflow-hidden bg-[#f8f8f8]">
                   <Image
                     src={post.image || '/images/products/chr5-min-276x300.jpg'}
                     alt={post.title}
@@ -147,10 +147,10 @@ export async function FeaturedProducts() {
                 
                 {/* Content */}
                 <div className="p-4 sm:p-5 md:p-6">
-                  <h3 className="font-bold text-[#333333] text-sm sm:text-base md:text-lg mb-2 sm:mb-3 group-hover:text-[var(--accent)] transition-colors leading-tight line-clamp-2">
+                  <h3 className="font-bold text-[var(--grey)] text-sm sm:text-base md:text-lg mb-2 sm:mb-3 group-hover:text-[var(--accent)] transition-colors leading-tight line-clamp-2">
                     {post.title}
                   </h3>
-                  <p className="text-[#666666] text-xs sm:text-sm leading-relaxed mb-4 sm:mb-5 line-clamp-2">
+                  <p className="text-[var(--grey)] text-xs sm:text-sm leading-relaxed mb-4 sm:mb-5 line-clamp-2">
                     {post.excerpt}
                   </p>
                   

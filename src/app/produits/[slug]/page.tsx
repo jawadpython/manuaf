@@ -32,7 +32,7 @@ export default async function ProductDetailPage({ params }: Props) {
         <div className="max-w-7xl mx-auto px-6">
           <Link
             href="/produits/chariots"
-            className="inline-flex items-center gap-2 text-[#666666] hover:text-[var(--accent)] text-sm mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-[var(--grey)] hover:text-[var(--accent)] text-sm mb-6 transition-colors"
           >
             <svg
               className="w-4 h-4"
@@ -53,7 +53,7 @@ export default async function ProductDetailPage({ params }: Props) {
           <div className="bg-white">
             <div className="grid grid-cols-1 lg:grid-cols-2">
               {/* Image */}
-              <div className="relative aspect-square bg-[#f8f8f8] p-8">
+              <div className="relative w-full h-[480px] md:h-[600px] bg-[#f8f8f8] p-8">
                 <Image
                   src={
                     product.image ||
@@ -70,25 +70,25 @@ export default async function ProductDetailPage({ params }: Props) {
 
               {/* Content */}
               <div className="p-8 lg:p-12 border-l border-gray-100">
-                <p className="text-[#999999] uppercase tracking-wider text-xs mb-2">
+                <p className="text-[var(--grey)] uppercase tracking-wider text-xs mb-2">
                   {(product as any).category?.name || product.category || 'Non catégorisé'}
                 </p>
-                <h1 className="text-2xl md:text-3xl font-bold text-[#333333] mb-4">
+                <h1 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-4">
                   {product.name}
                 </h1>
                 <div className="w-16 h-1 bg-[var(--accent)] mb-6"></div>
-                <p className="text-[#666666] leading-relaxed mb-6">
+                <p className="text-[var(--grey)] leading-relaxed mb-6">
                   {product.description}
                 </p>
 
                 {features.length > 0 && (
                   <div className="mb-8">
-                    <h3 className="font-bold text-[#333333] mb-4">Caractéristiques</h3>
+                    <h3 className="font-bold text-[var(--grey)] mb-4">Caractéristiques</h3>
                     <ul className="space-y-2">
                       {features.map((feature, i) => (
                         <li
                           key={i}
-                          className="flex items-start gap-3 text-[#666666] text-sm"
+                          className="flex items-start gap-3 text-[var(--grey)] text-sm"
                         >
                           <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

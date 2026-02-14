@@ -35,57 +35,62 @@ export function ChariotsForm({
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [chariotsCategoryId, setChariotsCategoryId] = useState<string>('')
+  const [chariotsCategories, setChariotsCategories] = useState<Array<{ id: string; name: string; slug: string }>>([])
   const [categoriesLoading, setCategoriesLoading] = useState(true)
   const [noCategories, setNoCategories] = useState(false)
 
-  async function createDefaultChariotsCategory() {
+  async function createDefaultChariotsCategories() {
     try {
-      const res = await fetch('/api/admin/categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: 'Chariots',
-          type: 'chariots',
-          description: 'Catégorie par défaut pour les chariots',
-          published: true,
-        }),
-      })
-      const data = await res.json()
-      if (res.ok && data.id) {
-        setChariotsCategoryId(data.id)
+      const toCreate = [
+        { name: 'Chariots de location', type: 'chariots' as const, description: 'Chariots disponibles à la location' },
+        { name: "Chariots d'occasion", type: 'chariots' as const, description: "Chariots d'occasion reconditionnés" },
+      ]
+      const created: Array<{ id: string; name: string; slug: string }> = []
+      for (const cat of toCreate) {
+        const res = await fetch('/api/admin/categories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...cat, published: true }),
+        })
+        const data = await res.json()
+        if (res.ok && data.id) {
+          created.push({ id: data.id, name: data.name, slug: data.slug })
+        }
+      }
+      if (created.length > 0) {
+        setChariotsCategories((prev) => [...prev, ...created])
+        setChariotsCategoryId(created[0].id)
         setNoCategories(false)
-        setCategoriesLoading(false)
       } else {
-        setError('Impossible de créer la catégorie par défaut. Veuillez créer une catégorie Chariots dans la section Catégories.')
-        setCategoriesLoading(false)
+        setError('Impossible de créer les catégories. Créez « Chariots de location » et « Chariots d\'occasion » dans Catégories.')
       }
     } catch (error) {
-      console.error('Error creating default category:', error)
-      setError('Impossible de créer la catégorie par défaut. Veuillez créer une catégorie Chariots dans la section Catégories.')
+      console.error('Error creating default categories:', error)
+      setError('Impossible de créer les catégories. Créez-les dans la section Catégories.')
+    } finally {
       setCategoriesLoading(false)
     }
   }
 
   useEffect(() => {
-    // Fetch Chariots categories only
     setCategoriesLoading(true)
     fetch('/api/admin/categories')
       .then((res) => res.json())
       .then((data) => {
-        const chariotsCategories = data.filter((cat: any) => cat.type === 'chariots')
-        if (chariotsCategories.length > 0) {
-          // Use first chariots category or the product's category if it's a chariots category
-          const defaultCategory = product?.categoryId && chariotsCategories.find((c: any) => c.id === product.categoryId)
+        const chariotsCats = data.filter((cat: any) => cat.type === 'chariots')
+        if (chariotsCats.length > 0) {
+          setChariotsCategories(chariotsCats)
+          const defaultCategory = product?.categoryId && chariotsCats.find((c: any) => c.id === product.categoryId)
             ? product.categoryId
-            : chariotsCategories[0].id
+            : chariotsCats[0].id
           setChariotsCategoryId(defaultCategory)
           setNoCategories(false)
-          setCategoriesLoading(false)
         } else {
-          // No Chariots categories exist - create a default one
           setNoCategories(true)
-          createDefaultChariotsCategory()
+          createDefaultChariotsCategories()
+          return
         }
+        setCategoriesLoading(false)
       })
       .catch((err) => {
         console.error('Error fetching categories:', err)
@@ -197,7 +202,29 @@ export function ChariotsForm({
 
       {noCategories && !categoriesLoading && (
         <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 text-sm rounded-lg">
-          Création d&apos;une catégorie Chariots par défaut...
+          Création des catégories Chariots de location et Chariots d&apos;occasion...
+        </div>
+      )}
+
+      {chariotsCategories.length > 0 && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Page d&apos;affichage *</label>
+          <select
+            value={chariotsCategoryId}
+            onChange={(e) => setChariotsCategoryId(e.target.value)}
+            required
+            className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
+          >
+            <option value="">Choisir une page</option>
+            {chariotsCategories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+          <p className="text-gray-500 text-xs mt-1">
+            Ce chariot sera affiché sur la page « Chariots de location » ou « Chariots d&apos;occasion » selon votre choix.
+          </p>
         </div>
       )}
 
