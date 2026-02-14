@@ -1,7 +1,10 @@
 {
-  "name": "nauf4",
-  "version": "0.1.0",
+  "name": "logistec",
+  "version": "1.0.0",
   "private": true,
+  "description": "Site web moderne pour entreprise d'intralogistique et de manutention",
+  "author": "",
+  "license": "UNLICENSED",
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",

@@ -21,10 +21,17 @@ export default function Error({
         <h1 className="text-4xl md:text-6xl font-bold text-red-600 mb-4">
           Oups !
         </h1>
+<<<<<<< HEAD
         <h2 className="text-xl md:text-2xl font-bold text-[var(--grey)] mb-4">
           Une erreur s&apos;est produite
         </h2>
         <p className="text-[var(--grey)] mb-8">
+=======
+        <h2 className="text-xl md:text-2xl font-bold text-[#333333] mb-4">
+          Une erreur s&apos;est produite
+        </h2>
+        <p className="text-[#666666] mb-8">
+>>>>>>> d44e53db8f1f969d9827ebe433fe036dcff6c46f
           Nous nous excusons pour le désagrément. Veuillez réessayer ou contacter notre support si le problème persiste.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

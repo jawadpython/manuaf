@@ -7,10 +7,17 @@ export default function NotFound() {
         <h1 className="text-6xl md:text-8xl font-bold text-[var(--accent)] mb-4">
           404
         </h1>
+<<<<<<< HEAD
         <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-4">
           Page non trouvée
         </h2>
         <p className="text-[var(--grey)] mb-8 text-lg">
+=======
+        <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-4">
+          Page non trouvée
+        </h2>
+        <p className="text-[#666666] mb-8 text-lg">
+>>>>>>> d44e53db8f1f969d9827ebe433fe036dcff6c46f
           Désolé, la page que vous recherchez n&apos;existe pas ou a été déplacée.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

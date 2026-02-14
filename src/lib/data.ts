@@ -229,7 +229,7 @@ export async function getAllCategories() {
         },
         children: {
           where: { published: true },
-          select: { id: true, name: true, slug: true, type: true, parentId: true, order: true },
+          select: { id: true, name: true, slug: true, type: true, parentId: true, order: true, published: true },
           orderBy: { order: 'asc' },
         },
       },
