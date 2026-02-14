@@ -1,5 +1,4 @@
 import { getServerSession } from 'next-auth'
-import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { AdminNav } from '@/components/admin/AdminNav'
 
@@ -9,12 +8,6 @@ export default async function AdminLayout({
   children: React.ReactNode
 }) {
   const session = await getServerSession(authOptions)
-
-  // Allow login page without session
-  if (!session && typeof window === 'undefined') {
-    // Server-side: check if we're on login page
-    // This is handled by middleware, but we add extra protection here
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">

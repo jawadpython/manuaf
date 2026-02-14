@@ -242,7 +242,7 @@ export function ProductForm({
           )}
           {image && !uploading && !uploadError && (
             <div className="mt-3 space-y-2">
-              <p className="text-gray-900/70 text-xs">Aperçu de l'image:</p>
+              <p className="text-gray-900/70 text-xs">Aperçu de l&apos;image:</p>
               <div className="relative w-full max-w-xs h-48 bg-[#1a1a1a] border border-gray-200 overflow-hidden rounded">
                 <img
                   src={image}
@@ -259,7 +259,7 @@ export function ProductForm({
                 }}
                 className="text-red-400 text-xs hover:text-red-300 hover:underline"
               >
-                Supprimer l'image
+                Supprimer l&apos;image
               </button>
             </div>
           )}

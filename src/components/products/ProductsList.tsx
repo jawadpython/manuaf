@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -33,56 +33,43 @@ interface ProductsListProps {
 }
 
 export function ProductsList({ initialProducts, categories, defaultType = 'all', hideTypeFilter = false }: ProductsListProps) {
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(initialProducts)
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [selectedType, setSelectedType] = useState<string>(defaultType)
 
-  // Get all categories (flattened for filter dropdown)
-  const allCategories = categories.flatMap(cat => [
-    cat,
-    ...(cat.children || [])
-  ])
-
-  // Filter products based on selected category and type
-  useEffect(() => {
+  // Derive filtered products from selected category and type (no effect)
+  const filteredProducts = useMemo(() => {
     let filtered = [...initialProducts]
 
-    // Filter by type
     if (selectedType !== 'all') {
       filtered = filtered.filter(p => {
         const productCategory = typeof p.category === 'object' ? p.category : null
         if (!productCategory || !productCategory.id) {
-          // Try to get category from categoryId
           const productCategoryId = p.categoryId
           if (!productCategoryId) return false
           const cat = categories.find(c => c.id === productCategoryId)
           return cat?.type === selectedType
         }
-        
-        const cat = categories.find(c => 
-          c.id === productCategory.id || 
+        const cat = categories.find(c =>
+          c.id === productCategory.id ||
           c.children?.some(child => child.id === productCategory.id)
         )
         return cat?.type === selectedType
       })
     }
 
-    // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(p => {
         const productCategory = typeof p.category === 'object' ? p.category : null
         const productCategoryId = productCategory?.id || p.categoryId
         if (!productCategoryId) return false
-        
         const selectedCat = categories.find(c => c.id === selectedCategory)
         if (!selectedCat) return false
-        
-        return productCategoryId === selectedCategory || 
-               selectedCat.children?.some(child => child.id === productCategoryId)
+        return productCategoryId === selectedCategory ||
+          selectedCat.children?.some(child => child.id === productCategoryId)
       })
     }
 
-    setFilteredProducts(filtered)
+    return filtered
   }, [selectedCategory, selectedType, initialProducts, categories])
 
   const handleCategoryChange = (categoryId: string) => {
@@ -97,25 +84,6 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
   const resetFilters = () => {
     setSelectedCategory('all')
     setSelectedType('all')
-  }
-
-  // Get categories for the selected type
-  const typeCategories = selectedType === 'all' 
-    ? allCategories 
-    : allCategories.filter(cat => {
-        const category = categories.find(c => c.id === cat.id || c.children?.some(child => child.id === cat.id))
-        return category?.type === selectedType
-      })
-
-  // Helper to get category name
-  const getCategoryName = (product: Product): string => {
-    if (typeof product.category === 'object' && product.category) {
-      return product.category.name
-    }
-    if (typeof product.category === 'string') {
-      return product.category
-    }
-    return 'Non catégorisé'
   }
 
   // Build category tree for sidebar

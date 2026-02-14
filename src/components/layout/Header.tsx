@@ -71,6 +71,7 @@ export function Header() {
           <Link
             href="/"
             className="flex items-center -ml-4 sm:-ml-6 h-8 sm:h-9 md:h-10 min-w-[100px] overflow-visible"
+            suppressHydrationWarning
           >
             {!logoError ? (
               <img

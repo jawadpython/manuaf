@@ -187,7 +187,7 @@ export function Footer() {
 
       {/* Black copyright bar - full width, centered text (like reference image) */}
       <div className="h-[1cm] min-h-[2.5rem] bg-black flex items-center justify-center px-4">
-        <p className="text-white text-xs sm:text-sm text-center">
+        <p className="text-white text-xs sm:text-sm text-center" suppressHydrationWarning>
           © {new Date().getFullYear()} MANUAF. Tous droits réservés
         </p>
       </div>

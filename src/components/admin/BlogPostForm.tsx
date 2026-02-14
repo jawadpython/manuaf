@@ -176,7 +176,7 @@ export function BlogPostForm({
           )}
           {image && !uploading && !uploadError && (
             <div className="mt-3 space-y-2">
-              <p className="text-gray-600 text-xs font-medium">Aperçu de l'image:</p>
+              <p className="text-gray-600 text-xs font-medium">Aperçu de l&apos;image:</p>
               <div className="relative w-full max-w-xs h-48 bg-gray-100 border border-gray-300 overflow-hidden rounded-lg">
                 <img
                   src={image}
@@ -193,7 +193,7 @@ export function BlogPostForm({
                 }}
                 className="text-red-600 text-xs hover:text-red-700 hover:underline font-medium"
               >
-                Supprimer l'image
+                Supprimer l&apos;image
               </button>
             </div>
           )}

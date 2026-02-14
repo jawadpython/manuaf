@@ -45,7 +45,7 @@ export async function PUT(
 
   const { id } = await params
   const body = await request.json()
-  const { name, description, type, parentId, order, published } = body
+  const { name, description, parentId, order, published } = body
 
   if (!name) {
     return NextResponse.json(

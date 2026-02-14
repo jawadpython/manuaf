@@ -71,7 +71,7 @@ export default async function ProductDetailPage({ params }: Props) {
               {/* Content */}
               <div className="p-8 lg:p-12 border-l border-gray-100">
                 <p className="text-[var(--grey)] uppercase tracking-wider text-xs mb-2">
-                  {(product as any).category?.name || product.category || 'Non catégorisé'}
+                  {typeof product.category === 'object' && product.category !== null ? (product.category as { name?: string }).name : String(product.category ?? 'Non catégorisé')}
                 </p>
                 <h1 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-4">
                   {product.name}

@@ -45,7 +45,7 @@ export function ProductFilter({ categories, products, onFilterChange }: ProductF
     // Filter by type
     if (type !== 'all') {
       filtered = filtered.filter(p => {
-        const productCategoryId = (p as any).category?.id || (p as any).categoryId
+        const productCategoryId = (typeof (p as { category?: { id?: string }; categoryId?: string }).category === 'object' ? (p as { category?: { id?: string } }).category?.id : undefined) || (p as { categoryId?: string }).categoryId
         const productCategory = categories.find(c => 
           c.id === productCategoryId || 
           c.children?.some(child => child.id === productCategoryId)
@@ -57,7 +57,7 @@ export function ProductFilter({ categories, products, onFilterChange }: ProductF
     // Filter by category
     if (categoryId !== 'all') {
       filtered = filtered.filter(p => {
-        const productCategoryId = (p as any).category?.id || (p as any).categoryId
+        const productCategoryId = (typeof (p as { category?: { id?: string }; categoryId?: string }).category === 'object' ? (p as { category?: { id?: string } }).category?.id : undefined) || (p as { categoryId?: string }).categoryId
         return productCategoryId === categoryId || 
                categories.find(c => c.id === categoryId)?.children?.some(child => child.id === productCategoryId)
       })

@@ -77,10 +77,10 @@ export function ChariotsForm({
     fetch('/api/admin/categories')
       .then((res) => res.json())
       .then((data) => {
-        const chariotsCats = data.filter((cat: any) => cat.type === 'chariots')
+        const chariotsCats = data.filter((cat: { type?: string }) => cat.type === 'chariots')
         if (chariotsCats.length > 0) {
           setChariotsCategories(chariotsCats)
-          const defaultCategory = product?.categoryId && chariotsCats.find((c: any) => c.id === product.categoryId)
+          const defaultCategory = product?.categoryId && chariotsCats.find((c: { id: string }) => c.id === product.categoryId)
             ? product.categoryId
             : chariotsCats[0].id
           setChariotsCategoryId(defaultCategory)
@@ -256,7 +256,7 @@ export function ChariotsForm({
           <div className="flex items-center gap-3">
             <label className="cursor-pointer">
               <span className="inline-block px-4 py-2 bg-[var(--accent)] text-white text-sm font-semibold hover:bg-[var(--accent-hover)] transition-colors rounded-lg shadow-md hover:shadow-lg">
-                {image ? 'Changer l\'image' : 'Sélectionner une image'}
+                {image ? 'Changer l&apos;image' : 'Sélectionner une image'}
               </span>
               <input
                 type="file"
@@ -277,7 +277,7 @@ export function ChariotsForm({
           )}
           {image && !uploading && !uploadError && (
             <div className="mt-3 space-y-2">
-              <p className="text-gray-600 text-xs font-medium">Aperçu de l'image:</p>
+              <p className="text-gray-600 text-xs font-medium">Aperçu de l&apos;image:</p>
               <div className="relative w-full max-w-xs h-48 bg-gray-100 border border-gray-300 overflow-hidden rounded-lg">
                 <img
                   src={image}
@@ -294,7 +294,7 @@ export function ChariotsForm({
                 }}
                 className="text-red-600 text-xs hover:text-red-700 hover:underline font-medium"
               >
-                Supprimer l'image
+                Supprimer l&apos;image
               </button>
             </div>
           )}
@@ -336,7 +336,7 @@ export function ChariotsForm({
         </label>
         {sold && (
           <p className="text-yellow-700 bg-yellow-50 border border-yellow-200 text-xs mt-2 px-3 py-2 rounded-lg">
-            ⚠️ Ce chariot sera marqué comme vendu et affichera un badge "Vendu" sur l&apos;image
+            ⚠️ Ce chariot sera marqué comme vendu et affichera un badge &quot;Vendu&quot; sur l&apos;image
           </p>
         )}
       </div>
