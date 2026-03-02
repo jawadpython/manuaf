@@ -7,6 +7,7 @@ interface Category {
   name: string
   slug: string
   description: string | null
+  image: string | null
   type: string // 'chariots' | 'pieces'
   parentId: string | null
   parent?: { id: string; name: string; slug: string } | null
@@ -34,11 +35,14 @@ export function CategoryForm({
 }) {
   const [name, setName] = useState(category?.name ?? '')
   const [description, setDescription] = useState(category?.description ?? '')
+  const [image, setImage] = useState(category?.image ?? '')
   const [type, setType] = useState(category?.type ?? 'chariots')
   const [parentId, setParentId] = useState(category?.parentId ?? '')
   const [order, setOrder] = useState(category?.order ?? 0)
   const [published, setPublished] = useState(category?.published ?? true)
   const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
   // Build hierarchical category options (exclude self and children from parent options)
   const getCategoryOptions = (): CategoryOption[] => {
@@ -76,6 +80,48 @@ export function CategoryForm({
 
   const categoryOptions = getCategoryOptions()
 
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Veuillez sélectionner un fichier image')
+      return
+    }
+
+    const maxSize = 10 * 1024 * 1024
+    if (file.size > maxSize) {
+      setUploadError('Fichier trop volumineux (max 10MB)')
+      return
+    }
+
+    setUploading(true)
+    setUploadError(null)
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+
+      if (res.ok && data.url) {
+        setImage(data.url)
+        setUploadError(null)
+      } else {
+        setUploadError(data.error || 'Erreur lors du téléchargement')
+      }
+    } catch (error) {
+      setUploadError('Erreur de connexion lors du téléchargement')
+      console.error('Upload error:', error)
+    } finally {
+      setUploading(false)
+    }
+    e.target.value = ''
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
@@ -91,6 +137,7 @@ export function CategoryForm({
       body: JSON.stringify({
         name,
         description: description || null,
+        image: image || null,
         type,
         parentId: parentId || null,
         order,
@@ -155,6 +202,60 @@ export function CategoryForm({
           rows={3}
           className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
         />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
+        <div className="flex items-center gap-3">
+          <label className="cursor-pointer">
+            <span className="inline-block px-4 py-2 bg-[var(--accent)] text-white text-sm font-semibold hover:bg-[var(--accent-hover)] transition-colors rounded-lg shadow-md hover:shadow-lg">
+              {image ? "Changer l'image" : 'Télécharger une image'}
+            </span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              disabled={uploading}
+              className="hidden"
+            />
+          </label>
+          {uploading && (
+            <span className="text-blue-600 text-xs font-medium">Téléchargement en cours...</span>
+          )}
+        </div>
+        {uploadError && (
+          <p className="text-red-600 text-xs bg-red-50 border border-red-200 px-3 py-2 rounded-lg mt-2">
+            {uploadError}
+          </p>
+        )}
+        {image && !uploading && !uploadError && (
+          <div className="mt-3 space-y-2">
+            <p className="text-gray-600 text-xs font-medium">Aperçu:</p>
+            <div className="flex items-start gap-3">
+              <div className="relative w-32 h-24 bg-gray-100 border border-gray-300 overflow-hidden rounded-lg flex-shrink-0">
+                <img
+                  src={image}
+                  alt="Aperçu"
+                  className="w-full h-full object-contain"
+                  onError={() => setUploadError("Impossible de charger l'image")}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setImage('')
+                  setUploadError(null)
+                }}
+                className="text-red-600 text-xs hover:text-red-700 hover:underline font-medium"
+              >
+                Supprimer l&apos;image
+              </button>
+            </div>
+          </div>
+        )}
+        <p className="text-gray-500 text-xs mt-1">
+          Image affichée dans le mega-menu pour les catégories principales
+        </p>
       </div>
 
       <div>

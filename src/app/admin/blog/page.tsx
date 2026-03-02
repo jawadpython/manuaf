@@ -13,10 +13,16 @@ export default async function AdminBlogPage() {
   })
 
   return (
-    <div className="p-8">
-      <h1 className="font-display text-3xl text-gray-900 mb-2">Blog</h1>
-      <p className="text-gray-600 mb-8">Gérer les articles</p>
+    <>
+      <header className="mb-8">
+        <h1 className="font-display text-3xl lg:text-4xl text-[var(--foreground)] tracking-tight">
+          Blog
+        </h1>
+        <p className="mt-1 text-[var(--foreground-muted)]">
+          Gérer les articles
+        </p>
+      </header>
       <BlogManager initialPosts={posts} />
-    </div>
+    </>
   )
 }

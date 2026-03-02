@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { RANDOM_IMAGES } from '@/lib/randomImages'
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -12,8 +13,9 @@ export default function ServicesPage() {
     <div className="bg-[#f5f5f5] min-h-screen pt-[56px] md:pt-[96px]">
       {/* Hero Section */}
       <section className="relative py-12 md:py-16 lg:py-24 bg-[var(--grey)] overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.4%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+        <div className="absolute inset-0">
+          <img src={RANDOM_IMAGES[0]} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+          <div className="absolute inset-0 bg-[var(--grey)]/80" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4">
@@ -35,13 +37,10 @@ export default function ServicesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             <Link
               href="/services/maintenance"
-              className="group block bg-white p-6 border-t-4 border-[var(--accent)] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
+              className="group block bg-white p-6 border-t-4 border-[var(--accent)] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden"
             >
-              <div className="w-16 h-16 bg-[var(--accent)]/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-[var(--accent)] transition-colors">
-                <svg className="w-8 h-8 text-[var(--accent)] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
+              <div className="relative aspect-video mb-6 overflow-hidden">
+                <img src={RANDOM_IMAGES[1]} alt="Maintenance" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform" />
               </div>
               <h2 className="text-xl font-bold text-[#333333] mb-3 group-hover:text-[var(--accent)] transition-colors">
                 Maintenance
@@ -59,12 +58,10 @@ export default function ServicesPage() {
 
             <Link
               href="/services/reconditionnement"
-              className="group block bg-white p-6 border-t-4 border-[var(--accent)] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
+              className="group block bg-white p-6 border-t-4 border-[var(--accent)] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden"
             >
-              <div className="w-16 h-16 bg-[var(--accent)]/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-[var(--accent)] transition-colors">
-                <svg className="w-8 h-8 text-[var(--accent)] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
+              <div className="relative aspect-video mb-6 overflow-hidden">
+                <img src={RANDOM_IMAGES[2]} alt="Reconditionnement" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform" />
               </div>
               <h2 className="text-xl font-bold text-[#333333] mb-3 group-hover:text-[var(--accent)] transition-colors">
                 Reconditionnement
@@ -82,12 +79,10 @@ export default function ServicesPage() {
 
             <Link
               href="/services/location"
-              className="group block bg-white p-6 border-t-4 border-[var(--accent)] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
+              className="group block bg-white p-6 border-t-4 border-[var(--accent)] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden"
             >
-              <div className="w-16 h-16 bg-[var(--accent)]/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-[var(--accent)] transition-colors">
-                <svg className="w-8 h-8 text-[var(--accent)] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+              <div className="relative aspect-video mb-6 overflow-hidden">
+                <img src={RANDOM_IMAGES[3]} alt="Location" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform" />
               </div>
               <h2 className="text-xl font-bold text-[#333333] mb-3 group-hover:text-[var(--accent)] transition-colors">
                 Location
@@ -105,12 +100,10 @@ export default function ServicesPage() {
 
             <Link
               href="/produits/pieces/commandes"
-              className="group block bg-white p-6 border-t-4 border-[var(--accent)] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
+              className="group block bg-white p-6 border-t-4 border-[var(--accent)] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden"
             >
-              <div className="w-16 h-16 bg-[var(--accent)]/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-[var(--accent)] transition-colors">
-                <svg className="w-8 h-8 text-[var(--accent)] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
+              <div className="relative aspect-video mb-6 overflow-hidden">
+                <img src={RANDOM_IMAGES[4]} alt="Pièces de rechange" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform" />
               </div>
               <h2 className="text-xl font-bold text-[#333333] mb-3 group-hover:text-[var(--accent)] transition-colors">
                 Pièces de rechange

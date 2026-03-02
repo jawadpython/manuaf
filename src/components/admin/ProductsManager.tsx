@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Image from 'next/image'
 import { ProductForm } from './ProductForm'
 
@@ -24,6 +24,18 @@ export function ProductsManager({
   const [products, setProducts] = useState(initialProducts)
   const [editing, setEditing] = useState<Product | null>(null)
   const [creating, setCreating] = useState(false)
+  const [filter, setFilter] = useState('')
+
+  const filteredProducts = useMemo(() => {
+    if (!filter.trim()) return products
+    const q = filter.trim().toLowerCase()
+    return products.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.category?.name?.toLowerCase().includes(q) ||
+        p.category?.parent?.name?.toLowerCase().includes(q)
+    )
+  }, [products, filter])
 
   async function handleDelete(id: string) {
     if (!confirm('Supprimer ce produit ?')) return
@@ -49,98 +61,133 @@ export function ProductsManager({
       setProducts((p) => [...p, product])
       setCreating(false)
     }
-    // Refresh the list to ensure consistency
     fetch('/api/admin/products')
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data)) {
-          setProducts(data)
-        }
+        if (Array.isArray(data)) setProducts(data)
       })
       .catch((err) => console.error('Error refreshing products:', err))
   }
 
   return (
-    <div className="space-y-8">
-      <button
-        type="button"
-        onClick={() => setCreating(true)}
-        className="bg-[var(--accent)] text-gray-900 px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] transition-colors"
-      >
-        Nouveau produit
-      </button>
+    <div className="space-y-6">
+      {/* Toolbar: filter + primary action */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <label htmlFor="product-filter" className="sr-only">
+          Filtrer par nom ou catégorie
+        </label>
+        <input
+          id="product-filter"
+          type="search"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          placeholder="Filtrer par nom ou catégorie…"
+          className="max-w-xs w-full rounded-lg border border-[var(--border)] px-4 py-2.5 text-sm text-[var(--foreground)] placeholder-[var(--foreground-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
+          aria-label="Filtrer par nom ou catégorie"
+        />
+        <button
+          type="button"
+          onClick={() => setCreating(true)}
+          className="inline-flex items-center justify-center bg-[var(--accent)] text-[var(--foreground)] px-6 py-2.5 font-semibold rounded-lg hover:bg-[var(--accent-hover)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] shrink-0"
+        >
+          Nouveau produit
+        </button>
+      </div>
 
       {(creating || editing) && (
-        <ProductForm
-          product={editing || undefined}
-          onSave={handleSaved}
-          onCancel={() => {
-            setCreating(false)
-            setEditing(null)
-          }}
-          categoryType="pieces"
-        />
+        <div className="bg-white border border-[var(--border)] rounded-xl p-6 shadow-sm">
+          <ProductForm
+            product={editing || undefined}
+            onSave={handleSaved}
+            onCancel={() => {
+              setCreating(false)
+              setEditing(null)
+            }}
+            categoryType="pieces"
+          />
+        </div>
       )}
 
-      <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="border-b border-gray-200">
-              <th className="p-4 text-gray-900/60 text-sm font-medium">Image</th>
-              <th className="p-4 text-gray-900/60 text-sm font-medium">Nom</th>
-              <th className="p-4 text-gray-900/60 text-sm font-medium">Catégorie</th>
-              <th className="p-4 text-gray-900/60 text-sm font-medium">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr
-                key={product.id}
-                className="border-b border-gray-100 hover:bg-gray-50"
-              >
-                <td className="p-4">
-                  <div className="relative w-20 h-20 bg-[#1a1a1a] border border-gray-200 rounded-lg overflow-hidden shadow-sm rounded">
-                    {product.image ? (
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-cover"
-                        unoptimized={product.image.startsWith('http') || product.image.startsWith('/uploads')}
-                      />
-                    ) : (
-                      <span className="text-gray-900/30 text-xs flex items-center justify-center h-full">Aucune image</span>
-                    )}
-                  </div>
-                </td>
-                <td className="p-4 text-gray-900">{product.name}</td>
-                <td className="p-4 text-gray-900/70">
-                  {product.category?.parent 
-                    ? `${product.category.parent.name} > ${product.category.name}`
-                    : product.category?.name || '—'}
-                </td>
-                <td className="p-4">
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setEditing(product)}
-                      className="text-[var(--accent)] text-sm hover:underline"
-                    >
-                      Modifier
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(product.id)}
-                      className="text-red-600 text-sm hover:underline"
-                    >
-                      Supprimer
-                    </button>
-                  </div>
-                </td>
+      {/* Table card */}
+      <div className="bg-white border border-[var(--border)] rounded-xl overflow-hidden shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left" role="table">
+            <thead>
+              <tr className="border-b border-[var(--border)] bg-[var(--background-alt)]">
+                <th scope="col" className="p-4 text-[var(--foreground-muted)] text-sm font-semibold">
+                  Image
+                </th>
+                <th scope="col" className="p-4 text-[var(--foreground-muted)] text-sm font-semibold">
+                  Nom
+                </th>
+                <th scope="col" className="p-4 text-[var(--foreground-muted)] text-sm font-semibold">
+                  Catégorie
+                </th>
+                <th scope="col" className="p-4 text-[var(--foreground-muted)] text-sm font-semibold text-right">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredProducts.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="p-8 text-center text-[var(--foreground-muted)]">
+                    {filter.trim() ? 'Aucun produit ne correspond au filtre.' : 'Aucun produit.'}
+                  </td>
+                </tr>
+              ) : (
+                filteredProducts.map((product) => (
+                  <tr
+                    key={product.id}
+                    className="border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--card-hover)] transition-colors"
+                  >
+                    <td className="p-4">
+                      <div className="relative w-16 h-16 bg-[var(--background-alt)] border border-[var(--border)] rounded-lg overflow-hidden">
+                        {product.image ? (
+                          <Image
+                            src={product.image}
+                            alt=""
+                            fill
+                            className="object-cover"
+                            unoptimized={product.image.startsWith('http') || product.image.startsWith('/uploads')}
+                          />
+                        ) : (
+                          <span className="text-[var(--foreground-subtle)] text-xs flex items-center justify-center h-full">
+                            —
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="p-4 font-medium text-[var(--foreground)]">{product.name}</td>
+                    <td className="p-4 text-[var(--foreground-muted)] text-sm">
+                      {product.category?.parent
+                        ? `${product.category.parent.name} › ${product.category.name}`
+                        : product.category?.name || '—'}
+                    </td>
+                    <td className="p-4 text-right">
+                      <div className="flex gap-2 justify-end">
+                        <button
+                          type="button"
+                          onClick={() => setEditing(product)}
+                          className="text-sm font-medium text-[var(--accent)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] rounded"
+                        >
+                          Modifier
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(product.id)}
+                          className="text-sm font-medium text-red-600 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 rounded"
+                        >
+                          Supprimer
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )

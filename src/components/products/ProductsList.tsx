@@ -155,7 +155,7 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
     <div className="flex flex-col lg:flex-row gap-6">
       {/* Left Sidebar Menu */}
       <aside className="w-full lg:w-64 flex-shrink-0">
-        <div className="bg-white border-2 border-gray-300 rounded-lg shadow-lg p-5 lg:sticky lg:top-4">
+        <div className="bg-white border-2 border-gray-300 shadow-lg p-5 lg:sticky lg:top-4">
           <div>
             <h3 className="text-xl font-bold text-gray-900 mb-4 pb-2 border-b-2 border-[var(--accent)]">Filtres</h3>
             

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getProductBySlug } from '@/lib/data'
+import { ProductRequestCTA } from '@/components/produits/ProductRequestCTA'
 import type { Metadata } from 'next'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -100,12 +101,7 @@ export default async function ProductDetailPage({ params }: Props) {
                   </div>
                 )}
 
-                <Link
-                  href="/contact"
-                  className="inline-block px-8 py-3 bg-[var(--accent)] text-white font-medium hover:bg-[var(--accent-hover)] transition-colors"
-                >
-                  Demander un devis
-                </Link>
+                <ProductRequestCTA productName={product.name} label="Demander un devis" />
               </div>
             </div>
           </div>

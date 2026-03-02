@@ -1,164 +1,562 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
+import {
+  MegaMenuOverlay,
+  type MegaMenuItem,
+  type FeaturedContent,
+  PANEL_LEAVE_CLOSE_DELAY_MS,
+  BUTTON_LEAVE_CLOSE_DELAY_MS,
+  MIN_OPEN_DURATION_MS,
+  OPEN_DELAY_MS,
+} from './MegaMenu'
+import headerStyles from './Header.module.css'
 
-type NavLink = {
-  href: string
-  label: string
-}
+const DESKTOP_MIN_WIDTH_PX = 1025
 
-const navLinks: NavLink[] = [
+type NavLink = { href: string; label: string }
+
+const topLevelLinks: NavLink[] = [
   { href: '/', label: 'Accueil' },
-  { href: '/produits/pieces', label: 'Pièces de rechange' },
-  { href: '/produits/chariots/location', label: 'Chariots de location' },
-  { href: '/produits/chariots/occasion', label: "Chariots d'occasion" },
-  { href: '/services', label: 'Services' },
   { href: '/qui-sommes-nous', label: 'Qui sommes-nous' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
 ]
 
-const socialLinks = [
-  { href: 'https://www.facebook.com', label: 'Facebook', icon: 'facebook' },
-  { href: 'https://www.instagram.com', label: 'Instagram', icon: 'instagram' },
-  { href: 'https://www.linkedin.com', label: 'LinkedIn', icon: 'linkedin' },
+/** Fallback when API returns empty */
+const chariotsGroupFallback: MegaMenuItem[] = [
+  { href: '/produits/chariots/location', label: 'Location', image: '/images/Chariots de location (2).webp', subLinks: [] },
+  { href: '/produits/chariots/occasion', label: "Chariots d'occasion", image: "/images/Chariots d'occasion.webp", subLinks: [] },
 ]
+const piecesGroupFallback: MegaMenuItem[] = [
+  { href: '/produits/pieces', label: 'Pièces de rechange', subLinks: [] },
+]
+
+const servicesGroup: MegaMenuItem[] = [
+  { href: '/services/maintenance', label: 'Maintenance', image: '/images/services/maintenance.webp', subLinks: [] },
+  { href: '/services/reconditionnement', label: 'Reconditionnement', image: '/images/services/reconditionnement.webp', subLinks: [] },
+  { href: '/services/location', label: 'Location', image: '/images/services/location.webp', subLinks: [] },
+]
+
+const chariotsFeatured: FeaturedContent = {
+  subtitle: 'NOUS SOMMES À VOTRE ENTIÈRE DISPOSITION',
+  title: 'Location de chariots élévateurs',
+  description:
+    'Pour une journée ou pour un an — si vous avez besoin rapidement d\'un chariot élévateur, vous pouvez compter sur notre service de location.',
+  href: '/produits/chariots/location',
+  cta: 'EN SAVOIR PLUS',
+  image: '/images/Chariots de location (2).webp',
+}
+
+const piecesFeatured: FeaturedContent = {
+  subtitle: 'PIÈCES ET ACCESSOIRES',
+  title: 'Pièces de rechange',
+  description:
+    'Batteries, accessoires et éléments de commande pour vos équipements de manutention.',
+  href: '/produits/pieces',
+  cta: 'EN SAVOIR PLUS',
+  image: '/images/products/chr5-min-276x300.jpg',
+}
+
+const servicesFeatured: FeaturedContent = {
+  subtitle: 'SOLUTIONS COMPLÈTES',
+  title: 'Nos services',
+  description:
+    'Maintenance, reconditionnement et location pour optimiser votre flotte et réduire vos coûts.',
+  href: '/services',
+  cta: 'EN SAVOIR PLUS',
+  image: '/images/services/maintenance.webp',
+}
 
 export function Header() {
   const [open, setOpen] = useState(false)
+  const [chariotsOpen, setChariotsOpen] = useState(false)
+  const [piecesOpen, setPiecesOpen] = useState(false)
+  const [servicesOpen, setServicesOpen] = useState(false)
   const [logoError, setLogoError] = useState(false)
+  const [mobileChariotsExpanded, setMobileChariotsExpanded] = useState(false)
+  const [mobilePiecesExpanded, setMobilePiecesExpanded] = useState(false)
+  const [mobileServicesExpanded, setMobileServicesExpanded] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(true)
+  const [chariotsGroup, setChariotsGroup] = useState<MegaMenuItem[]>(chariotsGroupFallback)
+  const [piecesGroup, setPiecesGroup] = useState<MegaMenuItem[]>(piecesGroupFallback)
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const openTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const chariotsOpenAtRef = useRef<number>(0)
+  const piecesOpenAtRef = useRef<number>(0)
+  const servicesOpenAtRef = useRef<number>(0)
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/mega-menu/chariots').then((r) => (r.ok ? r.json() : [])),
+      fetch('/api/mega-menu/pieces').then((r) => (r.ok ? r.json() : [])),
+    ])
+      .then(([chariots, pieces]: MegaMenuItem[][]) => {
+        if (Array.isArray(chariots) && chariots.length > 0) setChariotsGroup(chariots)
+        if (Array.isArray(pieces) && pieces.length > 0) setPiecesGroup(pieces)
+      })
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(min-width: ${DESKTOP_MIN_WIDTH_PX}px)`)
+    const handler = () => setIsDesktop(mq.matches)
+    handler()
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+
+  const clearCloseTimer = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current)
+      closeTimeoutRef.current = null
+    }
+  }
+
+  const clearOpenTimer = () => {
+    if (openTimeoutRef.current) {
+      clearTimeout(openTimeoutRef.current)
+      openTimeoutRef.current = null
+    }
+  }
+
+  const scheduleOpen = (openFn: () => void) => {
+    clearOpenTimer()
+    openTimeoutRef.current = setTimeout(openFn, OPEN_DELAY_MS)
+  }
+
+  const cancelOpen = () => {
+    clearOpenTimer()
+  }
+
+  const scheduleClose = (
+    close: () => void,
+    delayMs: number = PANEL_LEAVE_CLOSE_DELAY_MS,
+    openAtRef?: React.MutableRefObject<number>
+  ) => {
+    clearCloseTimer()
+    let delay = delayMs
+    if (openAtRef && openAtRef.current > 0) {
+      const elapsed = Date.now() - openAtRef.current
+      delay = Math.max(delayMs, MIN_OPEN_DURATION_MS - elapsed)
+    }
+    closeTimeoutRef.current = setTimeout(close, delay)
+  }
+
+  const openChariots = () => {
+    clearCloseTimer()
+    chariotsOpenAtRef.current = Date.now()
+    setPiecesOpen(false)
+    setServicesOpen(false)
+    setChariotsOpen(true)
+  }
+
+  const openPieces = () => {
+    clearCloseTimer()
+    piecesOpenAtRef.current = Date.now()
+    setChariotsOpen(false)
+    setServicesOpen(false)
+    setPiecesOpen(true)
+  }
+
+  const openServices = () => {
+    clearCloseTimer()
+    servicesOpenAtRef.current = Date.now()
+    setChariotsOpen(false)
+    setPiecesOpen(false)
+    setServicesOpen(true)
+  }
+
+  const closeAll = () => {
+    clearCloseTimer()
+    clearOpenTimer()
+    setOpen(false)
+    setChariotsOpen(false)
+    setPiecesOpen(false)
+    setServicesOpen(false)
+    setMobileChariotsExpanded(false)
+    setMobilePiecesExpanded(false)
+    setMobileServicesExpanded(false)
+  }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Top bar - Yellow: social icons + Demande de devis on the right (hidden on mobile) */}
-      <div className="bg-[var(--accent)] py-2 hidden md:block">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-end items-center gap-5">
+    <header
+      className="sticky top-0 left-0 right-0 z-30 header-root"
+      role="banner"
+    >
+      {/* Top bar — 32px, compact CTA */}
+      <div className="h-8 bg-[var(--header-top-bg)] hidden md:flex items-center">
+        <div className="layout-container flex justify-between items-center h-full">
           <div className="flex items-center gap-4">
-            {socialLinks.map(({ href, label, icon }) => (
-              <a
-                key={icon}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[var(--grey)] hover:opacity-80 transition-opacity"
-                aria-label={label}
-              >
-                {icon === 'facebook' && (
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                )}
-                {icon === 'instagram' && (
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                )}
-                {icon === 'linkedin' && (
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                )}
-              </a>
-            ))}
+            <Link
+              href="/contact"
+              className="flex items-center gap-1.5 text-white/90 text-xs hover:text-white transition-colors duration-200"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Trouver une agence
+            </Link>
+            <Link href="/qui-sommes-nous" className="text-white/90 text-xs hover:text-white transition-colors duration-200">
+              Qui sommes-nous
+            </Link>
+            <Link href="/blog" className="text-white/90 text-xs hover:text-white transition-colors duration-200">
+              Blog
+            </Link>
           </div>
           <Link
             href="/contact"
-            className="text-black text-sm font-medium hover:opacity-80 transition-opacity"
+            className="bg-[var(--accent)] text-[var(--foreground)] px-3 py-1.5 text-xs font-semibold hover:bg-[var(--accent-hover)] transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded-md"
           >
             Demande de devis
           </Link>
         </div>
       </div>
-      
-      {/* Main navigation - Grey - overflow-visible so scaled logo isn't clipped */}
-      <div className="bg-[var(--grey)] shadow-sm overflow-visible">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+
+      {/* Main nav bar — 56px, dense and premium */}
+      <div className="h-14 bg-[var(--header-main-bg)] flex items-center">
+        <div className="layout-container flex items-center justify-between gap-4">
+          <nav
+            className="hidden md:flex items-center gap-3 flex-1 min-w-0"
+            aria-label="Navigation principale"
+            role="menubar"
+          >
+            <Link
+              href="/contact"
+              className="flex-shrink-0 w-9 h-9 bg-[var(--accent)] rounded-md flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--accent-hover)] transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+              aria-label="Recherche"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </Link>
+            <Link
+              href="/"
+              className="px-3 py-2 text-[12px] font-semibold text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)] transition-colors duration-300 ease-out uppercase tracking-wide rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Accueil
+            </Link>
+            <button
+              type="button"
+              aria-haspopup="true"
+              aria-expanded={chariotsOpen}
+              aria-controls="mega-chariots"
+              onMouseEnter={isDesktop ? () => scheduleOpen(openChariots) : undefined}
+              onMouseLeave={isDesktop ? () => { cancelOpen(); scheduleClose(() => setChariotsOpen(false), BUTTON_LEAVE_CLOSE_DELAY_MS, chariotsOpenAtRef) } : undefined}
+              onClick={() => {
+                setChariotsOpen((v) => !v)
+                setPiecesOpen(false)
+                setServicesOpen(false)
+              }}
+              className={`flex items-center gap-1 px-3 py-2 text-[12px] font-semibold uppercase tracking-wide rounded cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-300 ease-out ${
+                chariotsOpen ? 'text-[var(--accent)]' : 'text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)]'
+              }`}
+            >
+              Chariots
+              <svg
+                className={`w-3.5 h-3.5 transition-transform duration-300 ease-out ${chariotsOpen ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              aria-haspopup="true"
+              aria-expanded={piecesOpen}
+              aria-controls="mega-pieces"
+              onMouseEnter={isDesktop ? () => scheduleOpen(openPieces) : undefined}
+              onMouseLeave={isDesktop ? () => { cancelOpen(); scheduleClose(() => setPiecesOpen(false), BUTTON_LEAVE_CLOSE_DELAY_MS, piecesOpenAtRef) } : undefined}
+              onClick={() => {
+                setPiecesOpen((v) => !v)
+                setChariotsOpen(false)
+                setServicesOpen(false)
+              }}
+              className={`flex items-center gap-1 px-3 py-2 text-[12px] font-semibold uppercase tracking-wide rounded cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-300 ease-out ${
+                piecesOpen ? 'text-[var(--accent)]' : 'text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)]'
+              }`}
+            >
+              Pièces de rechange
+              <svg
+                className={`w-3.5 h-3.5 transition-transform duration-300 ease-out ${piecesOpen ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              aria-haspopup="true"
+              aria-expanded={servicesOpen}
+              aria-controls="mega-services"
+              onMouseEnter={isDesktop ? () => scheduleOpen(openServices) : undefined}
+              onMouseLeave={isDesktop ? () => { cancelOpen(); scheduleClose(() => setServicesOpen(false), BUTTON_LEAVE_CLOSE_DELAY_MS, servicesOpenAtRef) } : undefined}
+              onClick={() => {
+                setServicesOpen((v) => !v)
+                setChariotsOpen(false)
+                setPiecesOpen(false)
+              }}
+              className={`flex items-center gap-1 px-3 py-2 text-[12px] font-semibold uppercase tracking-wide rounded cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-300 ease-out ${
+                servicesOpen ? 'text-[var(--accent)]' : 'text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)]'
+              }`}
+            >
+              Services
+              <svg
+                className={`w-3.5 h-3.5 transition-transform duration-300 ease-out ${servicesOpen ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {topLevelLinks
+              .filter((l) => l.href !== '/' && l.href !== '/contact')
+              .map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="px-3 py-2 text-[12px] font-semibold text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)] transition-colors duration-300 ease-out uppercase tracking-wide rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            <Link
+              href="/contact"
+              className="px-3 py-2 text-[12px] font-semibold text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)] transition-colors duration-300 ease-out uppercase tracking-wide rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Contact
+            </Link>
+          </nav>
+
           <Link
             href="/"
-            className="flex items-center -ml-4 sm:-ml-6 h-8 sm:h-9 md:h-10 min-w-[100px] overflow-visible"
+            className="flex items-center h-8 min-w-[100px] overflow-visible shrink-0 ml-auto md:ml-0"
+            aria-label="MANUAF - Accueil"
             suppressHydrationWarning
           >
             {!logoError ? (
               <img
                 src="/images/NEW-logo-MANUAF-1-.png"
-                alt="MANUAF"
+                alt=""
                 width={180}
                 height={40}
-                className="h-full w-auto object-contain object-left max-w-[180px] block scale-125 origin-left"
+                className="h-full w-auto max-h-8 object-contain object-right max-w-[180px] block brightness-0 invert"
                 onError={() => setLogoError(true)}
               />
             ) : (
-              <span className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight">
+              <span className="text-xl md:text-2xl font-bold text-white tracking-tight font-display">
                 MANUAF
               </span>
             )}
           </Link>
 
-          <nav className="hidden md:flex items-center gap-4 lg:gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-white hover:text-[var(--accent)] transition-colors uppercase tracking-wide"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Mobile menu button */}
           <button
             type="button"
-            className="md:hidden p-2 text-white"
+            className="md:hidden p-2 text-white rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             onClick={() => setOpen(!open)}
             aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
             aria-expanded={open}
+            aria-controls="mobile-menu"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
               {open ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
           </button>
         </div>
-
-        {/* Mobile menu */}
-        {open && (
-          <nav className="md:hidden border-t border-gray-600 px-4 sm:px-6 py-4 bg-[var(--grey)]">
-            <div className="flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-white hover:text-[var(--accent)] transition-colors uppercase text-sm py-3 border-b border-gray-600 block"
-                  onClick={() => setOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <Link
-                href="/contact"
-                className="px-4 py-3 bg-[var(--accent)] text-white text-center text-sm font-medium mt-2"
-                onClick={() => setOpen(false)}
-              >
-                Demande de devis
-              </Link>
-            </div>
-          </nav>
-        )}
       </div>
+
+      <MegaMenuOverlay
+        id="mega-menu"
+        title={chariotsOpen ? 'Chariots' : piecesOpen ? 'Pièces de rechange' : 'Services'}
+        items={chariotsOpen ? chariotsGroup : piecesOpen ? piecesGroup : servicesGroup}
+        featured={chariotsOpen ? chariotsFeatured : piecesOpen ? piecesFeatured : servicesFeatured}
+        open={chariotsOpen || piecesOpen || servicesOpen}
+        onClose={closeAll}
+        onMouseEnterPanel={isDesktop ? clearCloseTimer : undefined}
+        onMouseLeavePanel={isDesktop ? () => scheduleClose(closeAll, PANEL_LEAVE_CLOSE_DELAY_MS) : undefined}
+        highlights={
+          chariotsOpen
+            ? [
+                { icon: 'zap' as const, label: 'Électrique et thermique' },
+                { icon: 'clock' as const, label: 'Location courte ou longue durée' },
+                { icon: 'shield' as const, label: 'Chariots reconditionnés garantis' },
+                { icon: 'check' as const, label: 'Demande de devis rapide' },
+              ]
+            : undefined
+        }
+      />
+
+      {/* Mobile: slide-in drawer + accordion */}
+      <div
+        className={`${headerStyles.drawerBackdrop} ${open ? headerStyles.drawerBackdropOpen : ''}`}
+        aria-hidden
+        onClick={closeAll}
+      />
+      <aside
+        id="mobile-menu"
+        className={`${headerStyles.drawer} ${open ? headerStyles.drawerOpen : ''}`}
+        aria-label="Menu mobile"
+        aria-modal="true"
+        role="dialog"
+      >
+        <div className={headerStyles.drawerContent}>
+          <Link
+            href="/"
+            className="block py-3 text-white font-bold uppercase text-sm border-b border-white/10 transition-colors duration-200"
+            onClick={closeAll}
+          >
+            Accueil
+          </Link>
+
+          {/* Accordion: Chariots */}
+          <div className="border-b border-white/10">
+            <button
+              type="button"
+              className="flex items-center justify-between w-full py-3 text-left text-white/60 text-xs font-semibold uppercase tracking-wider"
+              onClick={() => setMobileChariotsExpanded((v) => !v)}
+              aria-expanded={mobileChariotsExpanded}
+              aria-controls="mobile-chariots-list"
+            >
+              Chariots
+              <svg
+                className={`w-5 h-5 transition-transform duration-200 ${mobileChariotsExpanded ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <ul id="mobile-chariots-list" className={mobileChariotsExpanded ? 'block pb-2' : 'hidden'} role="list">
+              {chariotsGroup.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="flex items-center justify-between py-3 px-4 text-white hover:bg-white/10 rounded transition-colors duration-200"
+                    onClick={closeAll}
+                  >
+                    {link.label}
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Accordion: Pièces de rechange */}
+          <div className="border-b border-white/10">
+            <button
+              type="button"
+              className="flex items-center justify-between w-full py-3 text-left text-white/60 text-xs font-semibold uppercase tracking-wider"
+              onClick={() => setMobilePiecesExpanded((v) => !v)}
+              aria-expanded={mobilePiecesExpanded}
+              aria-controls="mobile-pieces-list"
+            >
+              Pièces de rechange
+              <svg
+                className={`w-5 h-5 transition-transform duration-200 ${mobilePiecesExpanded ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <ul id="mobile-pieces-list" className={mobilePiecesExpanded ? 'block pb-2' : 'hidden'} role="list">
+              {piecesGroup.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="flex items-center justify-between py-3 px-4 text-white hover:bg-white/10 rounded transition-colors duration-200"
+                    onClick={closeAll}
+                  >
+                    {link.label}
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Accordion: Services */}
+          <div className="border-b border-white/10">
+            <button
+              type="button"
+              className="flex items-center justify-between w-full py-3 text-left text-white/60 text-xs font-semibold uppercase tracking-wider"
+              onClick={() => setMobileServicesExpanded((v) => !v)}
+              aria-expanded={mobileServicesExpanded}
+              aria-controls="mobile-services-list"
+            >
+              Services
+              <svg
+                className={`w-5 h-5 transition-transform duration-200 ${mobileServicesExpanded ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <ul id="mobile-services-list" className={mobileServicesExpanded ? 'block pb-2' : 'hidden'} role="list">
+              {servicesGroup.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="flex items-center justify-between py-3 px-4 text-white hover:bg-white/10 rounded transition-colors duration-200"
+                    onClick={closeAll}
+                  >
+                    {link.label}
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {topLevelLinks
+            .filter((l) => l.href !== '/' && l.href !== '/contact')
+            .map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block py-3 text-white font-bold uppercase text-sm border-b border-white/10 transition-colors duration-200"
+                onClick={closeAll}
+              >
+                {link.label}
+              </Link>
+            ))}
+          <Link
+            href="/contact"
+            className="flex mt-4 px-4 py-3 bg-[var(--accent)] text-[var(--foreground)] font-bold justify-center rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] transition-colors duration-200"
+            onClick={closeAll}
+          >
+            Demande de devis
+          </Link>
+        </div>
+      </aside>
     </header>
   )
 }

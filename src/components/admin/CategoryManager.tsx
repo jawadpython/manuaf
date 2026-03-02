@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { CategoryForm } from './CategoryForm'
 
 interface Category {
@@ -8,6 +8,7 @@ interface Category {
   name: string
   slug: string
   description: string | null
+  image: string | null
   type: string // 'chariots' | 'pieces'
   parentId: string | null
   parent?: { id: string; name: string; slug: string } | null
@@ -25,6 +26,13 @@ export function CategoryManager({
   const [categories, setCategories] = useState(initialCategories)
   const [editing, setEditing] = useState<Category | null>(null)
   const [creating, setCreating] = useState(false)
+  const formRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if ((creating || editing) && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [creating, editing])
 
   async function handleDelete(id: string) {
     if (!confirm('Supprimer cette catégorie ?')) return
@@ -166,15 +174,18 @@ export function CategoryManager({
       </div>
 
       {(creating || editing) && (
-        <CategoryForm
-          category={editing || undefined}
-          categories={categories}
-          onSave={handleSaved}
-          onCancel={() => {
-            setCreating(false)
-            setEditing(null)
-          }}
-        />
+        <div ref={formRef}>
+          <CategoryForm
+            key={editing?.id ?? 'new'}
+            category={editing ?? undefined}
+            categories={categories}
+            onSave={handleSaved}
+            onCancel={() => {
+              setCreating(false)
+              setEditing(null)
+            }}
+          />
+        </div>
       )}
 
       {/* Chariots Categories */}

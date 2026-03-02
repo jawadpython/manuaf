@@ -2,19 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
-import Image from 'next/image'
+import { RANDOM_IMAGES } from '@/lib/randomImages'
 
 const heroSlides = [
-  {
-    title: 'Solutions intralogistiques globales',
-    subtitle: 'Comment pouvons-nous rendre votre entrepôt encore plus efficace, durable et économique ?',
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1920&q=80',
-  },
-  {
-    title: 'Solutions intralogistiques globales',
-    subtitle: 'Comment pouvons-nous rendre votre entrepôt encore plus efficace, durable et économique ?',
-    image: '/images/acc1.png',
-  },
+  { title: 'Solutions intralogistiques globales', subtitle: 'Comment pouvons-nous rendre votre entrepôt encore plus efficace, durable et économique ?', image: RANDOM_IMAGES[0] },
+  { title: 'Location de chariots', subtitle: 'Des solutions flexibles pour vos besoins ponctuels ou à long terme. Électrique ou thermique.', image: RANDOM_IMAGES[1] },
+  { title: "Chariots d'occasion", subtitle: 'Équipements révisés et garantis pour optimiser votre budget sans compromettre la qualité.', image: RANDOM_IMAGES[2] },
+  { title: 'Maintenance & Support', subtitle: 'Entretien préventif, réparation et pièces détachées. Nos techniciens certifiés à votre service.', image: RANDOM_IMAGES[3] },
+  { title: 'Solutions intralogistiques globales', subtitle: 'Vente, location, reconditionnement. Une offre complète pour tous vos besoins en manutention.', image: RANDOM_IMAGES[4] },
 ]
 
 export function HeroSection() {
@@ -29,24 +24,20 @@ export function HeroSection() {
   }, [])
 
   return (
-    <section className="relative min-h-[75vh] md:min-h-[85vh] flex items-center pt-[72px] md:pt-[96px] overflow-hidden">
+    <section className="relative min-h-[75vh] md:min-h-[85vh] flex items-center overflow-hidden -mt-[var(--header-height)] pt-[var(--header-height)]">
       {/* Background images - flip between them */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 hero-bg-layer">
         {heroSlides.map((s, i) => (
           <div
             key={i}
-            className={`absolute inset-0 transition-opacity duration-[30000ms] ${
+            className={`absolute inset-0 transition-opacity duration-[30000ms] hero-bg-layer ${
               i === currentIndex ? 'opacity-100 z-0' : 'opacity-0 z-0'
             }`}
           >
-            <Image
+            <img
               src={s.image}
               alt="Entrepôt logistique"
-              fill
-              className="object-cover"
-              priority={i === 0}
-              sizes="100vw"
-              unoptimized={s.image.startsWith('/')}
+              className="absolute inset-0 w-full h-full object-cover"
             />
           </div>
         ))}

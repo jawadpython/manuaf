@@ -30,12 +30,16 @@ export default async function AdminProduitsPage() {
   })
 
   return (
-    <div className="p-8">
-      <h1 className="font-display text-3xl text-gray-900 mb-2">Pièces de rechange</h1>
-      <p className="text-gray-600 mb-8">
-        Gérer les pièces de rechange
-      </p>
+    <>
+      <header className="mb-8">
+        <h1 className="font-display text-3xl lg:text-4xl text-[var(--foreground)] tracking-tight">
+          Pièces de rechange
+        </h1>
+        <p className="mt-1 text-[var(--foreground-muted)]">
+          Gérer les pièces de rechange
+        </p>
+      </header>
       <ProductsManager initialProducts={products} />
-    </div>
+    </>
   )
 }

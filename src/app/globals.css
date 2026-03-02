@@ -1,31 +1,133 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Design system — MANUAF
+   Enterprise-style tokens: colors, spacing, typography, radii, shadows.
+   ========================================================================== */
+
 :root {
+  /* Backgrounds */
   --background: #ffffff;
   --background-alt: #f8f9fa;
+  --background-muted: #f0f2f5;
   --foreground: #1a1a1a;
-  --muted: #3C464B;
-  --grey: #3C464B;
+  --foreground-muted: #3C464B;
+  --foreground-subtle: #6b7280;
+
+  /* Brand */
   --accent: #ffb900;
   --accent-hover: #e6a700;
   --accent-dark: #2d3748;
+  --grey: #3C464B;
+  --grey-dark: #2a3036;
+
+  /* UI */
   --border: #e5e7eb;
+  --border-strong: #d1d5db;
   --card: #ffffff;
   --card-hover: #f9fafb;
   --header-bg: #ffffff;
   --footer-bg: #1a1a1a;
+
+  /* Reference-style: dark header + mega-menu + utility bar */
+  --header-top-bg: #000000;
+  --header-main-bg: #3C464B;
+  --nav-link-color: #ffffff;
+  --nav-link-hover: rgba(255, 255, 255, 0.9);
+  --mega-menu-left-bg: #333333;
+  --mega-menu-link-text: #ffffff;
+  --mega-menu-link-active-bg: var(--accent);
+  --mega-menu-link-active-text: #ffffff;
+  --mega-menu-right-bg: #ffffff;
+  --utility-bar-bg: var(--accent);
+  --utility-bar-size: 56px;
+  /* Compact header: mobile 56px, desktop 32+56=88px (no layout shift) */
+  --header-height: 56px;
+  --header-top-height: 32px;
+  --header-main-height: 56px;
+
+  /* Spacing scale (align with Tailwind: 1 unit = 0.25rem = 4px) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Section vertical rhythm */
+  --section-py: 3rem;
+  --section-py-md: 4rem;
+  --section-py-lg: 6rem;
+
+  /* Typography */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+  --text-7xl: 4.5rem;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* Radii */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Focus (accessibility) */
+  --focus-ring: 2px solid var(--accent);
+  --focus-offset: 2px;
+
+  /* Transitions (150–250ms industrial UI) */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 250ms ease;
+
+  /* Layout */
+  --content-max-width: 80rem;
+  --mega-menu-overlap: 20px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-height: 88px;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-background-alt: var(--background-alt);
+  --color-background-muted: var(--background-muted);
   --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-muted: var(--foreground-muted);
   --color-grey: var(--grey);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-dark: var(--accent-dark);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-card: var(--card);
   --color-card-hover: var(--card-hover);
   --font-display: 'Bebas Neue', system-ui, sans-serif;
@@ -40,6 +142,12 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -51,7 +159,103 @@ body {
   font-family: var(--font-display);
 }
 
+/* Focus visible for keyboard navigation (accessibility) */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
 ::selection {
   background: rgba(255, 185, 0, 0.3);
   color: #1a1a1a;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-4);
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  background: var(--accent);
+  color: var(--foreground);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: var(--space-4);
+}
+
+/* ==========================================================================
+   Layout & components (reference structure)
+   ========================================================================== */
+
+/* Page content container */
+.layout-container {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .layout-container {
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
+}
+
+/* Cards — soft shadows, industrial */
+.card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Button-like link for mega-menu CTA */
+.btn-primary-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  background: var(--header-main-bg);
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: opacity var(--transition-base);
+}
+
+.btn-primary-dark:hover {
+  opacity: 0.9;
+}
+
+.btn-primary-dark:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+/* Header root height (mega-menu layout lives in MegaMenu.module.css) */
+.header-root {
+  height: var(--header-height);
+}
+
+/* Prevent background flicker when mega-menu overlay appears */
+.hero-bg-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }

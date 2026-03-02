@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation'
 import { Header } from './Header'
 import { Footer } from './Footer'
+import { RightUtilityBar } from './RightUtilityBar'
 
 export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -14,8 +15,14 @@ export function ConditionalLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <a href="#main-content" className="skip-link">
+        Aller au contenu principal
+      </a>
       <Header />
-      <main className="pt-[72px]">{children}</main>
+      <RightUtilityBar />
+      <main id="main-content" className="pt-[var(--header-height)] min-h-[50vh]" role="main">
+        {children}
+      </main>
       <Footer />
     </>
   )

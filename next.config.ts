@@ -1,8 +1,13 @@
 import type { NextConfig } from "next";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Resolve from config directory so Tailwind is found in this project's node_modules (fixes "resolve in parent" on dev)
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   turbopack: {
-    root: process.cwd(),
+    root: projectRoot,
   },
   images: {
     remotePatterns: [

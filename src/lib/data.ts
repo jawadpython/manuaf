@@ -1,4 +1,5 @@
 import { prisma } from './prisma'
+import { RANDOM_IMAGES } from './randomImages'
 
 // Product images from local folder
 const localImages = {
@@ -290,6 +291,26 @@ export async function getProductsByType(type: 'chariots' | 'pieces') {
   }
 }
 
+// Get subcategories for occasion/location pages (children of main category)
+export async function getSubcategoriesForChariotsPage(categorySlug: string) {
+  try {
+    const parent = await prisma.category.findUnique({
+      where: { slug: categorySlug, type: 'chariots', published: true },
+      select: { id: true },
+    })
+    if (!parent) return []
+
+    const children = await prisma.category.findMany({
+      where: { parentId: parent.id, published: true },
+      select: { id: true, name: true, slug: true },
+      orderBy: { order: 'asc' },
+    })
+    return children
+  } catch {
+    return []
+  }
+}
+
 // Get products for Chariots de location page (category slug: chariots-location)
 export async function getProductsForChariotsLocation() {
   try {
@@ -380,6 +401,128 @@ export async function getProductsForChariotsOccasion() {
   }
 }
 
+/** Default images for principal categories when none set in DB */
+const categoryDefaultImages: Record<string, string> = {
+  chariots: '/images/Chariots de location (2).webp',
+  'chariots-de-location': '/images/Chariots de location (2).webp',
+  'chariots-location': '/images/Chariots de location (2).webp',
+  'chariots-d-occasion': "/images/Chariots d'occasion.webp",
+  'chariots-occasion': "/images/Chariots d'occasion.webp",
+  pieces: '/images/products/chr6-min-276x300.jpg',
+  'pieces-de-rechange': '/images/products/chr6-min-276x300.jpg',
+  batteries: '/images/products/chr8-min-276x300.jpg',
+  accessoires: '/images/products/JUNGHEINRICH-EFG-318K_1.jpg',
+}
+
+function getCategoryImage(cat: { slug: string; image?: string | null }): string {
+  if (cat.image) return cat.image
+  return categoryDefaultImages[cat.slug] ?? '/images/products/chr5-min-276x300.jpg'
+}
+
+/** Mega-menu item shape for Produits dropdown */
+export type MegaMenuItemProduits = {
+  href: string
+  label: string
+  subLinks: { href: string; label: string }[]
+  /** Optional featured content (image, description) for this category */
+  image?: string | null
+  description?: string | null
+}
+
+/** Build mega-menu by category type (chariots | pieces) */
+export async function getMegaMenuByType(type: 'chariots' | 'pieces'): Promise<MegaMenuItemProduits[]> {
+  try {
+    const categories = await prisma.category.findMany({
+      where: { published: true, type },
+      include: {
+        parent: { select: { id: true, name: true, slug: true } },
+        children: {
+          where: { published: true },
+          include: {
+            products: {
+              where: { sold: false },
+              select: { id: true, name: true, slug: true, order: true },
+              orderBy: [{ order: 'asc' }, { name: 'asc' }],
+            },
+          },
+          orderBy: { order: 'asc' },
+        },
+        products: {
+          where: { sold: false },
+          select: { id: true, name: true, slug: true, order: true },
+          orderBy: [{ order: 'asc' }, { name: 'asc' }],
+        },
+      },
+      orderBy: [{ parentId: 'asc' }, { order: 'asc' }, { name: 'asc' }],
+      take: 50,
+    })
+
+    const items: MegaMenuItemProduits[] = []
+    const rootCats = categories.filter((c) => !c.parentId)
+
+    for (const cat of rootCats) {
+      const subLinks: { href: string; label: string }[] = []
+
+      // Add child categories as sub-links
+      for (const child of cat.children || []) {
+        subLinks.push({
+          href: `/produits/c/${child.slug}`,
+          label: child.name,
+        })
+      }
+
+      // Add products in this category and its children as sub-links
+      const rootProducts = cat.products || []
+      const childProducts = (cat.children || []).flatMap((ch) => ch.products || [])
+      const allProducts = [...rootProducts, ...childProducts].sort(
+        (a, b) => (a.order ?? 0) - (b.order ?? 0) || a.name.localeCompare(b.name)
+      )
+
+      for (const p of allProducts) {
+        subLinks.push({
+          href: `/produits/${p.slug}`,
+          label: p.name,
+        })
+      }
+
+      // Dedupe by href (child categories may also have products)
+      const seen = new Set<string>()
+      const uniqueSubLinks = subLinks.filter((s) => {
+        if (seen.has(s.href)) return false
+        seen.add(s.href)
+        return true
+      })
+
+      // Chariots: no subLinks on right (user prefers image + description only)
+      const finalSubLinks = type === 'chariots' ? [] : uniqueSubLinks
+
+      items.push({
+        href: type === 'chariots' && (cat.slug === 'chariots-de-location' || cat.slug === 'chariots-d-occasion')
+          ? (cat.slug === 'chariots-de-location' ? '/produits/chariots/location' : '/produits/chariots/occasion')
+          : `/produits/c/${cat.slug}`,
+        label: cat.name,
+        subLinks: finalSubLinks,
+        image: getCategoryImage(cat as { slug: string; image?: string | null }),
+        description: cat.description ?? null,
+      })
+    }
+
+    return items
+  } catch (error) {
+    console.error('Error fetching mega menu:', error)
+    return []
+  }
+}
+
+/** Build Produits mega-menu (all types) - kept for backward compatibility */
+export async function getMegaMenuProduits(): Promise<MegaMenuItemProduits[]> {
+  const [chariots, pieces] = await Promise.all([
+    getMegaMenuByType('chariots'),
+    getMegaMenuByType('pieces'),
+  ])
+  return [...chariots, ...pieces]
+}
+
 export async function getCategoryBySlug(slug: string) {
   try {
     const category = await prisma.category.findUnique({
@@ -416,7 +559,7 @@ const fallbackPosts = [
     slug: 'choisir-societe-entretien-manutention',
     excerpt: 'Dans le domaine de la manutention, la fiabilité des équipements est primordiale. Découvrez nos conseils pour choisir le bon partenaire.',
     content: '<p>Le choix d\'une société de maintenance pour vos équipements de manutention est crucial pour garantir la sécurité et la productivité de vos opérations.</p><h2>Les critères essentiels</h2><p>Lors de votre sélection, assurez-vous de vérifier l\'expertise technique, les certifications, la disponibilité du service après-vente et la qualité des pièces de rechange utilisées.</p><h2>L\'importance de la réactivité</h2><p>Un bon partenaire doit pouvoir intervenir rapidement en cas de panne pour minimiser les temps d\'arrêt de vos équipements.</p>',
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80',
+    image: RANDOM_IMAGES[0],
     published: true,
     createdAt: new Date('2024-01-15'),
   },
@@ -426,7 +569,7 @@ const fallbackPosts = [
     slug: 'louer-chariots-pic-saisonnalite',
     excerpt: 'En tant qu\'acteur majeur du secteur de la logistique, vous devez anticiper les périodes de forte activité. Voici comment gérer vos besoins.',
     content: '<p>Les pics de saisonnalité peuvent mettre à rude épreuve votre flotte de chariots élévateurs. La location de chariots supplémentaires est une solution flexible et économique.</p><h2>Avantages de la location</h2><p>La location vous permet d\'adapter votre capacité de manutention sans investissement lourd, tout en bénéficiant d\'équipements récents et bien entretenus.</p><h2>Comment planifier</h2><p>Anticipez vos besoins en analysant les données des années précédentes et contactez votre fournisseur plusieurs semaines à l\'avance.</p>',
-    image: 'https://images.unsplash.com/photo-1553413077-190dd305871c?w=800&q=80',
+    image: RANDOM_IMAGES[1],
     published: true,
     createdAt: new Date('2024-01-10'),
   },
@@ -436,9 +579,39 @@ const fallbackPosts = [
     slug: 'optimiser-logistique-saisonnalite',
     excerpt: 'Lorsqu\'un pic de saisonnalité survient, la gestion de la logistique devient un défi majeur. Découvrez nos stratégies d\'optimisation.',
     content: '<p>Une gestion efficace de la logistique pendant les périodes de forte activité est essentielle pour maintenir la satisfaction client et la rentabilité.</p><h2>Stratégies d\'optimisation</h2><p>Optimisez vos flux en réorganisant votre entrepôt, en formant du personnel temporaire et en utilisant des équipements adaptés à vos besoins spécifiques.</p><h2>L\'importance de l\'anticipation</h2><p>Préparez-vous en amont en renforçant vos stocks, en planifiant les rotations d\'équipes et en vérifiant l\'état de vos équipements de manutention.</p>',
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80',
+    image: RANDOM_IMAGES[2],
     published: true,
     createdAt: new Date('2024-01-05'),
+  },
+  {
+    id: '4',
+    title: 'Chariots électriques vs thermiques : lequel choisir pour votre entrepôt ?',
+    slug: 'chariots-electriques-vs-thermiques',
+    excerpt: 'Comparaison des chariots électriques et thermiques pour vous aider à faire le bon choix selon vos contraintes d\'utilisation et votre environnement.',
+    content: '<p>Le choix entre un chariot électrique et un chariot thermique dépend de nombreux facteurs : utilisation intérieure ou extérieure, durée de travail quotidienne, budget et normes environnementales.</p><h2>Chariots électriques</h2><p>Idéaux pour les espaces fermés, silencieux, sans émission directe. Parfaits pour les environnements alimentaires ou pharmaceutiques.</p><h2>Chariots thermiques</h2><p>Plus adaptés aux utilisations extérieures intensives et aux charges lourdes. Plus longue autonomie et capacité de charge.</p>',
+    image: RANDOM_IMAGES[3],
+    published: true,
+    createdAt: new Date('2024-01-02'),
+  },
+  {
+    id: '5',
+    title: 'Les avantages du reconditionnement de chariots élévateurs',
+    slug: 'avantages-reconditionnement-chariots',
+    excerpt: 'Découvrez pourquoi le reconditionnement de vos chariots peut vous faire économiser tout en garantissant des performances optimales.',
+    content: '<p>Le reconditionnement professionnel prolonge la durée de vie de vos équipements tout en réduisant vos coûts d\'investissement.</p><h2>Économies substantielles</h2><p>Un chariot reconditionné coûte jusqu\'à 50 % moins cher qu\'un neuf, avec des performances équivalentes après une révision complète.</p><h2>Garantie et traçabilité</h2><p>Choisissez un partenaire qui propose une garantie et une traçabilité complète des interventions réalisées.</p>',
+    image: RANDOM_IMAGES[4],
+    published: true,
+    createdAt: new Date('2023-12-28'),
+  },
+  {
+    id: '6',
+    title: 'Sécurité en entrepôt : les bonnes pratiques de manutention',
+    slug: 'securite-entrepot-bonnes-pratiques',
+    excerpt: 'La sécurité en entrepôt passe par des équipements adaptés et des formations régulières. Voici nos recommandations.',
+    content: '<p>La manutention en entrepôt présente des risques qu\'il convient de maîtriser par une combinaison d\'équipements conformes et de formations du personnel.</p><h2>Équipements</h2><p>Vérifiez régulièrement l\'état de vos chariots, transpalettes et gerbeurs. Les contrôles périodiques sont obligatoires.</p><h2>Formation</h2><p>Formez vos opérateurs aux gestes de sécurité et assurez-vous que les habilitations sont à jour.</p>',
+    image: RANDOM_IMAGES[5],
+    published: true,
+    createdAt: new Date('2023-12-20'),
   },
 ]
 

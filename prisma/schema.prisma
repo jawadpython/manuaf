@@ -13,6 +13,7 @@ model Category {
   name        String
   slug        String     @unique
   description String?
+  image       String?    // Image for mega-menu / category display
   type        String     // 'chariots' | 'pieces' - distinguishes main product categories
   parentId    String?
   parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
@@ -74,4 +75,25 @@ model Service {
   published   Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model RentalRequest {
+  id             String   @id @default(cuid())
+  chariot_type   String   // Category slug or name (pre-filled from selection)
+  motorisation   String   // electrique | thermique
+  capacite_kg    Int?
+  hauteur_m     Float?
+  ville         String?
+  duree_location String?  // 1 semaine, 1 mois, 3 mois, 6 mois, 1 an, etc.
+  type_roues    String?  // coussin, pneumatique, etc.
+  type_mat      String?  // rétractable, frontal, etc.
+  notes         String?
+  client_name   String
+  client_phone   String
+  status        String   @default("new") // new | in_progress | quoted | closed
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
 }

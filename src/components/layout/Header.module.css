@@ -1,0 +1,48 @@
+/**
+ * Header — mobile drawer (slide-in from right), layout
+ */
+
+.drawerBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 35;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms ease, visibility 200ms ease;
+}
+
+.drawerBackdropOpen {
+  opacity: 1;
+  visibility: visible;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(320px, 100vw);
+  background: var(--header-main-bg);
+  z-index: 40;
+  transform: translateX(100%);
+  transition: transform 200ms ease;
+  overflow: auto;
+  box-shadow: -4px 0 24px rgb(0 0 0 / 0.15);
+}
+
+.drawerOpen {
+  transform: translateX(0);
+}
+
+.drawerContent {
+  padding: 24px 16px;
+  padding-top: calc(var(--header-height) + 16px);
+}
+
+@media (min-width: 768px) {
+  .drawerBackdrop,
+  .drawer {
+    display: none;
+  }
+}

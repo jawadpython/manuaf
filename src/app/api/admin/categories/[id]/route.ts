@@ -45,7 +45,7 @@ export async function PUT(
 
   const { id } = await params
   const body = await request.json()
-  const { name, description, parentId, order, published } = body
+  const { name, description, image, parentId, order, published } = body
 
   if (!name) {
     return NextResponse.json(
@@ -99,6 +99,7 @@ export async function PUT(
       name,
       slug,
       description: description || null,
+      image: image || null,
       type: finalType, // Preserve original type
       parentId: parentId || null,
       order: order ?? 0,

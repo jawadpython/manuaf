@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { ContactForm } from '@/components/contact/ContactForm'
+import { RANDOM_IMAGES } from '@/lib/randomImages'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -11,7 +12,12 @@ export default function ContactPage() {
   return (
     <div className="bg-[#f5f5f5] min-h-screen pt-[56px] md:pt-[96px]">
       {/* Hero Section */}
-      <section className="py-12 md:py-16 bg-[#4a4a4a]">
+      <section className="relative py-12 md:py-16 overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={RANDOM_IMAGES[5]} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+          <div className="absolute inset-0 bg-[var(--grey)]/90" />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-3">
             Nous contacter
@@ -23,6 +29,7 @@ export default function ContactPage() {
           <p className="text-white/80 max-w-xl mx-auto text-sm sm:text-base">
             Notre équipe est à votre disposition pour répondre à toutes vos questions
           </p>
+        </div>
         </div>
       </section>
 

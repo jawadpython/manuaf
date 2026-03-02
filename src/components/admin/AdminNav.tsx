@@ -4,52 +4,98 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 
-const links = [
-  { href: '/admin', label: 'Dashboard' },
+/* Grouped admin navigation: Contenu (categories, chariots, produits, services, blog) and General (dashboard, site, logout) */
+
+const contentLinks = [
   { href: '/admin/categories', label: 'Catégories' },
   { href: '/admin/chariots', label: 'Chariots' },
   { href: '/admin/produits', label: 'Pièces de rechange' },
+  { href: '/admin/services', label: 'Services' },
+  { href: '/admin/rental-requests', label: 'Demandes location' },
   { href: '/admin/blog', label: 'Blog' },
 ]
 
 export function AdminNav() {
   const pathname = usePathname()
 
+  function isActive(href: string) {
+    if (href === '/admin') return pathname === '/admin'
+    return pathname?.startsWith(href)
+  }
+
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col shadow-sm">
-      <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)]">
-        <Link href="/admin" className="font-display text-xl text-white">
-          Admin Panel
+    <aside
+      className="w-64 min-h-screen flex flex-col bg-white border-r border-[var(--border)] shrink-0"
+      aria-label="Navigation administration"
+    >
+      {/* Brand block */}
+      <div className="p-6 border-b border-[var(--border)] bg-[var(--grey)]">
+        <Link
+          href="/admin"
+          className="font-display text-xl text-white tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded"
+        >
+          Admin MANUAF
         </Link>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1">
-        {links.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className={`block px-4 py-3 text-sm transition-colors rounded-lg ${
-              pathname === link.href
-                ? 'bg-[var(--accent)]/10 text-[var(--accent)] font-semibold'
-                : 'text-gray-700 hover:text-[var(--accent)] hover:bg-gray-50'
-            }`}
-          >
-            {link.label}
-          </Link>
-        ))}
+      <nav className="flex-1 p-4 space-y-6" aria-label="Sections du panel">
+        {/* Group: General */}
+        <div>
+          <p className="px-3 mb-2 text-xs font-semibold text-[var(--foreground-subtle)] uppercase tracking-wider">
+            Général
+          </p>
+          <ul className="space-y-0.5" role="list">
+            <li>
+              <Link
+                href="/admin"
+                className={`block px-4 py-3 text-sm rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
+                  pathname === '/admin'
+                    ? 'bg-[var(--accent)]/15 text-[var(--accent)] font-semibold'
+                    : 'text-[var(--foreground-muted)] hover:bg-[var(--background-alt)] hover:text-[var(--foreground)]'
+                }`}
+              >
+                Dashboard
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Group: Contenu */}
+        <div>
+          <p className="px-3 mb-2 text-xs font-semibold text-[var(--foreground-subtle)] uppercase tracking-wider">
+            Contenu
+          </p>
+          <ul className="space-y-0.5" role="list">
+            {contentLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={`block px-4 py-3 text-sm rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
+                    isActive(link.href)
+                      ? 'bg-[var(--accent)]/15 text-[var(--accent)] font-semibold'
+                      : 'text-[var(--foreground-muted)] hover:bg-[var(--background-alt)] hover:text-[var(--foreground)]'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </nav>
 
-      <div className="p-4 border-t border-gray-200 bg-gray-50">
+      {/* Footer: site link + logout */}
+      <div className="p-4 border-t border-[var(--border)] bg-[var(--background-alt)] space-y-1">
         <Link
           href="/"
-          className="block px-4 py-3 text-sm text-gray-600 hover:text-[var(--accent)] mb-2 rounded-lg hover:bg-gray-100 transition-colors"
+          className="block px-4 py-3 text-sm text-[var(--foreground-muted)] hover:text-[var(--accent)] hover:bg-white rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
         >
           Voir le site →
         </Link>
         <button
           type="button"
           onClick={() => signOut({ callbackUrl: '/admin/login' })}
-          className="block w-full text-left px-4 py-3 text-sm text-gray-600 hover:text-red-600 rounded-lg hover:bg-gray-100 transition-colors"
+          className="block w-full text-left px-4 py-3 text-sm text-[var(--foreground-muted)] hover:text-red-600 hover:bg-white rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
         >
           Déconnexion
         </button>

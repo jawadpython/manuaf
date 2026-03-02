@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { ButtonHTMLAttributes, AnchorHTMLAttributes } from 'react'
 
 type BaseProps = {
-  variant?: 'primary' | 'grey' | 'outline' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'grey' | 'outline' | 'ghost'
   size?: 'sm' | 'md' | 'lg' | 'xl'
   children: React.ReactNode
   className?: string
@@ -24,7 +24,9 @@ type ButtonProps = ButtonAsButton | ButtonAsLink
 
 const variants = {
   primary:
-    'bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] border-transparent',
+    'bg-[var(--accent)] text-[var(--foreground)] hover:bg-[var(--accent-hover)] border-transparent',
+  secondary:
+    'bg-[var(--header-main-bg)] text-white hover:opacity-90 border-transparent',
   grey:
     'bg-[var(--grey)] text-white hover:bg-[var(--grey)]/90 border-transparent',
   outline:
@@ -47,7 +49,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    'inline-flex items-center justify-center font-medium transition-all duration-300 ease-out'
+    'inline-flex items-center justify-center font-medium transition-all duration-200 ease-out rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]'
 
   const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`
 

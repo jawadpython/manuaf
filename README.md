@@ -76,6 +76,8 @@ npx prisma generate
 npm run dev
 ```
 
+(Le script `dev` utilise `--webpack` pour éviter une erreur de résolution Tailwind lorsque le projet est dans un dossier parent. Pour utiliser Turbopack : `npm run dev:turbo`.)
+
 Le site sera accessible sur :
 - **Site public** : http://localhost:3000
 - **Admin panel** : http://localhost:3000/admin

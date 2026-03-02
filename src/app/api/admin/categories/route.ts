@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
   const body = await request.json()
-  const { name, description, type, parentId, order, published } = body
+  const { name, description, image, type, parentId, order, published } = body
 
   if (!name || !type) {
     return NextResponse.json(
@@ -69,6 +69,7 @@ export async function POST(request: Request) {
       name,
       slug: finalSlug,
       description: description || null,
+      image: image || null,
       type,
       parentId: parentId || null,
       order: order ?? 0,
