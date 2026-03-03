@@ -65,6 +65,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Fichier trop volumineux (max 10MB)' }, { status: 400 })
   }
 
+  // Restrict to allowed image MIME types
+  const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return NextResponse.json(
+      { error: 'Type de fichier non autorisé. Utilisez JPEG, PNG, WebP ou GIF.' },
+      { status: 400 }
+    )
+  }
+
   const ext = file.name.split('.').pop() || 'jpg'
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import styles from './MegaMenu.module.css'
 
 export type NavLink = { href: string; label: string }
@@ -43,6 +44,8 @@ type MegaMenuOverlayProps = {
   onMouseLeavePanel?: () => void
   /** Shown when subLinks is empty — fills the space with benefits/highlights */
   highlights?: HighlightItem[]
+  /** Per-item highlights keyed by href (overrides highlights when active item matches) */
+  highlightsByHref?: Record<string, HighlightItem[]>
 }
 
 const HIGHLIGHT_ICONS = {
@@ -78,6 +81,7 @@ export function MegaMenuOverlay({
   onMouseEnterPanel,
   onMouseLeavePanel,
   highlights = [],
+  highlightsByHref,
 }: MegaMenuOverlayProps) {
   const panelRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
@@ -88,6 +92,8 @@ export function MegaMenuOverlay({
 
   const activeItem = items[activeIndex]
   const subLinks = activeItem?.subLinks ?? []
+  const rawHighlights = (activeItem?.href && highlightsByHref?.[activeItem.href]) ?? highlights
+  const effectiveHighlights: HighlightItem[] = Array.isArray(rawHighlights) ? rawHighlights : []
   const featuredImage = activeItem?.image ?? featured.image
   const featuredDescription = activeItem?.description ?? featured.description
   const featuredHref = activeItem?.href ?? featured.href
@@ -108,7 +114,7 @@ export function MegaMenuOverlay({
       setIsClosing(false)
       setActiveIndex(0)
     }
-  }, [open])
+  }, [open, items])
 
   useEffect(() => {
     if (!open && isVisible) {
@@ -167,11 +173,14 @@ export function MegaMenuOverlay({
         aria-label={`Menu ${title}`}
         aria-hidden={!panelOpen}
         className={`${styles.megaMenu__panel} ${panelOpen ? styles.megaMenu__panelOpen : ''} ${isClosing ? styles.megaMenu__panelClosing : ''}`}
-        onMouseEnter={onMouseEnterPanel}
-        onMouseLeave={onMouseLeavePanel}
       >
-        <div className={styles.megaMenu__bridge} aria-hidden />
-
+        <div
+          className={styles.megaMenu__hoverZone}
+          onMouseEnter={onMouseEnterPanel}
+          onMouseLeave={onMouseLeavePanel}
+        >
+          <div className={styles.megaMenu__bridge} aria-hidden />
+          <div className={styles.megaMenu__card}>
         <div className={styles.megaMenu__grid}>
           {/* Left: category list (dark grey) */}
           <aside className={styles.megaMenu__sidebar}>
@@ -238,9 +247,9 @@ export function MegaMenuOverlay({
                     </li>
                   ))}
                 </ul>
-              ) : highlights.length > 0 ? (
+              ) : effectiveHighlights.length > 0 ? (
                 <ul className={styles.megaMenu__highlights} role="list">
-                  {highlights.map((h, i) => (
+                  {effectiveHighlights.map((h, i) => (
                     <li key={i} className={styles.megaMenu__highlightItem}>
                       <span className={styles.megaMenu__highlightIcon} aria-hidden>
                         {HIGHLIGHT_ICONS[h.icon]}
@@ -253,10 +262,13 @@ export function MegaMenuOverlay({
             </div>
             <div className={styles.megaMenu__featured}>
               <div className={styles.megaMenu__featuredImage}>
-                <img
+                <Image
                   src={featuredImage}
                   alt=""
+                  fill
                   className={styles.megaMenu__featuredImg}
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  unoptimized={featuredImage.startsWith('http')}
                 />
               </div>
               <div className={styles.megaMenu__featuredBody}>
@@ -285,6 +297,8 @@ export function MegaMenuOverlay({
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
           </svg>
+        </div>
+        </div>
         </div>
       </div>
     </div>

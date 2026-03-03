@@ -202,8 +202,9 @@ export async function getProductBySlug(slug: string) {
     if (product) {
       return {
         ...product,
-        // Keep backward compatibility
-        category: product.category?.name || 'Non catégorisé',
+        category: product.category
+          ? { ...product.category, name: product.category.name }
+          : { id: '', name: 'Non catégorisé', slug: '', parent: null },
       }
     }
   } catch {
@@ -291,7 +292,7 @@ export async function getProductsByType(type: 'chariots' | 'pieces') {
   }
 }
 
-// Get subcategories for occasion/location pages (children of main category)
+// Get subcategories for occasion/location pages (for filter) - only children, not the main page type
 export async function getSubcategoriesForChariotsPage(categorySlug: string) {
   try {
     const parent = await prisma.category.findUnique({
@@ -677,4 +678,48 @@ export async function getServiceBySlug(slug: string) {
     // Fallback
   }
   return null
+}
+
+/** Fetch form fields for devis form (location only). Returns [] if table missing or error. */
+export async function getFormFieldsForLocation(): Promise<Array<{
+  id: string
+  key: string
+  label: string
+  type: string
+  required: boolean
+  placeholder: string | null
+  options: { value: string; label: string }[] | null
+}>> {
+  try {
+    const context = 'chariots-location'
+    const fields = await prisma.devisFormField.findMany({
+      where: {
+        active: true,
+        OR: [
+          { showFor: null },
+          { showFor: 'all' },
+          { showFor: context },
+        ],
+      },
+      orderBy: { sortOrder: 'asc' },
+    })
+    const seen = new Set<string>()
+    return fields
+      .filter((f) => {
+        if (seen.has(f.key)) return false
+        seen.add(f.key)
+        return true
+      })
+      .map((f) => ({
+        ...f,
+        options: Array.isArray(f.options) &&
+          f.options.every((o): o is { value: string; label: string } =>
+            o != null && typeof o === 'object' && 'value' in o && 'label' in o
+          )
+          ? f.options
+          : null,
+      }))
+  } catch {
+    return []
+  }
 }

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import Image from 'next/image'
 import { ProductForm } from './ProductForm'
 
 interface Product {
@@ -143,19 +142,22 @@ export function ProductsManager({
                   >
                     <td className="p-4">
                       <div className="relative w-16 h-16 bg-[var(--background-alt)] border border-[var(--border)] rounded-lg overflow-hidden">
-                        {product.image ? (
-                          <Image
-                            src={product.image}
-                            alt=""
-                            fill
-                            className="object-cover"
-                            unoptimized={product.image.startsWith('http') || product.image.startsWith('/uploads')}
-                          />
-                        ) : (
-                          <span className="text-[var(--foreground-subtle)] text-xs flex items-center justify-center h-full">
-                            —
-                          </span>
-                        )}
+                        {(() => {
+                          const urls = product.image ? product.image.split(/[|\r\n]+/).map((u) => u.trim()).filter(Boolean) : []
+                          const thumb = urls[0]
+                          return thumb ? (
+                            <img
+                              src={thumb}
+                              alt=""
+                              className="w-full h-full object-cover"
+                              referrerPolicy="no-referrer"
+                            />
+                          ) : (
+                            <span className="text-[var(--foreground-subtle)] text-xs flex items-center justify-center h-full">
+                              —
+                            </span>
+                          )
+                        })()}
                       </div>
                     </td>
                     <td className="p-4 font-medium text-[var(--foreground)]">{product.name}</td>

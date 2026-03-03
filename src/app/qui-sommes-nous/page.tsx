@@ -1,5 +1,7 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Metadata } from 'next'
+import { PageHero } from '@/components/layout/PageHero'
 import { RANDOM_IMAGES } from '@/lib/randomImages'
 
 export const metadata: Metadata = {
@@ -10,33 +12,20 @@ export const metadata: Metadata = {
 
 export default function QuiSommesNousPage() {
   return (
-    <div className="bg-[#f5f5f5] min-h-screen pt-[56px] md:pt-[96px]">
-      {/* Hero Section */}
-      <section className="relative py-12 md:py-16 lg:py-24 bg-[var(--grey)] overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={RANDOM_IMAGES[6]} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25" />
-          <div className="absolute inset-0 bg-[var(--grey)]/85" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4">
-            À propos
-          </p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
-            Qui sommes-nous ?
-          </h1>
-          <div className="w-16 sm:w-20 h-1 bg-[var(--accent)] mx-auto mb-4 sm:mb-6"></div>
-          <p className="text-white/80 max-w-2xl mx-auto text-sm sm:text-base md:text-lg px-4">
-            MANUAF, votre partenaire de confiance pour tous vos besoins en intralogistique au Maroc
-          </p>
-        </div>
-      </section>
+    <div className="bg-[#f5f5f5] min-h-screen">
+      <PageHero
+        label="À propos"
+        title="Qui sommes-nous ?"
+        subtitle="MANUAF, votre partenaire de confiance pour tous vos besoins en intralogistique au Maroc"
+        imageIndex={10}
+      />
 
       {/* About Section */}
       <section className="py-10 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
             <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[300px] overflow-hidden order-2 lg:order-1">
-              <img src={RANDOM_IMAGES[7]} alt="MANUAF équipe" className="absolute inset-0 w-full h-full object-cover" />
+              <Image src={RANDOM_IMAGES[11]} alt="MANUAF équipe" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
             </div>
             <div className="order-1 lg:order-2">
               <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-6">
@@ -60,7 +49,7 @@ export default function QuiSommesNousPage() {
             </div>
             <div className="space-y-6">
               <div className="relative aspect-video overflow-hidden">
-                <img src={RANDOM_IMAGES[8]} alt="Notre mission" className="absolute inset-0 w-full h-full object-cover" />
+                <Image src={RANDOM_IMAGES[12]} alt="Notre mission" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 896px" />
               </div>
               <div>
               <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-6">

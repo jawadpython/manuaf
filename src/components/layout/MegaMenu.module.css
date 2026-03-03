@@ -59,7 +59,7 @@
   pointer-events: auto;
 }
 
-/* Panel: fixed dimensions — same size for Produits & Services to prevent flicker */
+/* Panel: full-width positioning container (borders/shadows on inner card) */
 .megaMenu__panel {
   --mega-panel-height: 520px;
   --mega-panel-height-md: 620px;
@@ -71,11 +71,7 @@
   height: var(--mega-panel-height);
   min-height: var(--mega-panel-height);
   padding: 0 var(--space-4);
-  background: transparent;
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 12px 24px -8px rgb(0 0 0 / 0.25);
   z-index: 50;
-  overflow: hidden;
   opacity: 0;
   visibility: hidden;
   transition: opacity 350ms cubic-bezier(0.25, 0.1, 0.25, 1), visibility 350ms cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -83,6 +79,21 @@
   backface-visibility: hidden;
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+/* Card: content-width boundary with borders/shadow (not full screen) */
+.megaMenu__card {
+  width: 100%;
+  max-width: var(--content-max-width);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 12px 24px -8px rgb(0 0 0 / 0.25);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 @media (min-width: 640px) {
@@ -108,7 +119,19 @@
   visibility: hidden;
 }
 
-/* Invisible bridge: extends hover zone into navbar to prevent close when moving down */
+/* Hover zone: card + bridge — mouse leave closes when moving left/right off the dropdown */
+.megaMenu__hoverZone {
+  position: relative;
+  width: 100%;
+  max-width: var(--content-max-width);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Invisible bridge: extends hover zone into navbar to prevent close when moving down.
+   pointer-events: none so it does NOT block nav buttons when switching between Chariots/Pièces/Services */
 .megaMenu__bridge {
   position: absolute;
   left: 0;
@@ -117,6 +140,7 @@
   height: 36px;
   margin-top: -36px;
   z-index: 1;
+  pointer-events: none;
 }
 
 @media (min-width: 768px) {
@@ -134,8 +158,6 @@
   flex: 1;
   min-height: 0;
   width: 100%;
-  max-width: var(--content-max-width);
-  margin: 0 auto;
   overflow: hidden;
 }
 

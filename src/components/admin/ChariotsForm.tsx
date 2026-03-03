@@ -19,23 +19,31 @@ export function ChariotsForm({
   product,
   onSave,
   onCancel,
+  defaultCategorySlug,
+  showSoldOption = false,
 }: {
   product?: Product
   onSave: (p: Product) => void
   onCancel: () => void
+  /** Preselect category when creating (e.g. chariots-d-occasion, chariots-de-location) */
+  defaultCategorySlug?: string
+  /** Show "Marquer comme vendu" only for Chariots d'occasion */
+  showSoldOption?: boolean
 }) {
   const [name, setName] = useState(product?.name ?? '')
   const [description, setDescription] = useState(product?.description ?? '')
-  const [image, setImage] = useState(product?.image ?? '')
+  const [images, setImages] = useState<string[]>(
+    product?.image ? product.image.split(/[|\r\n]+/).map((u) => u.trim()).filter(Boolean) : []
+  )
   const [features, setFeatures] = useState(product?.features ?? '')
   const [order, setOrder] = useState(product?.order ?? 0)
-  const [sold, setSold] = useState(product?.sold ?? false)
+  const [sold, setSold] = useState(showSoldOption ? (product?.sold ?? false) : false)
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [chariotsCategoryId, setChariotsCategoryId] = useState<string>('')
-  const [chariotsCategories, setChariotsCategories] = useState<Array<{ id: string; name: string; slug: string }>>([])
+  const [chariotsCategories, setChariotsCategories] = useState<Array<{ id: string; name: string; slug: string; parentId?: string | null; parent?: { slug: string } | null; children?: unknown[] }>>([])
   const [categoriesLoading, setCategoriesLoading] = useState(true)
   const [noCategories, setNoCategories] = useState(false)
 
@@ -79,10 +87,25 @@ export function ChariotsForm({
       .then((data) => {
         const chariotsCats = data.filter((cat: { type?: string }) => cat.type === 'chariots')
         if (chariotsCats.length > 0) {
-          setChariotsCategories(chariotsCats)
-          const defaultCategory = product?.categoryId && chariotsCats.find((c: { id: string }) => c.id === product.categoryId)
+          const main = chariotsCats.filter((c: { parentId?: string | null }) => !c.parentId).sort((a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name))
+          // Only subcategories (children) - "Chariots d'occasion" and "Chariots de location" are page types, not categories
+          const mainCat = main.find((m: { slug: string }) => m.slug === defaultCategorySlug)
+          const subcatsOnly = defaultCategorySlug
+            ? chariotsCats.filter((c: { parentId?: string | null }) => c.parentId === mainCat?.id).sort((a: { order?: number }, b: { order?: number }) => (a.order ?? 0) - (b.order ?? 0))
+            : []
+          let withChildren = subcatsOnly.length > 0
+            ? subcatsOnly
+            : mainCat ? [mainCat] : []
+          // When editing, include main if product is assigned to it (so we can display current value)
+          if (product?.categoryId && mainCat && product.categoryId === mainCat.id && !withChildren.find((c: { id: string }) => c.id === mainCat.id)) {
+            withChildren = [mainCat, ...withChildren]
+          }
+          setChariotsCategories(withChildren)
+          const defaultCategory = product?.categoryId && withChildren.find((c: { id: string }) => c.id === product.categoryId)
             ? product.categoryId
-            : chariotsCats[0].id
+            : subcatsOnly.length === 0 && mainCat
+            ? mainCat.id
+            : withChildren[0]?.id ?? ''
           setChariotsCategoryId(defaultCategory)
           setNoCategories(false)
         } else {
@@ -97,7 +120,13 @@ export function ChariotsForm({
         setNoCategories(true)
         setCategoriesLoading(false)
       })
-  }, [product?.categoryId])
+  }, [product?.categoryId, defaultCategorySlug])
+
+  useEffect(() => {
+    if (product) {
+      setImages(product.image ? product.image.split(/[|\r\n]+/).map((u) => u.trim()).filter(Boolean) : [])
+    }
+  }, [product?.id, product?.image])
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -127,7 +156,7 @@ export function ChariotsForm({
       const data = await res.json()
       
       if (res.ok && data.url) {
-        setImage(data.url)
+        setImages((prev) => [...prev, data.url])
         setUploadError(null)
       } else {
         setUploadError(data.error || 'Erreur lors du téléchargement')
@@ -162,10 +191,10 @@ export function ChariotsForm({
         name,
         description,
         categoryId: chariotsCategoryId,
-        image: image || null,
+        image: images.length > 0 ? images.join('|') : null,
         features: features || null,
         order,
-        sold,
+        sold: showSoldOption ? sold : false,
       }),
     })
 
@@ -208,22 +237,22 @@ export function ChariotsForm({
 
       {chariotsCategories.length > 0 && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Page d&apos;affichage *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Choisir une catégorie *</label>
           <select
             value={chariotsCategoryId}
             onChange={(e) => setChariotsCategoryId(e.target.value)}
             required
             className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
           >
-            <option value="">Choisir une page</option>
+            <option value="">Choisir une catégorie</option>
             {chariotsCategories.map((cat) => (
               <option key={cat.id} value={cat.id}>
-                {cat.name}
+                {cat.parentId ? cat.name : `${cat.name} (par défaut)`}
               </option>
             ))}
           </select>
           <p className="text-gray-500 text-xs mt-1">
-            Ce chariot sera affiché sur la page « Chariots de location » ou « Chariots d&apos;occasion » selon votre choix.
+            La catégorie détermine où ce chariot sera affiché.
           </p>
         </div>
       )}
@@ -251,12 +280,13 @@ export function ChariotsForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Image *</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Images (galerie produit)</label>
+        <p className="text-xs text-gray-600 mb-2">Vous pouvez ajouter plusieurs images. La première sera affichée en principal.</p>
         <div className="space-y-3">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <label className="cursor-pointer">
               <span className="inline-block px-4 py-2 bg-[var(--accent)] text-white text-sm font-semibold hover:bg-[var(--accent-hover)] transition-colors rounded-lg shadow-md hover:shadow-lg">
-                {image ? 'Changer l&apos;image' : 'Sélectionner une image'}
+                {uploading ? 'Téléchargement...' : 'Ajouter une image'}
               </span>
               <input
                 type="file"
@@ -266,36 +296,37 @@ export function ChariotsForm({
                 className="hidden"
               />
             </label>
-            {uploading && (
-              <span className="text-blue-600 text-xs font-medium">Téléchargement en cours...</span>
-            )}
           </div>
           {uploadError && (
             <p className="text-red-600 text-xs bg-red-50 border border-red-200 px-3 py-2 rounded-lg">
               {uploadError}
             </p>
           )}
-          {image && !uploading && !uploadError && (
+          {images.length > 0 && (
             <div className="mt-3 space-y-2">
-              <p className="text-gray-600 text-xs font-medium">Aperçu de l&apos;image:</p>
-              <div className="relative w-full max-w-xs h-48 bg-gray-100 border border-gray-300 overflow-hidden rounded-lg">
-                <img
-                  src={image}
-                  alt="Preview"
-                  className="w-full h-full object-contain"
-                  onError={() => setUploadError('Impossible de charger l\'image')}
-                />
+              <p className="text-gray-600 text-xs font-medium">{images.length} image(s) — la première sera affichée en principal</p>
+              <div className="flex flex-wrap gap-3 max-h-64 overflow-y-auto p-1">
+                {images.map((url, i) => (
+                  <div key={i} className="relative group flex-shrink-0">
+                    <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 border border-gray-300 overflow-hidden rounded-lg shrink-0">
+                      <img
+                        src={url}
+                        alt={`Image ${i + 1}`}
+                        className="w-full h-full object-cover"
+                        onError={() => setUploadError('Impossible de charger l\'image')}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
+                      className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                      title="Supprimer"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setImage('')
-                  setUploadError(null)
-                }}
-                className="text-red-600 text-xs hover:text-red-700 hover:underline font-medium"
-              >
-                Supprimer l&apos;image
-              </button>
             </div>
           )}
         </div>
@@ -303,14 +334,40 @@ export function ChariotsForm({
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Caractéristiques (une par ligne)
+          Caractéristiques techniques (format: Libellé: valeur — une par ligne)
         </label>
+        <div className="flex gap-2 mb-1">
+          <button
+            type="button"
+            onClick={() => {
+              const template = `Année:
+Heures de fonctionnement:
+Modèle:
+Capacité:
+Mât:
+Hauteur:
+Levée verticale:
+Levée libre:
+Chariot de fourche:
+Entraînement:
+Soupapes additionnelles:
+Attachments:
+Pneus avant:
+Pneus arrière:
+État:`
+              setFeatures((prev) => (prev.trim() ? prev : template))
+            }}
+            className="text-xs px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded border border-gray-300"
+          >
+            Remplir le modèle vide
+          </button>
+        </div>
         <textarea
           value={features}
           onChange={(e) => setFeatures(e.target.value)}
-          rows={4}
-          placeholder={'Option A\nOption B\nOption C'}
-          className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
+          rows={18}
+          placeholder="Année: 2016 | Heures: 1 410 h | Modèle: 8FBMT30 | etc."
+          className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent font-mono text-sm"
         />
       </div>
 
@@ -324,22 +381,24 @@ export function ChariotsForm({
         />
       </div>
 
-      <div>
-        <label className="flex items-center gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={sold}
-            onChange={(e) => setSold(e.target.checked)}
-            className="w-5 h-5 text-[var(--accent)] border-gray-300 rounded focus:ring-[var(--accent)] focus:ring-2"
-          />
-          <span className="text-sm text-gray-700 font-medium">Marquer comme vendu</span>
-        </label>
-        {sold && (
-          <p className="text-yellow-700 bg-yellow-50 border border-yellow-200 text-xs mt-2 px-3 py-2 rounded-lg">
-            ⚠️ Ce chariot sera marqué comme vendu et affichera un badge &quot;Vendu&quot; sur l&apos;image
-          </p>
-        )}
-      </div>
+      {showSoldOption && (
+        <div>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={sold}
+              onChange={(e) => setSold(e.target.checked)}
+              className="w-5 h-5 text-[var(--accent)] border-gray-300 rounded focus:ring-[var(--accent)] focus:ring-2"
+            />
+            <span className="text-sm text-gray-700 font-medium">Marquer comme vendu</span>
+          </label>
+          {sold && (
+            <p className="text-yellow-700 bg-yellow-50 border border-yellow-200 text-xs mt-2 px-3 py-2 rounded-lg">
+              ⚠️ Ce chariot sera marqué comme vendu et affichera un badge &quot;Vendu&quot; sur l&apos;image
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="flex gap-4">
         <button

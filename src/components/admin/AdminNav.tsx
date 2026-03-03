@@ -8,10 +8,12 @@ import { signOut } from 'next-auth/react'
 
 const contentLinks = [
   { href: '/admin/categories', label: 'Catégories' },
-  { href: '/admin/chariots', label: 'Chariots' },
+  { href: '/admin/chariots/occasion', label: "Chariots d'occasion" },
+  { href: '/admin/chariots/location', label: 'Chariots de location' },
   { href: '/admin/produits', label: 'Pièces de rechange' },
-  { href: '/admin/services', label: 'Services' },
   { href: '/admin/rental-requests', label: 'Demandes location' },
+  { href: '/admin/quote-requests', label: 'Demandes devis' },
+  { href: '/admin/form-devis', label: 'Formulaire devis' },
   { href: '/admin/blog', label: 'Blog' },
 ]
 

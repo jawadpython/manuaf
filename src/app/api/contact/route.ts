@@ -1,13 +1,36 @@
 import { NextResponse } from 'next/server'
+import { sanitizeInput, sanitizeTextarea, isValidEmail } from '@/lib/utils'
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { name, email, company, phone, message } = body
+    const name = sanitizeInput(body.name)
+    const email = sanitizeInput(body.email)
+    const company = body.company ? sanitizeInput(body.company) : null
+    const phone = body.phone ? sanitizeInput(body.phone) : null
+    const message = sanitizeTextarea(body.message)
 
-    if (!name || !email || !message) {
+    if (!name || name.length < 2) {
       return NextResponse.json(
-        { error: 'Champs requis manquants' },
+        { error: 'Nom requis (min. 2 caractères)' },
+        { status: 400 }
+      )
+    }
+    if (!email) {
+      return NextResponse.json(
+        { error: 'Email requis' },
+        { status: 400 }
+      )
+    }
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: 'Format d\'email invalide' },
+        { status: 400 }
+      )
+    }
+    if (!message || message.length < 10) {
+      return NextResponse.json(
+        { error: 'Message requis (min. 10 caractères)' },
         { status: 400 }
       )
     }
@@ -19,7 +42,7 @@ export async function POST(request: Request) {
       console.log('Contact form submission:', { name, email, company, phone, message })
     }
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, message: 'Message envoyé' })
   } catch {
     return NextResponse.json(
       { error: 'Erreur serveur' },

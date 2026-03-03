@@ -8,14 +8,16 @@
   "scripts": {
     "dev": "next dev --webpack",
     "dev:turbo": "next dev",
-    "build": "prisma generate && next build",
+    "build": "(prisma generate || echo Prisma generate skipped) && next build",
+    "build:next": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "next lint",
     "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "@vercel/blob": "^0.25.0",
+    "isomorphic-dompurify": "^3.0.0",
     "next": "16.1.6",
     "next-auth": "^4.24.13",
     "react": "19.2.3",

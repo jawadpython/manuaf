@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { PageHero } from '@/components/layout/PageHero'
 
 export const metadata: Metadata = {
   title: 'Politique de confidentialité',
@@ -6,15 +7,11 @@ export const metadata: Metadata = {
 
 export default function ConfidentialitePage() {
   return (
-    <div className="bg-[#f5f5f5] min-h-screen mt-[72px] md:mt-[96px]">
-      <section className="py-12 md:py-16 bg-[#4a4a4a]">
-        <div className="max-w-7xl mx-auto px-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">
-            Politique de confidentialité
-          </h1>
-          <div className="w-16 h-1 bg-[var(--accent)]"></div>
-        </div>
-      </section>
+    <div className="bg-[#f5f5f5] min-h-screen">
+      <PageHero
+        title="Politique de confidentialité"
+        imageIndex={9}
+      />
 
       <section className="py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-6">

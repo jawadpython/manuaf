@@ -27,9 +27,9 @@ const footerLinks = {
     { href: '/produits/pieces/commandes', label: 'Pièces de rechange' },
   ],
   services: [
-    { href: '/services/maintenance', label: 'Maintenance' },
-    { href: '/services/reconditionnement', label: 'Reconditionnement' },
-    { href: '/services/location', label: 'Location' },
+    { href: '/services?service=maintenance', label: 'Maintenance' },
+    { href: '/services?service=reconditionnement', label: 'Reconditionnement' },
+    { href: '/services?service=location', label: 'Location' },
   ],
 }
 
@@ -95,7 +95,7 @@ export function Footer() {
 
             {/* Links */}
             <div>
-              <h2 className="text-white font-bold text-sm uppercase tracking-wider mb-4">
+              <h2 className="text-white font-bold uppercase tracking-wider mb-2">
                 Liens
               </h2>
               <ul className="space-y-2" role="list">
@@ -114,7 +114,7 @@ export function Footer() {
 
             {/* Products */}
             <div>
-              <h2 className="text-white font-bold text-sm uppercase tracking-wider mb-4">
+              <h2 className="text-white font-bold uppercase tracking-wider mb-2">
                 Nos Produits
               </h2>
               <ul className="space-y-2" role="list">
@@ -133,7 +133,7 @@ export function Footer() {
 
             {/* Services + Legal */}
             <div>
-              <h2 className="text-white font-bold text-sm uppercase tracking-wider mb-4">
+              <h2 className="text-white font-bold uppercase tracking-wider mb-2">
                 Nos Services
               </h2>
               <ul className="space-y-2 mb-6" role="list">
@@ -160,7 +160,7 @@ export function Footer() {
 
             {/* Social */}
             <div>
-              <h2 className="text-white font-bold text-sm uppercase tracking-wider mb-4">
+              <h2 className="text-white font-bold uppercase tracking-wider mb-2">
                 Suivez-nous
               </h2>
               <div className="flex gap-2 sm:gap-3" role="list">

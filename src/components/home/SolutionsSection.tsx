@@ -15,18 +15,18 @@ function SolutionCard({ title, image, href }: { title: string; image: string; hr
   return (
     <Link
       href={href}
-      className="group block relative overflow-hidden aspect-[4/3] min-h-[200px] sm:min-h-[240px]"
+      className="block relative overflow-hidden w-full h-[140px] sm:h-[160px]"
     >
       <Image
         src={image}
         alt={title}
         fill
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        className="object-cover"
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
       />
-      <div className="absolute inset-0 bg-black/50 group-hover:bg-black/60 transition-colors" />
-      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-        <h3 className="text-white font-bold text-base sm:text-lg">
+      <div className="absolute inset-0 bg-black/35" />
+      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+        <h3 className="!text-white font-bold text-xs sm:text-sm">
           {title}
         </h3>
       </div>
@@ -49,7 +49,7 @@ export function SolutionsSection() {
         </div>
 
         {/* Solutions Grid - 3x2 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 items-stretch">
           {solutions.map((solution, index) => (
             <SolutionCard key={index} {...solution} />
           ))}

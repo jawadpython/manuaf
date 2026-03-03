@@ -1,21 +1,41 @@
 import { getServerSession } from 'next-auth'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
-  // Get all Chariots categories
-  const chariotsCategories = await prisma.category.findMany({
-    where: { type: 'chariots' },
-    select: { id: true },
-  })
+  const { searchParams } = new URL(request.url)
+  const categorySlug = searchParams.get('categorySlug') // chariots-d-occasion | chariots-de-location
 
-  const categoryIds = chariotsCategories.map(c => c.id)
+  let categoryIds: string[]
+  if (categorySlug === 'chariots-d-occasion' || categorySlug === 'chariots-de-location') {
+    const categories = await prisma.category.findMany({
+      where: {
+        type: 'chariots',
+        published: true,
+        OR: [
+          { slug: categorySlug },
+          { parent: { slug: categorySlug } },
+        ],
+      },
+      select: { id: true },
+    })
+    categoryIds = categories.map((c) => c.id)
+  } else {
+    const chariotsCategories = await prisma.category.findMany({
+      where: { type: 'chariots' },
+      select: { id: true },
+    })
+    categoryIds = chariotsCategories.map((c) => c.id)
+  }
 
-  // Get all products in Chariots categories
+  if (categoryIds.length === 0) {
+    return NextResponse.json([])
+  }
+
   const chariots = await prisma.product.findMany({
     where: {
       categoryId: { in: categoryIds },

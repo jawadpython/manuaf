@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Fonts */
+@font-face {
+  font-family: 'JHNeueDIN-XBold';
+  src: url('/fonts/JHNeueDIN-XBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ==========================================================================
    Design system — MANUAF
    Enterprise-style tokens: colors, spacing, typography, radii, shadows.
@@ -130,8 +139,8 @@
   --color-border-strong: var(--border-strong);
   --color-card: var(--card);
   --color-card-hover: var(--card-hover);
-  --font-display: 'Bebas Neue', system-ui, sans-serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'JHNeueDIN-XBold', Arial, sans-serif;
+  --font-sans: 'JHNeueDIN-XBold', Arial, sans-serif;
 }
 
 * {
@@ -150,13 +159,57 @@ html {
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+  color: rgb(0, 0, 0);
+  font-family: 'JHNeueDIN-XBold', Arial, sans-serif;
+  font-style: normal;
+  font-weight: 800;
   -webkit-font-smoothing: antialiased;
 }
 
 .font-display {
-  font-family: var(--font-display);
+  font-family: 'JHNeueDIN-XBold', Arial, sans-serif;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.en-savoir-plus {
+  font-family: 'JHNeueDIN-XBold', Arial, sans-serif;
+  font-weight: 800;
+}
+
+/* Titles — JHNeueDIN-XBold, bigger sizes */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'JHNeueDIN-XBold', Arial, sans-serif;
+  font-style: normal;
+  font-weight: 800;
+  color: rgb(0, 0, 0);
+}
+
+h1 { font-size: var(--text-2xl); line-height: var(--leading-tight); }
+h2 { font-size: var(--text-xl); line-height: var(--leading-tight); }
+h3 { font-size: var(--text-lg); line-height: var(--leading-snug); }
+h4 { font-size: var(--text-base); line-height: var(--leading-snug); }
+h5 { font-size: var(--text-base); line-height: var(--leading-normal); }
+h6 { font-size: var(--text-sm); line-height: var(--leading-normal); }
+
+@media (min-width: 640px) {
+  h1 { font-size: var(--text-3xl); }
+  h2 { font-size: var(--text-2xl); }
+  h3 { font-size: var(--text-xl); }
+  h4 { font-size: var(--text-lg); }
+}
+
+@media (min-width: 768px) {
+  h1 { font-size: var(--text-4xl); }
+  h2 { font-size: var(--text-3xl); }
+  h3 { font-size: var(--text-2xl); }
+  h4 { font-size: var(--text-xl); }
+}
+
+/* Footer section titles — smaller than global h2, readable */
+footer h2 {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 700;
 }
 
 /* Focus visible for keyboard navigation (accessibility) */
@@ -258,4 +311,52 @@ body {
 .hero-bg-layer {
   transform: translateZ(0);
   backface-visibility: hidden;
+}
+
+/* ==========================================================================
+   Hero animations
+   ========================================================================== */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+/* Button hover effects */
+.btn-hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-hover-lift:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 25px -5px rgb(0 0 0 / 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up {
+    animation: none;
+    opacity: 1;
+  }
+  
+  .btn-hover-lift:hover {
+    transform: none;
+  }
 }

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Metadata } from 'next'
 import { RANDOM_IMAGES } from '@/lib/randomImages'
 
@@ -14,7 +15,7 @@ export default function LocationPage() {
       {/* Hero Section */}
       <section className="relative py-12 md:py-16 lg:py-24 bg-[var(--grey)] overflow-hidden">
         <div className="absolute inset-0">
-          <img src={RANDOM_IMAGES[12]} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+          <Image src={RANDOM_IMAGES[12]} alt="" fill className="object-cover opacity-30" sizes="100vw" priority />
           <div className="absolute inset-0 bg-[var(--grey)]/80" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">

@@ -9,6 +9,13 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: projectRoot,
   },
+  async redirects() {
+    return [
+      { source: '/services/maintenance', destination: '/services?service=maintenance', permanent: true },
+      { source: '/services/reconditionnement', destination: '/services?service=reconditionnement', permanent: true },
+      { source: '/services/location', destination: '/services?service=location', permanent: true },
+    ]
+  },
   images: {
     remotePatterns: [
       {

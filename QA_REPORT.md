@@ -1,232 +1,258 @@
-# 🔍 Comprehensive QA Report - MANUAF Website
+# MANUAF Intralogistics — QA Scan Report
 
-**Date:** $(date)  
-**Status:** ✅ All Critical Issues Fixed
-
-## 📋 Executive Summary
-
-A comprehensive quality assurance test was performed on the MANUAF website. All critical issues have been identified and fixed. The website is now production-ready with proper error handling, accessibility features, and user experience improvements.
+**Project:** Next.js MANUAF intralogistics  
+**Path:** `d:\websites.khedma\logistec2 - Copy (2)`  
+**Date:** March 3, 2025  
+**Scope:** Full deep scan — architecture, security, performance, accessibility, testing, documentation
 
 ---
 
-## ✅ Issues Fixed
+## Executive Summary
 
-### 1. Error Handling & 404 Pages ✅
-
-**Issue:** Missing custom 404 and error pages  
-**Status:** ✅ FIXED
-
-- ✅ Created `src/app/not-found.tsx` - Custom 404 page with navigation options
-- ✅ Created `src/app/error.tsx` - Error boundary with retry functionality
-- ✅ Both pages styled consistently with the website design
-- ✅ Include helpful navigation links back to main sections
-
-**Files:**
-- `src/app/not-found.tsx` (NEW)
-- `src/app/error.tsx` (NEW)
+The MANUAF project is a Next.js 16 App Router application for intralogistics (chariots élévateurs, pièces, services). The structure is clear, TypeScript is used throughout, and admin routes are protected. Several security, performance, and testing improvements are recommended. **Highest priority:** blog XSS risk and lack of automated tests.
 
 ---
 
-### 2. Production Code Quality ✅
+## 1. Project Structure & Architecture
 
-**Issue:** `console.log` in production code  
-**Status:** ✅ FIXED
+### Findings
 
-- ✅ Updated contact API to only log in development mode
-- ✅ All other console.error statements are appropriate for error logging
+| Area | Status | Notes |
+|------|--------|-------|
+| App Router | ✅ | Uses Next.js 16 App Router (`src/app/`) |
+| Layout | ✅ | `ConditionalLayout` switches layout for admin vs public |
+| Admin layout | ⚠️ | Renders admin shell only when session exists; consider redirecting to `/admin/login` when unauthenticated |
+| API routes | ✅ | ~25 routes: admin/* (products, categories, chariots, blog, services, form-fields, quote-requests, rental-requests, upload) + public (contact, quote-requests, rental-requests, form-fields, mega-menu, categories) |
+| Components | ✅ | Well-organized: `admin/`, `layout/`, `contact/`, `products/`, `chariots/`, `produits/`, `services/`, `home/` |
+| Lib | ✅ | `auth.ts`, `prisma.ts`, `data.ts`, `utils.ts`, `email.ts`, `randomImages.ts` |
+| Design system | ✅ | Tokens in `globals.css` (colors, spacing, fonts) |
 
-**Files Modified:**
-- `src/app/api/contact/route.ts`
+### Improvement Suggestions
 
----
-
-### 3. Accessibility Improvements ✅
-
-**Issue:** Missing ARIA labels on interactive elements  
-**Status:** ✅ FIXED
-
-- ✅ Added `aria-expanded` to mobile menu button
-- ✅ Improved `aria-label` text for mobile menu toggle
-- ✅ All images have proper `alt` attributes
-- ✅ Form inputs have proper labels
-
-**Files Modified:**
-- `src/components/layout/Header.tsx`
+1. **Duplicate auth checks** — Create shared `requireAdmin()` helper instead of repeating `getServerSession` + 401 in each admin API route.
+2. **Admin layout redirect** — Redirect unauthenticated users from `admin/layout` to `/admin/login` so no admin page is ever rendered without a session.
+3. **Service page structure** — Verify `/services/maintenance`, `/services/location`, `/services/reconditionnement` redirects and dedicated pages are reachable as intended.
 
 ---
 
-## ✅ Verified Working Features
+## 2. Code Quality
 
-### Public Website
+### Findings
 
-#### Navigation ✅
-- ✅ Header navigation with hover menu works correctly
-- ✅ Mobile menu opens/closes properly
-- ✅ All links are functional
-- ✅ Products dropdown shows both Chariots and Pièces de rechange
-- ✅ Footer links are correct
+| Area | Status | Notes |
+|------|--------|-------|
+| TypeScript | ✅ | `strict: true`, types from Prisma and `src/types/` |
+| Error handling | ✅ | Root `error.tsx` with reset; APIs use try/catch and return 4xx/5xx |
+| Validation | ⚠️ | No Zod; APIs use manual checks (`!name || !email`); validation logic is inconsistent |
+| Loading states | ⚠️ | No `loading.tsx` anywhere; only one `Suspense` (services page) |
+| Lint script | ⚠️ | `"lint": "eslint"` may not run correctly — typically needs `"next lint"` or `"eslint ."` |
 
-#### Pages ✅
-- ✅ Homepage (`/`) - All sections load correctly
-- ✅ Products pages:
-  - ✅ `/produits/chariots` - Displays chariots with filtering
-  - ✅ `/produits/pieces` - Displays pieces with filtering
-  - ✅ `/produits/[slug]` - Product detail pages work
-- ✅ Services page (`/services`) - All service categories accessible
-- ✅ Blog (`/blog`) - Blog listing and detail pages work
-- ✅ Contact (`/contact`) - Contact form functional
-- ✅ About Us (`/qui-sommes-nous`) - Page loads correctly
+### Improvement Suggestions
 
-#### Features ✅
-- ✅ Product filtering by category works
-- ✅ Product filtering by type works
-- ✅ "SOLD" badge displays correctly on sold products
-- ✅ Image loading with proper fallbacks
-- ✅ Responsive design works on all screen sizes
-- ✅ Forms have proper validation
-- ✅ Error messages display correctly
-
-### Admin Panel
-
-#### Authentication ✅
-- ✅ Login page works
-- ✅ Session management works
-- ✅ Protected routes redirect to login
-- ✅ Logout functionality works
-
-#### Management Pages ✅
-- ✅ Dashboard (`/admin`) - All cards link correctly
-- ✅ Categories (`/admin/categories`) - CRUD operations work
-- ✅ Chariots (`/admin/chariots`) - Full CRUD with sold status
-- ✅ Pièces de rechange (`/admin/produits`) - Only shows pieces categories
-- ✅ Blog (`/admin/blog`) - CRUD operations work
-
-#### Forms ✅
-- ✅ Image upload works (local/Cloudinary/Vercel Blob)
-- ✅ Form validation works
-- ✅ Error messages display
-- ✅ Success feedback works
-- ✅ Image preview works
+1. Add `loading.tsx` for key routes (home, produits, blog, admin sections) for better UX and streaming.
+2. Introduce **Zod** for request body validation in `/api/contact`, `/api/quote-requests`, `/api/rental-requests`, and admin APIs.
+3. Fix `package.json` lint script: `"lint": "next lint"` or `"eslint ."`.
+4. Add shared `requireAdmin()` to centralize auth checks and reduce duplication.
 
 ---
 
-## 📊 Code Quality Assessment
+## 3. Security
 
-### TypeScript ✅
-- ✅ No TypeScript errors
-- ✅ Proper type definitions
-- ✅ Type safety maintained
+### Findings
 
-### React Best Practices ✅
-- ✅ Proper component structure
-- ✅ Client/Server components correctly separated
-- ✅ No hydration errors
-- ✅ Proper state management
-- ✅ Efficient re-renders
+| Area | Status | Notes |
+|------|--------|-------|
+| Admin API auth | ✅ | Routes use `getServerSession(authOptions)` and return 401 when unauthenticated |
+| Admin page auth | ✅ | Pages call `getServerSession` and `redirect('/admin/login')` if no session |
+| Middleware | ⚠️ | No global `middleware.ts`; admin protection is per-route only |
+| Credentials auth | ✅ | Single admin account from `ADMIN_EMAIL` / `ADMIN_PASSWORD` |
+| Input sanitization | ⚠️ | `rental-requests` has sanitization; `quote-requests` and `contact` do not |
+| SQL injection | ✅ | Prisma used for all DB access — low risk |
+| **XSS (Blog)** | ❌ | Blog content rendered with `dangerouslySetInnerHTML` without sanitization — **risk** |
+| Upload | ⚠️ | Auth required, 10MB limit; no MIME whitelist |
+| Secrets | ✅ | Stored in env; `env.example.txt` documents required vars |
 
-### Next.js Best Practices ✅
-- ✅ Proper use of Server Components
-- ✅ API routes correctly structured
-- ✅ Metadata generation works
-- ✅ Image optimization configured
-- ✅ Error boundaries in place
+### Improvement Suggestions (Prioritized)
 
-### Accessibility ✅
-- ✅ Semantic HTML
-- ✅ ARIA labels where needed
-- ✅ Alt text on all images
-- ✅ Keyboard navigation works
-- ✅ Screen reader friendly
-
-### Performance ✅
-- ✅ Database queries optimized
-- ✅ Image optimization enabled
-- ✅ Proper loading states
-- ✅ Efficient data fetching
+| Priority | Action |
+|----------|--------|
+| **P1** | Sanitize blog HTML (e.g. DOMPurify or isomorphic sanitizer) before `dangerouslySetInnerHTML` — **critical for XSS** |
+| **P2** | Add sanitization and validation for `contact` and `quote-requests` (length, email format) similar to `rental-requests` |
+| **P2** | Restrict allowed MIME types for upload (e.g. `image/jpeg`, `image/png`, `image/webp`) |
+| **P3** | Add rate limiting for `/api/contact`, `/api/quote-requests`, `/api/rental-requests` |
+| **P3** | Consider CSRF protection for POST/PUT/DELETE if cookies are used for auth |
 
 ---
 
-## 🧪 Testing Checklist
+## 4. Performance
 
-### Public Website Testing ✅
+### Findings
 
-- [x] Homepage loads without errors
-- [x] All navigation links work
-- [x] Product pages display correctly
-- [x] Product filtering works
-- [x] Product detail pages load
-- [x] Blog posts display
-- [x] Contact form submits
-- [x] Services page loads
-- [x] About page loads
-- [x] 404 page displays for invalid routes
-- [x] Error page displays on errors
-- [x] Mobile menu works
-- [x] Responsive design works
-- [x] Images load correctly
-- [x] "SOLD" badges display
+| Area | Status | Notes |
+|------|--------|-------|
+| next/image | ✅ | Used in ProductsList, ProductImageGallery, blog, PageHero, FeaturedProducts, SolutionsSection |
+| Raw `<img>` | ⚠️ | Used in MegaMenu featured image, qui-sommes-nous, services subpages — no optimization |
+| Caching | ⚠️ | No `revalidate`, `unstable_cache`, or `fetch` cache options found |
+| Data fetching | ⚠️ | Server components fetch directly; no ISR/static caching strategy |
+| Dynamic imports | ⚠️ | No `next/dynamic` for heavy admin components |
 
-### Admin Panel Testing ✅
+### Improvement Suggestions
 
-- [x] Login works
-- [x] Dashboard accessible
-- [x] Categories CRUD works
-- [x] Chariots CRUD works
-- [x] Pieces CRUD works (only pieces categories shown)
-- [x] Blog CRUD works
-- [x] Image upload works
-- [x] Form validation works
-- [x] Error handling works
-- [x] Logout works
+1. Replace raw `<img>` with `next/image` in MegaMenu, qui-sommes-nous, and services pages.
+2. Add `revalidate` or `unstable_cache` for product/category/blog data where freshness can be relaxed (e.g. 60–300 seconds).
+3. Use `next/dynamic` for heavier admin components (ChariotsManager, ProductsManager) to reduce initial admin bundle.
 
 ---
 
-## 🎯 Recommendations for Future
+## 5. Accessibility (a11y)
 
-### Optional Enhancements
+### Findings
 
-1. **Email Service Integration**
-   - Replace console.log in contact form with actual email service (Resend, SendGrid)
-   - Add email notifications for admin actions
+| Area | Status | Notes |
+|------|--------|-------|
+| Skip link | ✅ | Skip-to-content link with focus-visible styling |
+| ARIA | ✅ | `aria-label`, `aria-expanded`, `aria-controls`, `aria-modal`, `role="dialog"` used |
+| Decorative SVG | ✅ | Uses `aria-hidden` where appropriate |
+| Focus styles | ✅ | `focus-visible:outline` on interactive elements |
+| Reduced motion | ✅ | `prefers-reduced-motion: reduce` in globals.css |
+| Modal focus trap | ⚠️ | Modals use `role="dialog"` but no focus trap or ESC handling |
+| Alt text | ⚠️ | Some service images use `alt=""`; may lack meaningful descriptions |
 
-2. **Analytics**
-   - Add Google Analytics or similar
-   - Track user interactions
+### Improvement Suggestions
 
-3. **SEO Enhancements**
-   - Add structured data (JSON-LD)
-   - Improve meta descriptions
-   - Add Open Graph images
-
-4. **Performance Monitoring**
-   - Add error tracking (Sentry, etc.)
-   - Monitor API response times
-   - Track page load times
-
-5. **Additional Features**
-   - Search functionality
-   - Product comparison
-   - Wishlist/favorites
-   - Multi-language support
+1. Add focus trapping and ESC-to-close for ProductDevisInline and similar dialogs.
+2. Improve `alt` on service hero images where they convey meaning.
+3. Audit text colors (e.g. `#999999`, `#666666`) for WCAG AA contrast.
 
 ---
 
-## 📝 Notes
+## 6. UX & UI
 
-- All console.error statements are intentional for error logging
-- Development-only console.log statements are properly guarded
-- All forms have proper validation and error handling
-- Image upload supports multiple providers with fallback chain
-- Database queries are optimized for performance
-- Error boundaries prevent full app crashes
+### Findings
+
+| Area | Status | Notes |
+|------|--------|-------|
+| Responsive | ✅ | Tailwind breakpoints; header height adapts at 768px |
+| Form feedback | ✅ | ContactForm has `idle`, `loading`, `success`, `error` states |
+| Buttons | ✅ | Submit buttons show "Envoi..." when loading, disabled during submission |
+| Error display | ⚠️ | Generic "Erreur d'envoi" instead of server error message from API |
+| Consistency | ✅ | Shared design tokens in globals.css |
+
+### Improvement Suggestions
+
+1. Surface server error message from API response (400/500) in ContactForm.
+2. Add client-side validation (required, email format) before submit to reduce unnecessary requests.
 
 ---
 
-## ✅ Final Status
+## 7. Testing
 
-**Website Status:** ✅ PRODUCTION READY
+### Findings
 
-All critical issues have been fixed. The website is fully functional, accessible, and ready for production deployment.
 
-**Tested By:** AI QA Assistant  
-**Date:** $(date)
+
+| Area | Status |
+|------|--------|
+| Unit tests | ❌ None |
+| Integration tests | ❌ None |
+| E2E tests | ❌ None |
+| package.json | ❌ No `test` or `test:watch` script |
+
+### Improvement Suggestions
+
+1. Add **Vitest** or **Jest** for unit tests (utilities, slugify, sanitization).
+2. Add **Playwright** or **Cypress** for critical flows (login, quote form, contact form).
+3. Add `test` script to `package.json` and integrate into CI.
+
+---
+
+## 8. DevOps & Configuration
+
+### Findings
+
+| Area | Status | Notes |
+|------|--------|-------|
+| Scripts | ✅ | `dev`, `build`, `start`, `lint`, `postinstall` |
+| Lint | ⚠️ | `"lint": "eslint"` likely incomplete; use `"next lint"` or `"eslint ."` |
+| ESLint | ✅ | Uses `eslint-config-next` (core-web-vitals, typescript) |
+| Prettier | ⚠️ | Not configured |
+| Prisma | ✅ | Migrations in place; `postinstall` runs `prisma generate` |
+| Env | ✅ | `env.example.txt` documents main vars |
+
+### Improvement Suggestions
+
+1. Fix lint script: `"lint": "next lint"` or `"eslint ."`.
+2. Add Prettier and a `format` script; consider `lint-staged` for pre-commit.
+3. Add `db:migrate` or `db:push` scripts for local/dev workflows.
+4. Document `RESEND_API_KEY`, `EMAIL_FROM`, `CONTACT_EMAIL` in `env.example.txt` if used.
+
+---
+
+## 9. Documentation
+
+### Findings
+
+| Area | Status |
+|------|--------|
+| README | ✅ Covers tech stack, install, env, DB setup, deployment |
+| Inline comments | ⚠️ Light; mainly in form-fields API, upload route, email.ts |
+| API docs | ❌ None |
+
+### Improvement Suggestions
+
+1. Add simple API documentation for public endpoints (contact, quote-requests, rental-requests, form-fields).
+2. Document admin routes and expected payloads for maintainers.
+3. Add JSDoc to shared helpers (`slugify`, `sanitize`, etc.).
+
+---
+
+## Summary: Priority Action Matrix
+
+| Priority | Category | Action |
+|----------|----------|--------|
+| **P1** | Security | Sanitize blog HTML before `dangerouslySetInnerHTML` (XSS risk) |
+| **P1** | Testing | Introduce basic unit tests (utilities, sanitization) |
+| **P2** | Security | Add input sanitization/validation for contact and quote-requests |
+| **P2** | Security | Restrict MIME types for file upload |
+| **P2** | Performance | Replace raw `<img>` with `next/image` in MegaMenu and services |
+| **P2** | A11y | Add focus trap and ESC handling for modals |
+| **P2** | Config | Fix `package.json` lint script |
+| **P3** | UX | Add loading states (`loading.tsx`) for key routes |
+| **P3** | Performance | Add data caching (`revalidate`, `unstable_cache`) |
+| **P3** | Security | Add rate limiting for public forms |
+| **P3** | Testing | Add E2E tests for critical flows |
+| **P3** | Docs | Add API docs and JSDoc for helpers |
+
+---
+
+## Appendix: Key File References
+
+| Concern | File(s) |
+|---------|---------|
+| Blog XSS | `src/app/blog/[slug]/page.tsx` |
+| Admin auth | `src/app/admin/layout.tsx`, `src/app/api/admin/*/route.ts` |
+| Contact API | `src/app/api/contact/route.ts` |
+| Quote requests | `src/app/api/quote-requests/route.ts` |
+| Upload | `src/app/api/admin/upload/route.ts` |
+| MegaMenu raw img | `src/components/layout/MegaMenu.tsx` |
+| Modals | `src/components/produits/ProductDevisInline.tsx` |
+| Lint script | `package.json` |
+
+---
+
+---
+
+## Changelog (Applied Fixes — March 2025)
+
+- ✅ **Lint script:** `"lint": "next lint"`
+- ✅ **Blog XSS:** Added `sanitizeHtml()` via isomorphic-dompurify
+- ✅ **Contact/quote-requests:** Input sanitization + validation (email format, min length)
+- ✅ **Upload:** MIME restriction (JPEG, PNG, WebP, GIF)
+- ✅ **Raw img → next/image:** MegaMenu, qui-sommes-nous, services (maintenance, location, reconditionnement)
+- ✅ **Modal a11y:** Focus trap + ESC for ProductDevisInline
+- ✅ **Loading states:** `loading.tsx` for app, produits, blog
+- ✅ **Shared sanitization:** `sanitizeInput`, `sanitizeTextarea`, `isValidEmail` in `lib/utils`; rental-requests uses them
+- ⏭️ **Data caching:** Skipped to avoid behavior changes
+- ⏭️ **Rate limiting:** Skipped (needs middleware/Redis)
+
+*Report generated from full deep scan. Implement changes incrementally and re-scan after major updates.*

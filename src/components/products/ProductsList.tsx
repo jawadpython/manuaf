@@ -11,6 +11,7 @@ interface Category {
   type: string
   parentId: string | null
   published?: boolean
+  order?: number
   children?: Category[]
 }
 
@@ -25,47 +26,58 @@ interface Product {
   sold?: boolean
 }
 
+/** Collect category id and all descendant ids recursively */
+function getAllDescendantIds(categories: Category[], categoryId: string): Set<string> {
+  const ids = new Set<string>([categoryId])
+  const addDescendants = (parentId: string) => {
+    categories.forEach((c) => {
+      if (c.parentId === parentId) {
+        ids.add(c.id)
+        addDescendants(c.id)
+      }
+    })
+  }
+  addDescendants(categoryId)
+  return ids
+}
+
 interface ProductsListProps {
   initialProducts: Product[]
   categories: Category[]
   defaultType?: string // Optional: 'chariots' | 'pieces' | 'all'
   hideTypeFilter?: boolean // Hide type filter when on a specific type page
+  hideCategoryFilter?: boolean // Hide category filter when on a specific category page
 }
 
-export function ProductsList({ initialProducts, categories, defaultType = 'all', hideTypeFilter = false }: ProductsListProps) {
+export function ProductsList({ initialProducts, categories, defaultType = 'all', hideTypeFilter = false, hideCategoryFilter = false }: ProductsListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [selectedType, setSelectedType] = useState<string>(defaultType)
 
-  // Derive filtered products from selected category and type (no effect)
+  // Categories filtered by selected type (for tree and product filtering)
+  const categoriesForType = useMemo(() => {
+    if (selectedType === 'all') return categories.filter((c) => c.published)
+    return categories.filter((c) => c.published && c.type === selectedType)
+  }, [categories, selectedType])
+
   const filteredProducts = useMemo(() => {
     let filtered = [...initialProducts]
 
     if (selectedType !== 'all') {
-      filtered = filtered.filter(p => {
+      filtered = filtered.filter((p) => {
         const productCategory = typeof p.category === 'object' ? p.category : null
-        if (!productCategory || !productCategory.id) {
-          const productCategoryId = p.categoryId
-          if (!productCategoryId) return false
-          const cat = categories.find(c => c.id === productCategoryId)
-          return cat?.type === selectedType
-        }
-        const cat = categories.find(c =>
-          c.id === productCategory.id ||
-          c.children?.some(child => child.id === productCategory.id)
-        )
+        const productCategoryId = productCategory?.id ?? p.categoryId
+        if (!productCategoryId) return false
+        const cat = categories.find((c) => c.id === productCategoryId)
         return cat?.type === selectedType
       })
     }
 
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(p => {
-        const productCategory = typeof p.category === 'object' ? p.category : null
-        const productCategoryId = productCategory?.id || p.categoryId
-        if (!productCategoryId) return false
-        const selectedCat = categories.find(c => c.id === selectedCategory)
-        if (!selectedCat) return false
-        return productCategoryId === selectedCategory ||
-          selectedCat.children?.some(child => child.id === productCategoryId)
+      const allowedIds = getAllDescendantIds(categories, selectedCategory)
+      filtered = filtered.filter((p) => {
+        const productCategoryId =
+          (typeof p.category === 'object' && p.category?.id) || p.categoryId
+        return productCategoryId && allowedIds.has(productCategoryId)
       })
     }
 
@@ -83,10 +95,10 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
 
   const resetFilters = () => {
     setSelectedCategory('all')
-    setSelectedType('all')
+    setSelectedType(hideTypeFilter ? defaultType : 'all')
   }
 
-  // Build category tree for sidebar
+  // Build category tree for sidebar (only categories of selected type)
   const buildCategoryTree = (cats: Category[]): Category[] => {
     const map = new Map<string, Category>()
     const roots: Category[] = []
@@ -106,24 +118,24 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
       }
     })
 
-    return roots.sort((a, b) => {
-      // Filter by selected type
-      if (selectedType !== 'all') {
-        if (a.type === selectedType && b.type !== selectedType) return -1
-        if (a.type !== selectedType && b.type === selectedType) return 1
-      }
-      return 0
-    })
+    const sortNodes = (nodes: Category[]) =>
+      nodes.sort((a, b) => {
+        const orderA = a.order ?? 0
+        const orderB = b.order ?? 0
+        if (orderA !== orderB) return orderA - orderB
+        return (a.name || '').localeCompare(b.name || '')
+      })
+    const sortTree = (nodes: Category[]) => {
+      sortNodes(nodes)
+      nodes.forEach((n) => n.children?.length && sortTree(n.children))
+    }
+    sortTree(roots)
+    return roots
   }
 
-  const categoryTree = buildCategoryTree(categories.filter(c => c.published))
+  const categoryTree = buildCategoryTree(categoriesForType)
 
   const renderCategoryMenuItem = (category: Category, level: number = 0) => {
-    // Filter by type if selected
-    if (selectedType !== 'all' && category.type !== selectedType) {
-      return null
-    }
-
     const isSelected = selectedCategory === category.id
     const hasChildren = category.children && category.children.length > 0
 
@@ -151,9 +163,12 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
     )
   }
 
+  const showSidebar = !hideTypeFilter || !hideCategoryFilter
+
   return (
     <div className="flex flex-col lg:flex-row gap-6">
       {/* Left Sidebar Menu */}
+      {showSidebar && (
       <aside className="w-full lg:w-64 flex-shrink-0">
         <div className="bg-white border-2 border-gray-300 shadow-lg p-5 lg:sticky lg:top-4">
           <div>
@@ -178,6 +193,7 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
             )}
 
             {/* Category Menu */}
+            {!hideCategoryFilter && (
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Catégories
@@ -201,9 +217,10 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
                 )}
               </div>
             </div>
+            )}
 
-            {/* Reset Button */}
-            {(selectedCategory !== 'all' || selectedType !== 'all') && (
+            {/* Reset Button - show when category filter active, or type filter (when type selector visible) */}
+            {(selectedCategory !== 'all' || (selectedType !== 'all' && !hideTypeFilter)) && (
               <button
                 onClick={resetFilters}
                 className="w-full mt-4 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
@@ -216,7 +233,7 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
             <div className="mt-4 pt-4 border-t border-gray-200">
               <p className="text-xs text-gray-600">
                 {filteredProducts.length} {filteredProducts.length === 1 ? 'produit' : 'produits'}
-                {(selectedCategory !== 'all' || selectedType !== 'all') && (
+                {(selectedCategory !== 'all' || (selectedType !== 'all' && !hideTypeFilter)) && (
                   <span className="block mt-1 text-[var(--accent)]">
                     sur {initialProducts.length} au total
                   </span>
@@ -226,6 +243,7 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
           </div>
         </div>
       </aside>
+      )}
 
       {/* Main Content Area */}
       <div className="flex-1 min-w-0">
@@ -264,6 +282,11 @@ function ProductCard({ product }: { product: Product }) {
   
   const isSold = product.sold || false
 
+  const imageUrls = product.image
+    ? product.image.split(/[|\r\n]+/).map((u) => u.trim()).filter(Boolean)
+    : []
+  const mainImage = imageUrls[0] || '/images/products/chr5-min-276x300.jpg'
+
   return (
     <Link
       href={`/produits/${product.slug}`}
@@ -272,12 +295,12 @@ function ProductCard({ product }: { product: Product }) {
       {/* Image */}
       <div className="relative w-full h-[420px] sm:h-[480px] md:h-[540px] overflow-hidden bg-[#f8f8f8]">
         <Image
-          src={product.image || '/images/products/chr5-min-276x300.jpg'}
+          src={mainImage}
           alt={product.name}
           fill
           className="object-contain p-3 sm:p-4 md:p-6 transition-transform duration-300 group-hover:scale-105"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-          unoptimized={product.image?.startsWith('http') || product.image?.startsWith('/uploads')}
+          unoptimized={mainImage.startsWith('http') || mainImage.startsWith('/uploads')}
         />
         {/* Overlay */}
         <div className="absolute inset-0 bg-[var(--accent)]/0 group-hover:bg-[var(--accent)]/10 transition-all duration-300"></div>
@@ -287,23 +310,30 @@ function ProductCard({ product }: { product: Product }) {
         </span>
         {/* Sold Badge */}
         {isSold && (
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-10">
-            <span className="text-white text-xl font-bold uppercase tracking-widest bg-red-600 px-6 py-2 rotate-[-15deg]">
-              VENDU
-            </span>
+          <div className="absolute top-0 right-0 w-[6.5rem] h-[6.5rem] overflow-hidden pointer-events-none z-10">
+            <div
+              className="absolute left-0 top-0 w-48 bg-red-600 flex items-center justify-center py-3 text-white text-sm font-bold uppercase tracking-widest"
+              style={{
+                transform: 'translate(-20px, 20px) rotate(45deg)',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                textShadow: '0 0 1px rgba(0,0,0,0.5)',
+              }}
+            >
+              Vendu
+            </div>
           </div>
         )}
       </div>
 
       {/* Content */}
       <div className="p-3 sm:p-4 md:p-5 border-t-4 border-[var(--accent)]">
-        <h3 className="text-[var(--grey)] text-xs sm:text-sm md:text-base font-bold mb-1 sm:mb-2 group-hover:text-[var(--accent)] transition-colors duration-200 leading-tight line-clamp-2">
+        <h3 className="text-[var(--grey)] text-xs md:text-sm font-bold mb-1 sm:mb-2 group-hover:text-[var(--accent)] transition-colors duration-200 leading-tight line-clamp-2">
           {product.name}
         </h3>
         <p className="text-[var(--grey)] text-[10px] sm:text-xs md:text-sm mb-2 sm:mb-4 line-clamp-2 hidden sm:block">
           {product.description}
         </p>
-        <span className="inline-flex items-center gap-1 sm:gap-2 text-[var(--accent)] text-[10px] sm:text-xs md:text-sm font-semibold uppercase tracking-wider group-hover:gap-2 sm:group-hover:gap-3 transition-all duration-200">
+        <span className="en-savoir-plus inline-flex items-center gap-1 sm:gap-2 text-[var(--accent)] text-[10px] sm:text-[11px] md:text-xs font-semibold uppercase tracking-wider group-hover:gap-2 sm:group-hover:gap-3 transition-all duration-200">
           En savoir plus
           <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />

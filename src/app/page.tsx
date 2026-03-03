@@ -1,5 +1,4 @@
 import { HeroSection } from '@/components/home/HeroSection'
-import { StatsSection } from '@/components/home/StatsSection'
 import { CredibilityBand } from '@/components/home/CredibilityBand'
 import { SolutionsSection } from '@/components/home/SolutionsSection'
 import { FeaturedProducts } from '@/components/home/FeaturedProducts'
@@ -10,7 +9,6 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <StatsSection />
       <CredibilityBand />
       <SolutionsSection />
       <FeaturedProducts />

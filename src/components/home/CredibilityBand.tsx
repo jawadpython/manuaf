@@ -41,24 +41,24 @@ export function CredibilityBand() {
             </p>
             
             {/* Stats - responsive grid */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 md:mb-8">
-              <div className="text-center p-3 sm:p-4 bg-white">
-                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-[var(--accent)]">10+</p>
-                <p className="text-[10px] sm:text-xs text-[var(--foreground-muted)] uppercase tracking-wider">Années d&apos;exp.</p>
+            <div className="grid grid-cols-3 gap-3 sm:gap-5 mb-8 md:mb-10">
+              <div className="text-center p-4 sm:p-5 bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--accent)]">10+</p>
+                <p className="text-[10px] sm:text-xs text-[var(--foreground-muted)] uppercase tracking-[0.1em] mt-1">Années d&apos;exp.</p>
               </div>
-              <div className="text-center p-3 sm:p-4 bg-white">
-                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-[var(--accent)]">500+</p>
-                <p className="text-[10px] sm:text-xs text-[var(--foreground-muted)] uppercase tracking-wider">Clients</p>
+              <div className="text-center p-4 sm:p-5 bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--accent)]">500+</p>
+                <p className="text-[10px] sm:text-xs text-[var(--foreground-muted)] uppercase tracking-[0.1em] mt-1">Clients</p>
               </div>
-              <div className="text-center p-3 sm:p-4 bg-white">
-                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-[var(--accent)]">24/7</p>
-                <p className="text-[10px] sm:text-xs text-[var(--foreground-muted)] uppercase tracking-wider">Support</p>
+              <div className="text-center p-4 sm:p-5 bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--accent)]">24/7</p>
+                <p className="text-[10px] sm:text-xs text-[var(--foreground-muted)] uppercase tracking-[0.1em] mt-1">Support</p>
               </div>
             </div>
             
             <Link
               href="/contact"
-              className="inline-block w-full sm:w-auto text-center px-6 sm:px-8 py-3 bg-[var(--accent)] text-[var(--foreground)] font-semibold rounded-lg hover:bg-[var(--accent-hover)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+              className="en-savoir-plus inline-block w-full sm:w-auto text-center px-5 sm:px-6 py-2.5 text-[0.8125rem] bg-[var(--accent)] text-[var(--foreground)] font-semibold rounded-lg hover:bg-[var(--accent-hover)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
               En savoir plus
             </Link>

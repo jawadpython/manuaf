@@ -37,7 +37,10 @@ export function ProductForm({
   const [name, setName] = useState(product?.name ?? '')
   const [description, setDescription] = useState(product?.description ?? '')
   const [categoryId, setCategoryId] = useState(product?.categoryId ?? '')
-  const [image, setImage] = useState(product?.image ?? '')
+  // Multiple images: stored as pipe-separated in DB, displayed as array
+  const [images, setImages] = useState<string[]>(
+    product?.image ? product.image.split(/[|\r\n]+/).map((u) => u.trim()).filter(Boolean) : []
+  )
   const [features, setFeatures] = useState(product?.features ?? '')
   const [order, setOrder] = useState(product?.order ?? 0)
   const [loading, setLoading] = useState(false)
@@ -84,7 +87,7 @@ export function ProductForm({
       const data = await res.json()
       
       if (res.ok && data.url) {
-        setImage(data.url)
+        setImages((prev) => [...prev, data.url])
         setUploadError(null)
       } else {
         setUploadError(data.error || 'Erreur lors du téléchargement')
@@ -113,7 +116,7 @@ export function ProductForm({
         name,
         description,
         categoryId,
-        image: image || null,
+        image: images.length > 0 ? images.join('|') : null,
         features: features || null,
         order,
       }),
@@ -216,12 +219,13 @@ export function ProductForm({
       </div>
 
       <div>
-        <label className="block text-sm text-gray-900/70 mb-2">Image *</label>
+        <label className="block text-sm text-gray-900/70 mb-2">Images (galerie produit)</label>
+        <p className="text-xs text-gray-900/50 mb-2">Vous pouvez ajouter plusieurs images. La première sera affichée en principal.</p>
         <div className="space-y-3">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <label className="cursor-pointer">
               <span className="inline-block px-4 py-2 bg-[var(--accent)] text-gray-900 text-sm font-semibold hover:bg-[var(--accent-hover)] transition-colors">
-                {image ? 'Changer l\'image' : 'Sélectionner une image'}
+                {uploading ? 'Téléchargement...' : 'Ajouter une image'}
               </span>
               <input
                 type="file"
@@ -231,36 +235,37 @@ export function ProductForm({
                 className="hidden"
               />
             </label>
-            {uploading && (
-              <span className="text-blue-400 text-xs">Téléchargement en cours...</span>
-            )}
           </div>
           {uploadError && (
             <p className="text-red-400 text-xs bg-red-500/10 border border-red-500/30 px-3 py-2 rounded">
               {uploadError}
             </p>
           )}
-          {image && !uploading && !uploadError && (
+          {images.length > 0 && (
             <div className="mt-3 space-y-2">
-              <p className="text-gray-900/70 text-xs">Aperçu de l&apos;image:</p>
-              <div className="relative w-full max-w-xs h-48 bg-[#1a1a1a] border border-gray-200 overflow-hidden rounded">
-                <img
-                  src={image}
-                  alt="Preview"
-                  className="w-full h-full object-contain"
-                  onError={() => setUploadError('Impossible de charger l\'image')}
-                />
+              <p className="text-gray-900/70 text-xs">{images.length} image(s) ajoutée(s):</p>
+              <div className="flex flex-wrap gap-3">
+                {images.map((url, i) => (
+                  <div key={i} className="relative group">
+                    <div className="relative w-24 h-24 sm:w-32 sm:h-32 bg-[#1a1a1a] border border-gray-200 overflow-hidden rounded">
+                      <img
+                        src={url}
+                        alt={`Image ${i + 1}`}
+                        className="w-full h-full object-cover"
+                        onError={() => setUploadError('Impossible de charger l\'image')}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
+                      className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                      title="Supprimer"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setImage('')
-                  setUploadError(null)
-                }}
-                className="text-red-400 text-xs hover:text-red-300 hover:underline"
-              >
-                Supprimer l&apos;image
-              </button>
             </div>
           )}
         </div>
@@ -268,13 +273,17 @@ export function ProductForm({
 
       <div>
         <label className="block text-sm text-gray-900/70 mb-2">
-          Caractéristiques (une par ligne)
+          Caractéristiques (format: Libellé: valeur — une par ligne)
         </label>
         <textarea
           value={features}
           onChange={(e) => setFeatures(e.target.value)}
-          rows={4}
-          placeholder={'Option A\nOption B\nOption C'}
+          rows={8}
+          placeholder={`Marque:
+Modèle:
+Capacité:
+Dimensions:
+État: 3/4`}
           className="w-full bg-white border border-gray-200 px-4 py-2 text-gray-900"
         />
       </div>

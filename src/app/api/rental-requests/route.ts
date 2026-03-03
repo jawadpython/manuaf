@@ -1,34 +1,25 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendRentalRequestEmail } from '@/lib/email'
+import { sanitizeInput, sanitizeTextarea } from '@/lib/utils'
 
 const MOTORISATION_VALUES = ['electrique', 'thermique']
-
-function sanitize(str: unknown): string {
-  if (str == null || typeof str !== 'string') return ''
-  return str.trim().slice(0, 500)
-}
-
-function sanitizeTextarea(str: unknown): string {
-  if (str == null || typeof str !== 'string') return ''
-  return str.trim().slice(0, 2000)
-}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
 
-    const chariot_type = sanitize(body.chariot_type) || 'Non spécifié'
-    const motorisation = sanitize(body.motorisation)
+    const chariot_type = sanitizeInput(body.chariot_type) || 'Non spécifié'
+    const motorisation = sanitizeInput(body.motorisation)
     const capacite_kg = body.capacite_kg != null ? Math.max(0, Math.min(10000, Number(body.capacite_kg) || 0)) : null
     const hauteur_m = body.hauteur_m != null ? Math.max(0, Math.min(20, parseFloat(String(body.hauteur_m)) || 0)) : null
-    const ville = sanitize(body.ville) || null
-    const duree_location = sanitize(body.duree_location) || null
-    const type_roues = sanitize(body.type_roues) || null
-    const type_mat = sanitize(body.type_mat) || null
+    const ville = sanitizeInput(body.ville) || null
+    const duree_location = sanitizeInput(body.duree_location) || null
+    const type_roues = sanitizeInput(body.type_roues) || null
+    const type_mat = sanitizeInput(body.type_mat) || null
     const notes = sanitizeTextarea(body.notes) || null
-    const client_name = sanitize(body.client_name)
-    const client_phone = sanitize(body.client_phone)
+    const client_name = sanitizeInput(body.client_name)
+    const client_phone = sanitizeInput(body.client_phone)
 
     if (!client_name || client_name.length < 2) {
       return NextResponse.json({ error: 'Nom requis (min. 2 caractères)' }, { status: 400 })

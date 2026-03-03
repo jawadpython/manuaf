@@ -1,7 +1,10 @@
 import { notFound } from 'next/navigation'
-import Image from 'next/image'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getBlogPostBySlug } from '@/lib/data'
+import { sanitizeHtml } from '@/lib/sanitize'
+import { PageHero } from '@/components/layout/PageHero'
+import { RANDOM_IMAGES } from '@/lib/randomImages'
 import type { Metadata } from 'next'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -30,8 +33,16 @@ export default async function ArticlePage({ params }: Props) {
 
   if (!post) notFound()
 
+  const heroImage = post.image || RANDOM_IMAGES[2]
+
   return (
-    <article className="bg-[#f5f5f5] min-h-screen mt-[72px] md:mt-[96px]">
+    <article className="bg-[#f5f5f5] min-h-screen">
+      <PageHero
+        label="Blog"
+        title={post.title}
+        subtitle={post.excerpt}
+        image={heroImage}
+      />
       <section className="py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-6">
           <Link
@@ -55,19 +66,19 @@ export default async function ArticlePage({ params }: Props) {
           </Link>
 
           <div className="bg-white">
-            {post.image && (
+            {heroImage && (
               <div className="relative aspect-[21/9] overflow-hidden">
                 <Image
-                  src={post.image}
+                  src={heroImage}
                   alt={post.title}
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 896px"
                   priority
+                  unoptimized={heroImage.startsWith('http')}
                 />
               </div>
             )}
-
             <div className="p-8 md:p-12 border-t-4 border-[var(--accent)]">
               <p className="text-[#999999] text-sm mb-3">
                 {formatDate(post.createdAt)}
@@ -84,7 +95,7 @@ export default async function ArticlePage({ params }: Props) {
                 {post.content ? (
                   <div
                     className="text-[#666666] leading-relaxed space-y-4"
-                    dangerouslySetInnerHTML={{ __html: post.content }}
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
                   />
                 ) : (
                   <p className="text-[#999999] italic">

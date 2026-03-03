@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { ContactForm } from '@/components/contact/ContactForm'
-import { RANDOM_IMAGES } from '@/lib/randomImages'
+import { PageHero } from '@/components/layout/PageHero'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -10,28 +10,13 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="bg-[#f5f5f5] min-h-screen pt-[56px] md:pt-[96px]">
-      {/* Hero Section */}
-      <section className="relative py-12 md:py-16 overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={RANDOM_IMAGES[5]} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
-          <div className="absolute inset-0 bg-[var(--grey)]/90" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-3">
-            Nous contacter
-          </p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3">
-            Contact
-          </h1>
-          <div className="w-16 sm:w-20 h-1 bg-[var(--accent)] mx-auto mb-4"></div>
-          <p className="text-white/80 max-w-xl mx-auto text-sm sm:text-base">
-            Notre équipe est à votre disposition pour répondre à toutes vos questions
-          </p>
-        </div>
-        </div>
-      </section>
+    <div className="bg-[#f5f5f5] min-h-screen">
+      <PageHero
+        label="Nous contacter"
+        title="Contact"
+        subtitle="Notre équipe est à votre disposition pour répondre à toutes vos questions"
+        image="/images/contact.webp"
+      />
 
       <section className="py-10 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
