@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { PrismaClient } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
@@ -15,23 +15,30 @@ export async function GET() {
 
     logs.push({ time: now, type: 'info', message: 'Test de connexion Supabase / PostgreSQL...' })
 
-    // Check DATABASE_URL is set
-    if (!process.env.DATABASE_URL) {
-      logs.push({ time: now, type: 'error', message: 'DATABASE_URL non configurée' })
-      return NextResponse.json({
-        ok: false,
-        logs,
-        error: 'DATABASE_URL manquante',
-      })
+    const directUrl = process.env.DIRECT_URL || process.env.DATABASE_URL
+    if (!directUrl) {
+      logs.push({ time: now, type: 'error', message: 'DIRECT_URL et DATABASE_URL non configurées' })
+      return NextResponse.json({ ok: false, logs, error: 'Variables manquantes' })
     }
 
-    logs.push({ time: now, type: 'info', message: 'DATABASE_URL configurée (masquée)' })
+    logs.push({
+      time: now,
+      type: 'info',
+      message: process.env.DIRECT_URL
+        ? 'Connexion directe (DIRECT_URL) utilisée pour le test'
+        : 'Connexion poolée (DATABASE_URL) - en cas d\'erreur, ajoutez DIRECT_URL dans Vercel',
+    })
 
-    // Test connection with a simple query (use Unsafe to avoid prepared statement "s0 already exists" with PgBouncer)
+    // Use direct connection to bypass PgBouncer - avoids "prepared statement already exists" error
+    const directClient = new PrismaClient({
+      datasources: { db: { url: directUrl } },
+    })
+
     try {
-      await prisma.$queryRawUnsafe('SELECT 1')
+      await directClient.$queryRawUnsafe('SELECT 1')
       logs.push({ time: new Date().toISOString(), type: 'success', message: 'Connexion réussie' })
     } catch (dbError) {
+      await directClient.$disconnect().catch(() => {})
       const err = dbError as Error
       const errMsg = err?.message ?? String(dbError)
       logs.push({ time: new Date().toISOString(), type: 'error', message: `Erreur: ${errMsg}` })
@@ -58,6 +65,13 @@ export async function GET() {
           message: 'Conseil: Mot de passe incorrect. Vérifiez dans Supabase → Settings → Database.',
         })
       }
+      if (errMsg.includes('prepared statement')) {
+        logs.push({
+          time: new Date().toISOString(),
+          type: 'info',
+          message: 'Conseil: Utilisez DIRECT_URL (connexion directe, port 5432) pour ce test. La connexion poolée peut causer cette erreur.',
+        })
+      }
 
       return NextResponse.json({
         ok: false,
@@ -66,18 +80,20 @@ export async function GET() {
       })
     }
 
-    // Optional: count some tables to confirm schema
+    // Optional: count tables via direct client (bypasses PgBouncer)
     try {
       const [categories, products] = await Promise.all([
-        prisma.category.count(),
-        prisma.product.count(),
+        directClient.category.count(),
+        directClient.product.count(),
       ])
+      await directClient.$disconnect()
       logs.push({
         time: new Date().toISOString(),
         type: 'success',
         message: `Schéma OK - ${categories} catégories, ${products} produits`,
       })
     } catch {
+      await directClient.$disconnect().catch(() => {})
       logs.push({
         time: new Date().toISOString(),
         type: 'info',
