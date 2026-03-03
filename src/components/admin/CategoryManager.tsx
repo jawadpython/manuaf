@@ -190,7 +190,7 @@ export function CategoryManager({
 
       {/* Chariots Categories */}
       <div className="mb-8">
-        <h2 className="text-xl text-gray-900 mb-4 font-display">Chariots</h2>
+        <h2 className="text-base text-gray-900 mb-4 font-display">Chariots</h2>
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
           <table className="w-full text-left">
             <thead>
@@ -220,7 +220,7 @@ export function CategoryManager({
 
       {/* Pièces de rechange Categories */}
       <div>
-        <h2 className="text-xl text-gray-900 mb-4 font-display">Pièces de rechange</h2>
+        <h2 className="text-base text-gray-900 mb-4 font-display">Pièces de rechange</h2>
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
           <table className="w-full text-left">
             <thead>

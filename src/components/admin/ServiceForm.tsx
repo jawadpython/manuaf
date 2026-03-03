@@ -114,7 +114,7 @@ export function ServiceForm({
       onSubmit={handleSubmit}
       className="bg-white border border-gray-200 p-6 space-y-6 max-w-2xl"
     >
-      <h3 className="font-display text-xl text-gray-900">
+      <h3 className="font-display text-base text-gray-900">
         {service ? 'Modifier le service' : 'Nouveau service'}
       </h3>
 

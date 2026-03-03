@@ -46,7 +46,7 @@ export default function AdminLoginPage() {
         </Link>
 
         <div className="bg-white border border-[var(--border)] rounded-xl shadow-lg p-8">
-          <h1 className="font-display text-3xl text-[var(--foreground)] tracking-tight">
+          <h1 className="font-display text-xl text-[var(--foreground)] tracking-tight">
             Administration
           </h1>
           <p className="mt-2 text-[var(--foreground-muted)] text-sm">

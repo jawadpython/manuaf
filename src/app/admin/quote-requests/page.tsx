@@ -15,7 +15,7 @@ export default async function AdminQuoteRequestsPage() {
   return (
     <>
       <header className="mb-8">
-        <h1 className="font-display text-3xl lg:text-4xl text-[var(--foreground)] tracking-tight">
+        <h1 className="font-display text-xl lg:text-2xl text-[var(--foreground)] tracking-tight">
           Demandes de devis
         </h1>
         <p className="mt-1 text-[var(--foreground-muted)]">

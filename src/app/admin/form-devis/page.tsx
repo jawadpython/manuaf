@@ -15,7 +15,7 @@ export default async function AdminFormDevisPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-[var(--grey)]">Formulaire devis</h1>
+        <h1 className="text-xl font-bold text-[var(--grey)]">Formulaire devis</h1>
         <p className="text-gray-600 mt-1">Personnalisez les champs du formulaire &quot;Demander un devis&quot;</p>
       </div>
       <FormFieldsManager />

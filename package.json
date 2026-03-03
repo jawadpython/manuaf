@@ -6,7 +6,8 @@
   "author": "",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "next dev --webpack",
+    "dev": "next dev --webpack -p 8080",
+    "dev:3000": "next dev --webpack -p 3000",
     "dev:turbo": "next dev",
     "build": "(prisma generate || echo Prisma generate skipped) && next build",
     "build:next": "next build",

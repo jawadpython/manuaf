@@ -415,7 +415,6 @@ export function Header() {
       </div>
 
       <MegaMenuOverlay
-        key={chariotsOpen ? 'chariots' : piecesOpen ? 'pieces' : 'services'}
         id="mega-menu"
         title={chariotsOpen ? 'Chariots' : piecesOpen ? 'Pièces de rechange' : 'Services'}
         items={chariotsOpen ? chariotsGroup : piecesOpen ? piecesGroup : servicesGroup}

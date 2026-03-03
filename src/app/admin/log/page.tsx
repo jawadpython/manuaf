@@ -15,7 +15,7 @@ export default async function AdminLogPage() {
   return (
     <>
       <header className="mb-6">
-        <h1 className="font-display text-2xl lg:text-3xl text-[var(--foreground)] tracking-tight">
+        <h1 className="font-display text-xl lg:text-2xl text-[var(--foreground)] tracking-tight">
           Statut Base de données
         </h1>
         <p className="mt-1 text-sm text-[var(--foreground-muted)]">

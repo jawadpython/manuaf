@@ -114,7 +114,7 @@ export function MegaMenuOverlay({
       setIsClosing(false)
       setActiveIndex(0)
     }
-  }, [open, items])
+  }, [open, title, items])
 
   useEffect(() => {
     if (!open && isVisible) {
@@ -218,8 +218,9 @@ export function MegaMenuOverlay({
             </nav>
           </aside>
 
-          {/* Right: white panel — header, sub-links, promotional (updates with selection) */}
-          <div className={styles.megaMenu__right}>
+          {/* Right: white panel — header, sub-links, promotional (updates with selection).
+              Key forces fresh DOM when switching Chariots/Pièces/Services to avoid stale text flash */}
+          <div key={title} className={styles.megaMenu__right}>
             <div className={styles.megaMenu__rightContent}>
               <h4 className={styles.megaMenu__contentTitle}>
                 {activeItem?.label ?? featured.title}

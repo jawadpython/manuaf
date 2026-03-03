@@ -34,7 +34,7 @@ export function AdminNav() {
       <div className="p-6 border-b border-[var(--border)] bg-[var(--grey)]">
         <Link
           href="/admin"
-          className="font-display text-xl text-white tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded"
+          className="font-display text-base text-white tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded"
         >
           Admin MANUAF
         </Link>
