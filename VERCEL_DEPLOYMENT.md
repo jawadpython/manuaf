@@ -12,7 +12,7 @@ Simple steps to upload your project to GitHub and host it on Vercel.
 4. Go to **Settings → Database**
 5. Copy these two connection strings (replace `[YOUR-PASSWORD]` with your DB password):
 
-   - **Connection pooling (Transaction mode)** → use for `DATABASE_URL`
+   - **Connection pooling (Transaction mode)** → use for `DATABASE_URL` — **you must append `?pgbouncer=true`** to avoid Prisma errors (see checklist below)
    - **Direct connection (Session mode)** → use for `DIRECT_URL`
 
 6. Keep the Supabase project **Active** (free tier pauses after inactivity)
@@ -49,7 +49,7 @@ git push -u origin main
 
 | Variable | What it does | Where to get it |
 |----------|--------------|-----------------|
-| `DATABASE_URL` | Connects the app to your Supabase database (pooled = many connections, fast) | Supabase → Settings → Database → **Connection pooling** → URI (use port 6543) |
+| `DATABASE_URL` | Connects the app to your Supabase database (pooled = many connections, fast) | Supabase → Settings → Database → **Connection pooling** (Transaction mode, port 6543) → URI **+ add `?pgbouncer=true`** at the end (required for Prisma) |
 | `DIRECT_URL` | Used by Prisma for migrations only (direct connection) | Supabase → Settings → Database → **Connection string** → URI (port 5432) |
 | `NEXTAUTH_SECRET` | Encrypts session cookies – without it, admin login breaks | Run in terminal: `openssl rand -base64 32` |
 | `NEXTAUTH_URL` | Your site URL – needed for auth redirects | Use `https://your-project.vercel.app` (update after first deploy) |
@@ -112,7 +112,7 @@ npx prisma db push
 Add these in Vercel → Project → Settings → Environment Variables:
 
 ```
-DATABASE_URL       = (from Supabase, pooled, port 6543)
+DATABASE_URL       = (from Supabase, pooled, port 6543) + ?pgbouncer=true
 DIRECT_URL         = (from Supabase, direct, port 5432)
 NEXTAUTH_SECRET    = (run: openssl rand -base64 32)
 NEXTAUTH_URL       = https://YOUR_APP.vercel.app

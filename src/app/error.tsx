@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 export default function Error({
@@ -10,10 +10,18 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  const [showDetails, setShowDetails] = useState(false)
+
   useEffect(() => {
     // Log error to error reporting service in production
     console.error('Application error:', error)
   }, [error])
+
+  // Show error details in dev or when ?debug=1
+  const isDev = process.env.NODE_ENV === 'development'
+  const canShowDetails =
+    isDev ||
+    (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('debug') === '1')
 
   return (
     <div className="bg-[#f5f5f5] min-h-screen flex items-center justify-center pt-[72px] md:pt-[96px]">
@@ -27,6 +35,23 @@ export default function Error({
         <p className="text-[var(--grey)] mb-8">
           Nous nous excusons pour le désagrément. Veuillez réessayer ou contacter notre support si le problème persiste.
         </p>
+        {canShowDetails && (
+          <div className="mb-6 text-left">
+            <button
+              type="button"
+              onClick={() => setShowDetails(!showDetails)}
+              className="text-sm text-[var(--accent)] underline mb-2"
+            >
+              {showDetails ? 'Masquer' : 'Afficher'} les détails techniques
+            </button>
+            {showDetails && (
+              <pre className="bg-gray-900 text-amber-200 p-4 rounded text-xs overflow-auto max-h-48">
+                {error.message}
+                {error.digest && `\n[digest: ${error.digest}]`}
+              </pre>
+            )}
+          </div>
+        )}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={reset}
