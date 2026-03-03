@@ -59,6 +59,18 @@ export function AdminNav() {
                 Dashboard
               </Link>
             </li>
+            <li>
+              <Link
+                href="/admin/log"
+                className={`block px-4 py-3 text-sm rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
+                  pathname === '/admin/log'
+                    ? 'bg-[var(--accent)]/15 text-[var(--accent)] font-semibold'
+                    : 'text-[var(--foreground-muted)] hover:bg-[var(--background-alt)] hover:text-[var(--foreground)]'
+                }`}
+              >
+                Log / Statut DB
+              </Link>
+            </li>
           </ul>
         </div>
 

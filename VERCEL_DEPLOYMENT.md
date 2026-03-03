@@ -45,14 +45,27 @@ git push -u origin main
 4. Framework: **Next.js** (auto-detected)
 5. Before deploying, go to **Settings → Environment Variables** and add:
 
-| Variable | Value | Where to get it |
-|----------|-------|-----------------|
-| `DATABASE_URL` | Pooled connection string | Supabase → Settings → Database → Connection pooling |
-| `DIRECT_URL` | Direct connection string | Supabase → Settings → Database → Connection string (URI) |
-| `NEXTAUTH_SECRET` | Random 32+ chars | Run: `openssl rand -base64 32` |
-| `NEXTAUTH_URL` | `https://your-project.vercel.app` | After first deploy |
-| `ADMIN_EMAIL` | Your admin email | Any email |
-| `ADMIN_PASSWORD` | Strong password | For admin login |
+### Required variables (must have)
+
+| Variable | What it does | Where to get it |
+|----------|--------------|-----------------|
+| `DATABASE_URL` | Connects the app to your Supabase database (pooled = many connections, fast) | Supabase → Settings → Database → **Connection pooling** → URI (use port 6543) |
+| `DIRECT_URL` | Used by Prisma for migrations only (direct connection) | Supabase → Settings → Database → **Connection string** → URI (port 5432) |
+| `NEXTAUTH_SECRET` | Encrypts session cookies – without it, admin login breaks | Run in terminal: `openssl rand -base64 32` |
+| `NEXTAUTH_URL` | Your site URL – needed for auth redirects | Use `https://your-project.vercel.app` (update after first deploy) |
+| `ADMIN_EMAIL` | Email used to log in to `/admin` | Choose any email (e.g. `admin@manuaf.com`) |
+| `ADMIN_PASSWORD` | Password for admin login | Choose a strong password |
+
+### Optional variables (used if set)
+
+| Variable | What it does | Where to get it |
+|----------|--------------|-----------------|
+| `BLOB_READ_WRITE_TOKEN` | Upload product images in admin (Vercel Blob) | Vercel Dashboard → Storage → Blob → Create store |
+| `CLOUDINARY_CLOUD_NAME` | Alternative image upload (Cloudinary) | cloudinary.com dashboard |
+| `CLOUDINARY_API_KEY` | Cloudinary API key | cloudinary.com dashboard |
+| `CLOUDINARY_API_SECRET` | Cloudinary secret | cloudinary.com dashboard |
+| `RESEND_API_KEY` | Send emails (contact form, rental requests) | resend.com → API Keys |
+| `EMAIL_FROM` | Sender address for emails | Your verified domain (e.g. `noreply@manuaf.com`) |
 
 6. Click **Deploy**
 
@@ -91,3 +104,29 @@ npx prisma db push
 - `.env` is ignored by git — keep it local only
 - All production secrets go in **Vercel** → Environment Variables
 - Generate a new `NEXTAUTH_SECRET` for each environment
+
+---
+
+## Vercel variables checklist
+
+Add these in Vercel → Project → Settings → Environment Variables:
+
+```
+DATABASE_URL       = (from Supabase, pooled, port 6543)
+DIRECT_URL         = (from Supabase, direct, port 5432)
+NEXTAUTH_SECRET    = (run: openssl rand -base64 32)
+NEXTAUTH_URL       = https://YOUR_APP.vercel.app
+ADMIN_EMAIL        = your@email.com
+ADMIN_PASSWORD     = your-secure-password
+
+# Optional – image upload in admin
+BLOB_READ_WRITE_TOKEN  = (Vercel Blob token)
+# OR
+CLOUDINARY_CLOUD_NAME  = your-cloud-name
+CLOUDINARY_API_KEY     = your-key
+CLOUDINARY_API_SECRET  = your-secret
+
+# Optional – email notifications
+RESEND_API_KEY     = re_xxxxx
+EMAIL_FROM         = noreply@yourdomain.com
+```
