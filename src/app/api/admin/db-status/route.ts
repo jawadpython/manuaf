@@ -27,9 +27,9 @@ export async function GET() {
 
     logs.push({ time: now, type: 'info', message: 'DATABASE_URL configurée (masquée)' })
 
-    // Test connection with a simple query
+    // Test connection with a simple query (use Unsafe to avoid prepared statement "s0 already exists" with PgBouncer)
     try {
-      await prisma.$queryRaw`SELECT 1`
+      await prisma.$queryRawUnsafe('SELECT 1')
       logs.push({ time: new Date().toISOString(), type: 'success', message: 'Connexion réussie' })
     } catch (dbError) {
       const err = dbError as Error
