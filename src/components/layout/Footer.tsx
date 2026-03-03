@@ -22,9 +22,9 @@ const footerLinks = {
     { href: '/demander-chariot', label: 'Demander un chariot' },
     { href: '/produits/chariots/location', label: 'Location de chariots' },
     { href: '/produits/chariots/occasion', label: "Chariots d'occasion" },
-    { href: '/produits/pieces/batteries', label: 'Batteries' },
-    { href: '/produits/pieces/accessoires', label: 'Accessoires' },
-    { href: '/produits/pieces/commandes', label: 'Pièces de rechange' },
+    { href: '/produits/pieces?category=batteries', label: 'Batteries' },
+    { href: '/produits/pieces?category=accessoires', label: 'Accessoires' },
+    { href: '/produits/pieces?category=commandes', label: 'Commandes' },
   ],
   services: [
     { href: '/services?service=maintenance', label: 'Maintenance' },

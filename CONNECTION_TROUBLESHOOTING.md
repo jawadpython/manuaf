@@ -1,8 +1,8 @@
 # Supabase Connection Troubleshooting
 
 ## Current Status
-- ✅ .env file updated with: `postgresql://postgres:Islamsalma123@db.twmhpaeudrtpewwbepum.supabase.co:5432/postgres`
-- ❌ Connection test failed: "Can't reach database server"
+- Update `.env` with your Supabase connection string from the dashboard
+- If "Can't reach database server": project may be paused (free tier)
 
 ## Most Common Causes
 
@@ -62,16 +62,15 @@ Free tier Supabase projects pause after 1 week of inactivity.
 ```
 1. Settings → Database
 2. Connection string → URI tab
-3. Copy the string
-4. Replace [YOUR-PASSWORD] with: Islamsalma123
-5. Should look like:
-   postgresql://postgres:Islamsalma123@db.twmhpaeudrtpewwbepum.supabase.co:5432/postgres
+3. Copy the string and replace [YOUR-PASSWORD] with your database password
+4. Format: postgresql://postgres:PASSWORD@db.PROJECT_REF.supabase.co:5432/postgres
 ```
 
 ### Step 3: Update .env File
-Make sure your `.env` has:
+Add to your `.env` (never commit this file):
 ```env
-DATABASE_URL="postgresql://postgres:Islamsalma123@db.twmhpaeudrtpewwbepum.supabase.co:5432/postgres"
+DATABASE_URL="postgresql://..."  # From Supabase dashboard
+DIRECT_URL="postgresql://..."    # Direct connection (port 5432) for migrations
 ```
 
 ### Step 4: Test Again
@@ -81,22 +80,13 @@ npx prisma db push
 
 ## Alternative: Try Connection Pooling
 
-If direct connection doesn't work, try pooling (port 6543):
-
-```env
-DATABASE_URL="postgresql://postgres:Islamsalma123@db.twmhpaeudrtpewwbepum.supabase.co:6543/postgres?pgbouncer=true&connection_limit=1"
-```
+If direct connection doesn't work, try pooling (port 6543) from Supabase → Settings → Database → Connection pooling.
 
 ## Verify Connection String Format
 
-Your connection string should be:
-```
-postgresql://postgres:PASSWORD@db.PROJECT_REF.supabase.co:5432/postgres
-```
+Format: `postgresql://postgres:PASSWORD@db.PROJECT_REF.supabase.co:5432/postgres`
 
-Where:
-- `PASSWORD` = Your database password (Islamsalma123)
-- `PROJECT_REF` = Your project reference (twmhpaeudrtpewwbepum)
+Get both DATABASE_URL (pooled) and DIRECT_URL (direct) from the Supabase dashboard.
 
 **Important:** 
 - No extra `@` symbols

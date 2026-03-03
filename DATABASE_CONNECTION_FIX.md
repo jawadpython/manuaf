@@ -21,8 +21,10 @@ This usually means your Supabase project is **paused** (common on free tier).
 After restoring, verify your `.env` file has the correct connection string:
 
 ```env
-DATABASE_URL="postgresql://postgres.twmhpaeudrtpewwbepum:Islamsalma123@aws-1-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
+DATABASE_URL="postgresql://postgres.PROJECT_REF:YOUR_PASSWORD@REGION.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
 ```
+
+Get the exact strings from Supabase Dashboard → Settings → Database → Connection string (URI).
 
 ### 3. Test Connection
 

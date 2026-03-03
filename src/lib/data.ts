@@ -464,10 +464,10 @@ export async function getMegaMenuByType(type: 'chariots' | 'pieces'): Promise<Me
     for (const cat of rootCats) {
       const subLinks: { href: string; label: string }[] = []
 
-      // Add child categories as sub-links
+      // Add child categories as sub-links (pieces: stay on /produits/pieces with filter; chariots: dedicated page)
       for (const child of cat.children || []) {
         subLinks.push({
-          href: `/produits/c/${child.slug}`,
+          href: type === 'pieces' ? `/produits/pieces?category=${child.slug}` : `/produits/c/${child.slug}`,
           label: child.name,
         })
       }
@@ -500,6 +500,8 @@ export async function getMegaMenuByType(type: 'chariots' | 'pieces'): Promise<Me
       items.push({
         href: type === 'chariots' && (cat.slug === 'chariots-de-location' || cat.slug === 'chariots-d-occasion')
           ? (cat.slug === 'chariots-de-location' ? '/produits/chariots/location' : '/produits/chariots/occasion')
+          : type === 'pieces'
+          ? `/produits/pieces?category=${cat.slug}`
           : `/produits/c/${cat.slug}`,
         label: cat.name,
         subLinks: finalSubLinks,

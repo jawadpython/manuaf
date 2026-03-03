@@ -10,15 +10,24 @@ export const metadata: Metadata = {
     'Batteries, accessoires et éléments de commande pour chariots élévateurs au Maroc.',
 }
 
-export default async function PiecesPage() {
+type Props = { searchParams: Promise<{ category?: string }> }
+
+export default async function PiecesPage({ searchParams }: Props) {
   // Fetch categories and products in parallel - use optimized query for pieces
-  const [categories, piecesProducts] = await Promise.all([
+  const [categories, piecesProducts, params] = await Promise.all([
     getAllCategories(),
-    getProductsByType('pieces')
+    getProductsByType('pieces'),
+    searchParams
   ])
   
   // Get all published categories with their structure
   const allCategories = categories.filter(c => c.published)
+  
+  // Resolve default category from ?category=slug (from mega menu / footer links)
+  const categorySlug = params?.category
+  const defaultCategory = categorySlug
+    ? (allCategories.find((c) => c.slug === categorySlug && c.type === 'pieces')?.id ?? undefined)
+    : undefined
 
   return (
     <div className="bg-[#f5f5f5] min-h-screen">
@@ -37,6 +46,7 @@ export default async function PiecesPage() {
             categories={allCategories}
             defaultType="pieces"
             hideTypeFilter={true}
+            defaultCategory={defaultCategory}
           />
         </div>
       </section>

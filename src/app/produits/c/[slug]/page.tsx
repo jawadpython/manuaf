@@ -33,6 +33,11 @@ export default async function CategoryPage({ params }: Props) {
     }
   }
 
+  // Redirect pieces categories to main pieces page with category filter (no dedicated /produits/c/ pages for pieces)
+  if (category.type === 'pieces') {
+    redirect(`/produits/pieces?category=${category.slug}`)
+  }
+
   const [products, allCategories] = await Promise.all([
     getProductsByCategory(slug),
     getAllCategories(),

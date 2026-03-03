@@ -1,12 +1,12 @@
-# Supabase Setup Script
-# This script updates your .env file with Supabase connection string
+# Supabase Setup Script (local use only)
+# Updates .env with Supabase connection - replace placeholders with your credentials
 
-$projectPath = "C:\Users\Pc\3D Objects\websites.khedma\logistec2"
+$projectPath = $PSScriptRoot  # Use script's directory
 $envPath = Join-Path $projectPath ".env"
 
-# Fixed connection string (removed extra @)
-$databaseUrl = "postgresql://postgres:Islamsalma123@db.twmhpaeudrtpewwbepum.supabase.co:5432/postgres?pgbouncer=true&connection_limit=1"
-$nextAuthSecret = "E6ryxFLdK0BEoaUwtaycit4oRlGmQwZciJmBuOKS+to="
+# Replace with your Supabase connection strings from Dashboard → Settings → Database
+$databaseUrl = "postgresql://postgres:YOUR_PASSWORD@db.PROJECT_REF.supabase.co:5432/postgres?pgbouncer=true&connection_limit=1"
+$nextAuthSecret = "run-openssl-rand-base64-32-to-generate"
 
 Write-Host "🔧 Setting up Supabase connection..." -ForegroundColor Cyan
 

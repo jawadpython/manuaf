@@ -8,7 +8,7 @@ const solutions = [
   { title: 'Les solutions digitales', image: RANDOM_IMAGES[2], href: '/services' },
   { title: 'Les solutions automatisées', image: RANDOM_IMAGES[3], href: '/services' },
   { title: 'Les services', image: RANDOM_IMAGES[4], href: '/services' },
-  { title: 'Les solutions énergétiques', image: RANDOM_IMAGES[5], href: '/produits/pieces/batteries' },
+  { title: 'Les solutions énergétiques', image: RANDOM_IMAGES[5], href: '/produits/pieces?category=batteries' },
 ]
 
 function SolutionCard({ title, image, href }: { title: string; image: string; href: string }) {
