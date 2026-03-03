@@ -95,7 +95,19 @@ export async function POST(request: Request) {
     }
   }
 
-  // Priority 3: Local storage (development only)
+  // Priority 3: Local storage (development only – does NOT work on Vercel)
+  const isVercel = !!process.env.VERCEL
+  if (isVercel) {
+    return NextResponse.json(
+      {
+        error:
+          "Impossible d'enregistrer l'image : aucun stockage cloud configuré. " +
+          "Ajoutez BLOB_READ_WRITE_TOKEN (Vercel → Storage → Blob) ou CLOUDINARY_CLOUD_NAME dans les variables d'environnement Vercel.",
+      },
+      { status: 503 }
+    )
+  }
+
   try {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
@@ -110,7 +122,10 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Local storage upload failed:', error)
     return NextResponse.json(
-      { error: 'Erreur lors de l\'enregistrement local' },
+      {
+        error:
+          "Erreur lors de l'enregistrement local. En production, configurez Vercel Blob ou Cloudinary.",
+      },
       { status: 500 }
     )
   }

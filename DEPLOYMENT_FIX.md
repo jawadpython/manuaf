@@ -64,3 +64,27 @@ After redeploying:
 3. Browse products and chariots pages
 
 If errors persist, check `/admin/log` for database connection status.
+
+---
+
+## Fix: "Erreur lors de l'enregistrement local" (image upload)
+
+When uploading product/chariot images in admin on Vercel, local file storage does **not** work (Vercel's filesystem is read-only).
+
+### Solution: Configure cloud storage
+
+**Option A: Vercel Blob (recommended)**
+
+1. Go to **Vercel** → Your project → **Storage**
+2. Click **Create Database** → **Blob**
+3. Create a Blob store
+4. Copy the `BLOB_READ_WRITE_TOKEN`
+5. Add it in **Settings** → **Environment Variables**
+6. Redeploy
+
+**Option B: Cloudinary**
+
+1. Create a free account at [cloudinary.com](https://cloudinary.com)
+2. From Dashboard, copy: Cloud name, API Key, API Secret
+3. Add in Vercel: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
+4. Redeploy

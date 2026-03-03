@@ -56,14 +56,20 @@ git push -u origin main
 | `ADMIN_EMAIL` | Email used to log in to `/admin` | Choose any email (e.g. `admin@manuaf.com`) |
 | `ADMIN_PASSWORD` | Password for admin login | Choose a strong password |
 
-### Optional variables (used if set)
+### Image uploads (required for admin product/chariot images)
+
+**Local storage does NOT work on Vercel.** You must configure one of:
 
 | Variable | What it does | Where to get it |
 |----------|--------------|-----------------|
-| `BLOB_READ_WRITE_TOKEN` | Upload product images in admin (Vercel Blob) | Vercel Dashboard → Storage → Blob → Create store |
-| `CLOUDINARY_CLOUD_NAME` | Alternative image upload (Cloudinary) | cloudinary.com dashboard |
+| `BLOB_READ_WRITE_TOKEN` | ✅ Recommended: Upload images (Vercel Blob) | Vercel Dashboard → **Storage** → **Blob** → Create store → Copy token |
+| `CLOUDINARY_CLOUD_NAME` | Alternative (Cloudinary) | cloudinary.com → Dashboard → Cloud name |
 | `CLOUDINARY_API_KEY` | Cloudinary API key | cloudinary.com dashboard |
 | `CLOUDINARY_API_SECRET` | Cloudinary secret | cloudinary.com dashboard |
+
+See also: `DEPLOYMENT_FIX.md` if you see "Erreur lors de l'enregistrement local".
+
+### Other optional variables (used if set)
 | `RESEND_API_KEY` | Send emails (contact form, rental requests) | resend.com → API Keys |
 | `EMAIL_FROM` | Sender address for emails | Your verified domain (e.g. `noreply@manuaf.com`) |
 
