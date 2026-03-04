@@ -1,21 +1,31 @@
-# Deploy to Vercel (GitHub + Supabase)
+# Deploy to Vercel
 
-Simple steps to upload your project to GitHub and host it on Vercel.
+This project is configured for Vercel deployment. Follow these steps.
 
 ---
 
-## Step 1: Supabase Setup (Database)
+## Prerequisites
 
-1. Go to [supabase.com](https://supabase.com) and sign in
-2. Create a project (or use existing)
-3. Wait for the database to be ready
-4. Go to **Settings → Database**
-5. Copy these two connection strings (replace `[YOUR-PASSWORD]` with your DB password):
+- **Database**: Neon (via Vercel Storage) or Supabase
+- **Node.js**: 18+
 
-   - **Connection pooling (Transaction mode)** → use for `DATABASE_URL` — **you must append `?pgbouncer=true`** to avoid Prisma errors (see checklist below)
-   - **Direct connection (Session mode)** → use for `DIRECT_URL`
+---
 
-6. Keep the Supabase project **Active** (free tier pauses after inactivity)
+## Step 1: Database Setup
+
+### Option A: Neon (via Vercel)
+
+1. Vercel → Your project → **Storage** → **Create Database**
+2. Choose **Neon** (Postgres)
+3. Connect to your project — Vercel auto-adds `Neon_data_DATABASE_URL` and `Neon_data_DATABASE_URL_UNPOOLED`
+4. The Prisma schema uses these variables by default
+
+### Option B: Supabase
+
+1. Go to [supabase.com](https://supabase.com) and create a project
+2. Get connection strings from **Settings → Database**
+3. Add in Vercel: `DATABASE_URL` (pooled + `?pgbouncer=true`) and `DIRECT_URL` (direct)
+4. **Important**: Edit `prisma/schema.prisma` — change `url` to `env("DATABASE_URL")` and `directUrl` to `env("DIRECT_URL")`
 
 ---
 
@@ -47,10 +57,14 @@ git push -u origin main
 
 ### Required variables (must have)
 
+**If using Neon** (Vercel Storage): `Neon_data_DATABASE_URL` and `Neon_data_DATABASE_URL_UNPOOLED` are auto-injected.
+
+**If using Supabase**: Add these manually:
+
 | Variable | What it does | Where to get it |
 |----------|--------------|-----------------|
-| `DATABASE_URL` | Connects the app to your Supabase database (pooled = many connections, fast) | Supabase → Settings → Database → **Connection pooling** (Transaction mode, port 6543) → URI **+ add `?pgbouncer=true`** at the end (required for Prisma) |
-| `DIRECT_URL` | Used by Prisma for migrations only (direct connection) | Supabase → Settings → Database → **Connection string** → URI (port 5432) |
+| `Neon_data_DATABASE_URL` | Pooled DB connection (or use `DATABASE_URL` if you changed schema) | Supabase → Settings → Database → Connection pooling (port 6543) **+ `?pgbouncer=true`** |
+| `Neon_data_DATABASE_URL_UNPOOLED` | Direct DB connection (or use `DIRECT_URL`) | Supabase → Settings → Database → Direct connection (port 5432) |
 | `NEXTAUTH_SECRET` | Encrypts session cookies – without it, admin login breaks | Run in terminal: `openssl rand -base64 32` |
 | `NEXTAUTH_URL` | Your site URL – needed for auth redirects | Use `https://your-project.vercel.app` (update after first deploy) |
 | `ADMIN_EMAIL` | Email used to log in to `/admin` | Choose any email (e.g. `admin@manuaf.com`) |
@@ -118,8 +132,9 @@ npx prisma db push
 Add these in Vercel → Project → Settings → Environment Variables:
 
 ```
-DATABASE_URL       = (from Supabase, pooled, port 6543) + ?pgbouncer=true
-DIRECT_URL         = (from Supabase, direct, port 5432)
+# Database – Neon auto-injects Neon_data_*. For Supabase, add:
+Neon_data_DATABASE_URL         = (pooled URL + ?pgbouncer=true)
+Neon_data_DATABASE_URL_UNPOOLED = (direct connection URL)
 NEXTAUTH_SECRET    = (run: openssl rand -base64 32)
 NEXTAUTH_URL       = https://YOUR_APP.vercel.app
 ADMIN_EMAIL        = your@email.com

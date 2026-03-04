@@ -2,6 +2,9 @@
   "name": "logistec",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "description": "Site web moderne pour entreprise d'intralogistique et de manutention",
   "author": "",
   "license": "UNLICENSED",
