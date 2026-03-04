@@ -1,13 +1,14 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Metadata } from 'next'
+import { createMetadata } from '@/lib/seo'
 import { RANDOM_IMAGES } from '@/lib/randomImages'
 
-export const metadata: Metadata = {
-  title: 'Reconditionnement de chariots élévateurs',
+export const metadata = createMetadata({
+  title: 'Reconditionnement chariots élévateurs Casablanca',
   description:
-    'Service de reconditionnement complet de chariots élévateurs. Remise à neuf professionnelle au Maroc.',
-}
+    "Reconditionnement complet de chariots élévateurs. Remise à neuf professionnelle. MANUAF Maroc.",
+  canonical: '/services/reconditionnement',
+})
 
 export default function ReconditionnementPage() {
   return (
@@ -35,6 +36,13 @@ export default function ReconditionnementPage() {
       {/* Content Section */}
       <section className="py-10 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <nav className="flex flex-wrap items-center gap-2 text-sm text-[var(--grey)] mb-8" aria-label="Fil d'Ariane">
+            <Link href="/" className="hover:text-[var(--accent)]">Accueil</Link>
+            <span>/</span>
+            <Link href="/services" className="hover:text-[var(--accent)]">Services</Link>
+            <span>/</span>
+            <span className="text-[var(--foreground)] font-medium">Reconditionnement</span>
+          </nav>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
@@ -152,6 +160,25 @@ export default function ReconditionnementPage() {
                 </p>
               </div>
             </div>
+          </div>
+
+          <div className="bg-white p-6 border-t-4 border-[var(--accent)] mb-8">
+            <h2 className="font-bold text-[#333333] mb-4">Voir aussi</h2>
+            <p className="text-[var(--grey)] text-sm mb-3">
+              Découvrez notre{' '}
+              <Link href="/services/maintenance" className="text-[var(--accent)] font-medium hover:underline">
+                service de maintenance
+              </Link>
+              {' '}pour l&apos;entretien de vos chariots. Nous proposons aussi des{' '}
+              <Link href="/produits/chariots/occasion" className="text-[var(--accent)] font-medium hover:underline">
+                chariots d&apos;occasion reconditionnés
+              </Link>
+              {' '}à l&apos;achat et la{' '}
+              <Link href="/produits/chariots/location" className="text-[var(--accent)] font-medium hover:underline">
+                location de chariots
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </section>

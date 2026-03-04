@@ -1,16 +1,20 @@
 import Link from 'next/link'
-import type { Metadata } from 'next'
 import { PageHero } from '@/components/layout/PageHero'
+import { PiecesBreadcrumb } from '@/components/layout/PiecesBreadcrumb'
+import { PiecesRelatedLinks } from '@/components/layout/PiecesRelatedLinks'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Commandes de pièces de rechange',
   description:
-    'Commandez vos pièces de rechange pour chariots élévateurs. Service rapide et livraison au Maroc.',
-}
+    'Commandez vos pièces de rechange pour chariots élévateurs. Service rapide et livraison au Maroc. MANUAF Casablanca.',
+  canonical: '/produits/pieces/commandes',
+})
 
 export default function CommandesPage() {
   return (
     <div className="bg-[#f5f5f5] min-h-screen">
+      <PiecesBreadcrumb currentLabel="Commandes de pièces" />
       <PageHero
         label="Pièces de rechange"
         title="Commandes de pièces"
@@ -122,6 +126,10 @@ export default function CommandesPage() {
                 </ul>
               </div>
             </div>
+          </div>
+
+          <div className="mb-8">
+            <PiecesRelatedLinks currentSlug="commandes" />
           </div>
 
           {/* Service Section */}

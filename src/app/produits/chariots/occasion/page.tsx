@@ -2,13 +2,14 @@ import Link from 'next/link'
 import { getProductsForChariotsOccasion, getSubcategoriesForChariotsPage } from '@/lib/data'
 import { ChariotsGridWithForm } from '@/components/chariots/ChariotsGridWithForm'
 import { PageHero } from '@/components/layout/PageHero'
-import type { Metadata } from 'next'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Chariots élévateurs d\'occasion',
+export const metadata = createMetadata({
+  title: 'Chariots élévateurs d\'occasion Casablanca',
   description:
-    'Chariots élévateurs d\'occasion reconditionnés et garantis au Maroc. Qualité professionnelle à prix réduits.',
-}
+    "Chariots d'occasion reconditionnés et garantis à Casablanca. Qualité professionnelle, prix réduits. MANUAF Maroc.",
+  canonical: '/produits/chariots/occasion',
+})
 
 export default async function ChariotsOccasionPage() {
   const [usedProducts, subcategories] = await Promise.all([

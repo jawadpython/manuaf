@@ -1,13 +1,14 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Metadata } from 'next'
 import { RANDOM_IMAGES } from '@/lib/randomImages'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Maintenance de chariots élévateurs',
+export const metadata = createMetadata({
+  title: 'Maintenance chariots élévateurs Casablanca',
   description:
-    'Service de maintenance préventive et curative pour chariots élévateurs. Techniciens certifiés au Maroc.',
-}
+    "Maintenance préventive et curative pour chariots élévateurs. Techniciens certifiés. MANUAF Maroc.",
+  canonical: '/services/maintenance',
+})
 
 export default function MaintenancePage() {
   return (
@@ -35,6 +36,13 @@ export default function MaintenancePage() {
       {/* Content Section */}
       <section className="py-10 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <nav className="flex flex-wrap items-center gap-2 text-sm text-[var(--grey)] mb-8" aria-label="Fil d'Ariane">
+            <Link href="/" className="hover:text-[var(--accent)]">Accueil</Link>
+            <span>/</span>
+            <Link href="/services" className="hover:text-[var(--accent)]">Services</Link>
+            <span>/</span>
+            <span className="text-[var(--foreground)] font-medium">Maintenance</span>
+          </nav>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
@@ -162,6 +170,25 @@ export default function MaintenancePage() {
                 </p>
               </div>
             </div>
+          </div>
+
+          <div className="bg-white p-6 border-t-4 border-[var(--accent)] mb-8">
+            <h2 className="font-bold text-[#333333] mb-4">Voir aussi</h2>
+            <p className="text-[var(--grey)] text-sm mb-3">
+              Besoin de{' '}
+              <Link href="/services/reconditionnement" className="text-[var(--accent)] font-medium hover:underline">
+                reconditionnement
+              </Link>
+              {' '}pour remettre votre chariot à neuf ? Ou de{' '}
+              <Link href="/produits/chariots/location" className="text-[var(--accent)] font-medium hover:underline">
+                location de chariots
+              </Link>
+              {' '}? Consultez également nos{' '}
+              <Link href="/produits/pieces" className="text-[var(--accent)] font-medium hover:underline">
+                pièces de rechange
+              </Link>
+              {' '}pour l&apos;entretien de vos équipements.
+            </p>
           </div>
         </div>
       </section>

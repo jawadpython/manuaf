@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getProductBySlug, getFormFieldsForLocation } from '@/lib/data'
 import { ProductImageGallery } from '@/components/produits/ProductImageGallery'
 import { ProductDevisInline } from '@/components/produits/ProductDevisInline'
+import { createMetadata } from '@/lib/seo'
 import type { Metadata } from 'next'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -11,10 +12,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const product = await getProductBySlug(slug)
   if (!product) return { title: 'Produit non trouvé' }
-  return {
+  return createMetadata({
     title: product.name,
-    description: product.description,
-  }
+    description: product.description?.slice(0, 155) || `Chariot élévateur ${product.name} - MANUAF Casablanca`,
+    canonical: `/produits/${slug}`,
+  })
 }
 
 const ASSURANCES = [
@@ -108,6 +110,21 @@ export default async function ProductDetailPage({ params }: Props) {
                 <h2 className="text-xs font-bold text-[var(--grey)] uppercase tracking-wider mb-2 pb-2 border-b-2 border-[var(--accent)] w-fit">
                   Détails
                 </h2>
+                <p className="text-[var(--foreground-muted)] text-xs mb-3">
+                  Besoin de{' '}
+                  <Link href="/services/maintenance" className="text-[var(--accent)] font-medium hover:underline">
+                    maintenance
+                  </Link>
+                  , de{' '}
+                  <Link href="/services/reconditionnement" className="text-[var(--accent)] font-medium hover:underline">
+                    reconditionnement
+                  </Link>
+                  {' '}ou de{' '}
+                  <Link href="/produits/pieces" className="text-[var(--accent)] font-medium hover:underline">
+                    pièces de rechange
+                  </Link>
+                  {' '}? Nos équipes vous accompagnent.
+                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-[3mm] sm:gap-x-[5mm] gap-y-2 sm:gap-y-3">
                   <div>
                     <ul className="space-y-1 font-normal">

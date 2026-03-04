@@ -1,12 +1,14 @@
-import type { Metadata } from 'next'
+import Link from 'next/link'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { PageHero } from '@/components/layout/PageHero'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Contact',
+export const metadata = createMetadata({
+  title: 'Contact MANUAF | Devis chariots Casablanca',
   description:
-    'Contactez MANUAF pour un devis ou des conseils sur vos équipements de manutention au Maroc.',
-}
+    "Contactez MANUAF à Casablanca pour un devis location ou vente de chariots élévateurs. Conseil expert manutention.",
+  canonical: '/contact',
+})
 
 export default function ContactPage() {
   return (
@@ -108,9 +110,24 @@ export default function ContactPage() {
             {/* Contact Form */}
             <div className="lg:col-span-2">
               <div className="bg-white p-5 sm:p-6 md:p-8 border-t-4 border-[var(--accent)]">
-                <h3 className="font-bold text-[#333333] text-lg mb-6">
+                <h3 className="font-bold text-[#333333] text-lg mb-4">
                   Envoyez-nous un message
                 </h3>
+                <p className="text-[#666666] text-sm mb-6">
+                  Besoin d&apos;un devis pour la{' '}
+                  <Link href="/produits/chariots/location" className="text-[var(--accent)] font-medium hover:underline">
+                    location
+                  </Link>
+                  {' '}ou l&apos;{' '}
+                  <Link href="/produits/chariots/occasion" className="text-[var(--accent)] font-medium hover:underline">
+                    achat de chariots d&apos;occasion
+                  </Link>
+                  ? Utilisez notre{' '}
+                  <Link href="/demander-chariot" className="text-[var(--accent)] font-medium hover:underline">
+                    formulaire de demande de devis
+                  </Link>
+                  .
+                </p>
                 <ContactForm />
               </div>
             </div>

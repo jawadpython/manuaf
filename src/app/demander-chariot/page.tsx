@@ -1,13 +1,15 @@
-import type { Metadata } from 'next'
+import Link from 'next/link'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { PageHero } from '@/components/layout/PageHero'
 import { getFormFieldsForLocation } from '@/lib/data'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Demander un devis',
+export const metadata = createMetadata({
+  title: 'Demander un devis | Location chariots Casablanca',
   description:
-    'Demandez un devis personnalisé pour vos chariots élévateurs ou pièces de rechange. MANUAF répond sous 24h.',
-}
+    "Devis personnalisé location ou vente chariots élévateurs. MANUAF Casablanca, réponse sous 24h.",
+  canonical: '/demander-chariot',
+})
 
 export default async function DemanderChariotPage({
   searchParams,
@@ -55,12 +57,19 @@ export default async function DemanderChariotPage({
             }`}
           >
             <h3
-              className={`font-bold text-[#333333] mb-6 ${
+              className={`font-bold text-[#333333] mb-4 ${
                 category === 'chariots-de-location' ? 'text-xl md:text-2xl' : 'text-lg'
               }`}
             >
               Demande de devis {category === 'chariots-de-location' && '— Location'}
             </h3>
+            <p className="text-[#666666] text-sm mb-6">
+              Pour toute autre question ou demande d&apos;information,{' '}
+              <Link href="/contact" className="text-[var(--accent)] font-medium hover:underline">
+                contactez-nous directement
+              </Link>
+              .
+            </p>
             <ContactForm
               initialMessage={initialMessage}
               productName={product || undefined}

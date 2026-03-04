@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/Button'
 import { RANDOM_IMAGES } from '@/lib/randomImages'
 
@@ -93,10 +94,15 @@ export function HeroSection() {
               zIndex: i === currentIndex || fromIndex === i ? 1 : 0,
             }}
           >
-            <img
+            <Image
               src={s.image}
               alt="Entrepôt logistique"
-              className="absolute inset-0 w-full h-full min-w-full min-h-full object-cover object-center"
+              fill
+              className="object-cover object-center"
+              sizes="100vw"
+              priority={i === 0}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              unoptimized={s.image.startsWith('http')}
             />
             <div className="absolute inset-0 bg-black/35" />
             {/* White card — fixed with its image, moves with slide */}

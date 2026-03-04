@@ -143,7 +143,7 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
     return roots
   }
 
-  const categoryTree = buildCategoryTree(categoriesForType)
+  const categoryTree = useMemo(() => buildCategoryTree(categoriesForType), [categoriesForType])
 
   /** Product count per category (includes descendants) */
   const categoryProductCount = useMemo(() => {

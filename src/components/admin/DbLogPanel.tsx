@@ -16,7 +16,28 @@ export function DbLogPanel() {
 
     try {
       const res = await fetch('/api/admin/db-status')
-      const data = await res.json()
+      const text = await res.text()
+
+      let data: { ok?: boolean; logs?: LogEntry[]; error?: string }
+      try {
+        data = JSON.parse(text)
+      } catch {
+        // HTML response (404, Vercel error page, etc.)
+        const msg =
+          res.status === 404
+            ? 'Route /api/admin/db-status introuvable (404). Vérifiez que le déploiement Vercel inclut ce fichier.'
+            : `Réponse invalide (HTML au lieu de JSON, HTTP ${res.status}). Route peut-être absente ou erreur serveur. Vérifiez DATABASE_URL et DIRECT_URL dans Vercel → Settings → Environment Variables.`
+        setLogs([
+          {
+            time: new Date().toISOString(),
+            type: 'error',
+            message: msg,
+          },
+        ])
+        setLastOk(false)
+        setLoading(false)
+        return
+      }
 
       if (data.logs) setLogs(data.logs)
       setLastOk(data.ok === true)

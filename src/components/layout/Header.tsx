@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   MegaMenuOverlay,
   type MegaMenuItem,
@@ -39,9 +40,9 @@ const piecesGroupFallback: MegaMenuItem[] = [
 ]
 
 const servicesGroup: MegaMenuItem[] = [
-  { href: '/services?service=maintenance', label: 'Maintenance', image: '/images/services/maintenance.webp', subLinks: [] },
-  { href: '/services?service=reconditionnement', label: 'Reconditionnement', image: '/images/services/reconditionnement.webp', subLinks: [] },
-  { href: '/services?service=location', label: 'Location', image: '/images/services/location.webp', subLinks: [] },
+  { href: '/services/maintenance', label: 'Maintenance', image: '/images/services/maintenance.webp', subLinks: [] },
+  { href: '/services/reconditionnement', label: 'Reconditionnement', image: '/images/services/reconditionnement.webp', subLinks: [] },
+  { href: '/services/location', label: 'Location', image: '/images/services/location.webp', subLinks: [] },
 ]
 
 const chariotsFeatured: FeaturedContent = {
@@ -380,12 +381,13 @@ export function Header() {
             suppressHydrationWarning
           >
             {!logoError ? (
-              <img
+              <Image
                 src="/images/NEW-logo-MANUAF-1-.png"
-                alt=""
+                alt="MANUAF"
                 width={180}
                 height={40}
                 className="h-full w-auto max-h-8 object-contain object-right max-w-[180px] block brightness-0 invert"
+                sizes="180px"
                 onError={() => setLogoError(true)}
               />
             ) : (

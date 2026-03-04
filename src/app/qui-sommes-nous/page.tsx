@@ -1,14 +1,15 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Metadata } from 'next'
 import { PageHero } from '@/components/layout/PageHero'
 import { RANDOM_IMAGES } from '@/lib/randomImages'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Qui sommes-nous',
+export const metadata = createMetadata({
+  title: 'Qui sommes-nous | MANUAF Intralogistique Maroc',
   description:
-    'MANUAF, spécialiste de l\'intralogistique au Maroc. Découvrez notre histoire, nos valeurs et notre expertise.',
-}
+    "MANUAF, expert intralogistique à Casablanca. Notre histoire, valeurs et expertise en chariots élévateurs.",
+  canonical: '/qui-sommes-nous',
+})
 
 export default function QuiSommesNousPage() {
   return (
@@ -37,9 +38,27 @@ export default function QuiSommesNousPage() {
                 complètes et de qualité pour répondre aux besoins de nos clients.
               </p>
               <p className="text-[var(--grey)] mb-4">
-                Notre expertise couvre la vente, la location, la maintenance et le reconditionnement 
-                de chariots élévateurs, ainsi que la fourniture de pièces de rechange pour toutes 
-                les marques du marché.
+                Notre expertise couvre la{' '}
+                <Link href="/produits/chariots/occasion" className="text-[var(--accent)] font-medium hover:underline">
+                  vente
+                </Link>
+                , la{' '}
+                <Link href="/produits/chariots/location" className="text-[var(--accent)] font-medium hover:underline">
+                  location
+                </Link>
+                , la{' '}
+                <Link href="/services/maintenance" className="text-[var(--accent)] font-medium hover:underline">
+                  maintenance
+                </Link>
+                {' '}et le{' '}
+                <Link href="/services/reconditionnement" className="text-[var(--accent)] font-medium hover:underline">
+                  reconditionnement
+                </Link>
+                {' '}de chariots élévateurs, ainsi que la fourniture de{' '}
+                <Link href="/produits/pieces" className="text-[var(--accent)] font-medium hover:underline">
+                  pièces de rechange
+                </Link>
+                {' '}pour toutes les marques du marché.
               </p>
               <p className="text-[var(--grey)]">
                 Nous sommes fiers de notre réputation de fiabilité et de professionnalisme, 
@@ -140,30 +159,30 @@ export default function QuiSommesNousPage() {
               Notre expertise
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white p-6 border-t-4 border-[var(--accent)]">
+              <Link href="/produits/chariots/occasion" className="bg-white p-6 border-t-4 border-[var(--accent)] hover:shadow-lg transition-shadow block">
                 <h3 className="font-bold text-[var(--grey)] mb-3">Vente</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Large gamme de chariots élévateurs neufs et d&apos;occasion
                 </p>
-              </div>
-              <div className="bg-white p-6 border-t-4 border-[var(--accent)]">
+              </Link>
+              <Link href="/produits/chariots/location" className="bg-white p-6 border-t-4 border-[var(--accent)] hover:shadow-lg transition-shadow block">
                 <h3 className="font-bold text-[var(--grey)] mb-3">Location</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Solutions de location flexibles pour tous vos besoins
                 </p>
-              </div>
-              <div className="bg-white p-6 border-t-4 border-[var(--accent)]">
+              </Link>
+              <Link href="/services/maintenance" className="bg-white p-6 border-t-4 border-[var(--accent)] hover:shadow-lg transition-shadow block">
                 <h3 className="font-bold text-[var(--grey)] mb-3">Maintenance</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Service de maintenance préventive et curative par des experts
                 </p>
-              </div>
-              <div className="bg-white p-6 border-t-4 border-[var(--accent)]">
+              </Link>
+              <Link href="/produits/pieces" className="bg-white p-6 border-t-4 border-[var(--accent)] hover:shadow-lg transition-shadow block">
                 <h3 className="font-bold text-[var(--grey)] mb-3">Pièces</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Pièces de rechange d&apos;origine et compatibles, toutes marques
                 </p>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -176,17 +195,31 @@ export default function QuiSommesNousPage() {
             Travaillons ensemble
           </h2>
           <p className="text-white/90 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">
-            Contactez-nous pour discuter de vos besoins en intralogistique
+            Contactez-nous pour discuter de vos besoins. Besoin d&apos;un devis ?{' '}
+            <Link href="/demander-chariot" className="font-medium underline underline-offset-2 hover:opacity-90">
+              Demander un devis chariot
+            </Link>
           </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-white text-[var(--grey)] font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
-          >
-            Nous contacter
-            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-white text-[var(--grey)] font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
+            >
+              Nous contacter
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+            <Link
+              href="/demander-chariot"
+              className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white font-semibold hover:bg-white hover:text-[var(--grey)] transition-colors text-sm sm:text-base"
+            >
+              Demander un devis
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </section>
     </div>

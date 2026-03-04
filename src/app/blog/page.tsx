@@ -2,12 +2,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getBlogPosts } from '@/lib/data'
 import { PageHero } from '@/components/layout/PageHero'
-import type { Metadata } from 'next'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Blog de l\'intralogistique',
-  description: 'Conseils et actualités sur la manutention, les chariots élévateurs et l\'intralogistique au Maroc.',
-}
+export const metadata = createMetadata({
+  title: 'Blog intralogistique | Conseils manutention Maroc',
+  description:
+    "Actualités et conseils chariots élévateurs, manutention, intralogistique au Maroc. MANUAF Casablanca.",
+  canonical: '/blog',
+})
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat('fr-FR', {

@@ -199,12 +199,18 @@ export function ServicesGrid() {
                 </div>
               </div>
 
-              <div className="mt-10 pt-8 border-t border-[var(--border)] text-center">
+              <div className="mt-10 pt-8 border-t border-[var(--border)] flex flex-wrap justify-center gap-4">
+                <Link
+                  href="/services/maintenance"
+                  className="text-[var(--accent)] font-medium hover:underline text-sm"
+                >
+                  Voir la page maintenance complète
+                </Link>
                 <Link
                   href="/contact"
                   className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-[var(--accent)] text-[#1a1a1a] font-extrabold hover:bg-[var(--accent-hover)] rounded"
                 >
-                  Demander un devis
+                  Demander un devis maintenance
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
@@ -295,12 +301,18 @@ export function ServicesGrid() {
                 </div>
               </div>
 
-              <div className="border-t border-[var(--border)] pt-8 mt-8 text-center">
+              <div className="border-t border-[var(--border)] pt-8 mt-8 flex flex-wrap justify-center gap-4">
+                <Link
+                  href="/services/reconditionnement"
+                  className="text-[var(--accent)] font-medium hover:underline text-sm"
+                >
+                  Voir la page reconditionnement complète
+                </Link>
                 <Link
                   href="/contact"
                   className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-[var(--accent)] text-[#1a1a1a] font-extrabold hover:bg-[var(--accent-hover)] rounded"
                 >
-                  Demander un devis
+                  Demander un devis reconditionnement
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
@@ -406,12 +418,18 @@ export function ServicesGrid() {
                 </div>
               </div>
 
-              <div className="border-t border-[var(--border)] pt-8 mt-8 text-center">
+              <div className="border-t border-[var(--border)] pt-8 mt-8 flex flex-wrap justify-center gap-4">
                 <Link
-                  href="/contact"
+                  href="/produits/chariots/location"
+                  className="text-[var(--accent)] font-medium hover:underline text-sm"
+                >
+                  Voir nos chariots disponibles à la location
+                </Link>
+                <Link
+                  href="/demander-chariot?category=chariots-de-location"
                   className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-[var(--accent)] text-[#1a1a1a] font-extrabold hover:bg-[var(--accent-hover)] rounded"
                 >
-                  Demander un devis
+                  Demander un devis location
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>

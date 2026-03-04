@@ -2,13 +2,14 @@ import Link from 'next/link'
 import { getProductsByType, getAllCategories } from '@/lib/data'
 import { PageHero } from '@/components/layout/PageHero'
 import { ProductsList } from '@/components/products/ProductsList'
-import type { Metadata } from 'next'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Pièces de rechange',
+export const metadata = createMetadata({
+  title: 'Pièces de rechange chariots | Batteries, accessoires Casablanca',
   description:
-    'Batteries, accessoires et éléments de commande pour chariots élévateurs au Maroc.',
-}
+    "Pièces détachées chariots élévateurs : batteries, accessoires, commandes. MANUAF Casablanca.",
+  canonical: '/produits/pieces',
+})
 
 type Props = { searchParams: Promise<{ category?: string }> }
 

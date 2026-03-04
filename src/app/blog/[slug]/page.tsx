@@ -5,6 +5,7 @@ import { getBlogPostBySlug } from '@/lib/data'
 import { sanitizeHtml } from '@/lib/sanitize'
 import { PageHero } from '@/components/layout/PageHero'
 import { RANDOM_IMAGES } from '@/lib/randomImages'
+import { createMetadata } from '@/lib/seo'
 import type { Metadata } from 'next'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -13,10 +14,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const post = await getBlogPostBySlug(slug)
   if (!post) return { title: 'Article non trouvé' }
-  return {
+  return createMetadata({
     title: post.title,
     description: post.excerpt,
-  }
+    canonical: `/blog/${slug}`,
+  })
 }
 
 function formatDate(date: Date) {

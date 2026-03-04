@@ -1,16 +1,20 @@
 import Link from 'next/link'
-import type { Metadata } from 'next'
 import { PageHero } from '@/components/layout/PageHero'
+import { PiecesBreadcrumb } from '@/components/layout/PiecesBreadcrumb'
+import { PiecesRelatedLinks } from '@/components/layout/PiecesRelatedLinks'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Batteries pour chariots élévateurs',
   description:
-    'Batteries et chargeurs pour chariots élévateurs électriques. Pièces de rechange d\'origine et compatibles au Maroc.',
-}
+    'Batteries et chargeurs pour chariots élévateurs électriques. Pièces d\'origine et compatibles au Maroc. MANUAF Casablanca.',
+  canonical: '/produits/pieces/batteries',
+})
 
 export default function BatteriesPage() {
   return (
     <div className="bg-[#f5f5f5] min-h-screen">
+      <PiecesBreadcrumb currentLabel="Batteries et chargeurs" />
       <PageHero
         label="Pièces de rechange"
         title="Batteries et chargeurs"
@@ -93,6 +97,10 @@ export default function BatteriesPage() {
                 </li>
               </ul>
             </div>
+          </div>
+
+          <div className="mb-8">
+            <PiecesRelatedLinks currentSlug="batteries" />
           </div>
 
           {/* Service Section */}

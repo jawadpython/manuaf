@@ -1,9 +1,11 @@
-import type { Metadata } from 'next'
 import { PageHero } from '@/components/layout/PageHero'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Mentions légales',
-}
+  description: 'Mentions légales de MANUAF - Location et vente de chariots élévateurs à Casablanca. Informations éditeur, contact et hébergement.',
+  canonical: '/mentions-legales',
+})
 
 export default function MentionsLegalesPage() {
   return (

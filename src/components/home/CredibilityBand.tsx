@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { RANDOM_IMAGES } from '@/lib/randomImages'
 
 export function CredibilityBand() {
@@ -9,10 +10,12 @@ export function CredibilityBand() {
           {/* Left side - Image */}
           <div className="relative order-2 lg:order-1">
             <div className="relative aspect-[4/3] overflow-hidden">
-              <img
+              <Image
                 src={RANDOM_IMAGES[4]}
                 alt="Intralogistique MANUAF - Chariot élévateur en entrepôt"
-                className="absolute inset-0 w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
             {/* Accent decoration - hidden on mobile */}
@@ -36,8 +39,19 @@ export function CredibilityBand() {
               full-line ou clés en main incorporant le conseil, les équipements ainsi que le support après-vente.
             </p>
             <p className="text-[var(--foreground-muted)] text-sm sm:text-base leading-relaxed mb-6 md:mb-8">
-              Nous offrons un service complet : vente d&apos;équipement, location, réparation, maintenance et formation, 
-              avec de nombreuses solutions pour accompagner nos clients dans leur croissance.
+              Nous offrons un service complet :{' '}
+              <Link href="/produits/chariots/location" className="text-[var(--accent)] font-medium hover:underline">
+                location de chariots
+              </Link>
+              ,{' '}
+              <Link href="/services/maintenance" className="text-[var(--accent)] font-medium hover:underline">
+                maintenance
+              </Link>
+              ,{' '}
+              <Link href="/services/reconditionnement" className="text-[var(--accent)] font-medium hover:underline">
+                reconditionnement
+              </Link>
+              {' '}et formation, avec de nombreuses solutions pour accompagner nos clients dans leur croissance.
             </p>
             
             {/* Stats - responsive grid */}
@@ -56,12 +70,20 @@ export function CredibilityBand() {
               </div>
             </div>
             
-            <Link
-              href="/contact"
-              className="en-savoir-plus inline-block w-full sm:w-auto text-center px-5 sm:px-6 py-2.5 text-[0.8125rem] bg-[var(--accent)] text-[var(--foreground)] font-semibold rounded-lg hover:bg-[var(--accent-hover)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-            >
-              En savoir plus
-            </Link>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/qui-sommes-nous"
+                className="inline-block w-full sm:w-auto text-center px-5 sm:px-6 py-2.5 text-[0.8125rem] bg-[var(--accent)] text-[var(--foreground)] font-semibold rounded-lg hover:bg-[var(--accent-hover)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+              >
+                Découvrir MANUAF
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-block w-full sm:w-auto text-center px-5 sm:px-6 py-2.5 text-[0.8125rem] border-2 border-[var(--accent)] text-[var(--accent)] font-semibold rounded-lg hover:bg-[var(--accent)]/10 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+              >
+                Nous contacter
+              </Link>
+            </div>
           </div>
         </div>
       </div>

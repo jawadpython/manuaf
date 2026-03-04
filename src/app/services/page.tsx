@@ -1,14 +1,15 @@
 import Link from 'next/link'
 import { Suspense } from 'react'
-import type { Metadata } from 'next'
 import { ServicesGrid } from '@/components/services/ServicesGrid'
 import { PageHero } from '@/components/layout/PageHero'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Services',
+export const metadata = createMetadata({
+  title: 'Services intralogistique | Maintenance, Location, Reconditionnement',
   description:
-    'Services de maintenance, reconditionnement et location de chariots élévateurs au Maroc. Expertise professionnelle.',
-}
+    "Maintenance, reconditionnement et location de chariots élévateurs à Casablanca. MANUAF, expertise manutention Maroc.",
+  canonical: '/services',
+})
 
 export default function ServicesPage() {
   return (

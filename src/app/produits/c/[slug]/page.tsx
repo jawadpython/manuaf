@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getCategoryBySlug, getProductsByCategory, getAllCategories } from '@/lib/data'
 import { PageHero } from '@/components/layout/PageHero'
 import { ProductsList } from '@/components/products/ProductsList'
+import { createMetadata } from '@/lib/seo'
 import type { Metadata } from 'next'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -11,10 +12,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const category = await getCategoryBySlug(slug)
   if (!category) return { title: 'Catégorie non trouvée' }
-  return {
+  return createMetadata({
     title: category.name,
-    description: category.description ?? undefined,
-  }
+    description: category.description ?? `${category.name} - MANUAF Casablanca`,
+    canonical: `/produits/c/${slug}`,
+  })
 }
 
 export default async function CategoryPage({ params }: Props) {

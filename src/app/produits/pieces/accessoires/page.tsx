@@ -1,12 +1,15 @@
 import Link from 'next/link'
-import type { Metadata } from 'next'
 import { PageHero } from '@/components/layout/PageHero'
+import { PiecesBreadcrumb } from '@/components/layout/PiecesBreadcrumb'
+import { PiecesRelatedLinks } from '@/components/layout/PiecesRelatedLinks'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Accessoires pour chariots élévateurs',
   description:
-    'Accessoires et équipements pour chariots élévateurs : fourches, pinces, rotateurs, échelles. Toutes marques au Maroc.',
-}
+    'Accessoires pour chariots élévateurs : fourches, pinces, rotateurs, échelles. Toutes marques au Maroc. MANUAF Casablanca.',
+  canonical: '/produits/pieces/accessoires',
+})
 
 export default function AccessoiresPage() {
   return (
@@ -111,6 +114,10 @@ export default function AccessoiresPage() {
                 <li>• Accessoires de sécurité</li>
               </ul>
             </div>
+          </div>
+
+          <div className="mb-8">
+            <PiecesRelatedLinks currentSlug="accessoires" />
           </div>
 
           {/* Service Section */}

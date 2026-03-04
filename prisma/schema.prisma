@@ -4,9 +4,10 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  // Supports both: Neon (Neon_data_*) and Supabase (DATABASE_URL/DIRECT_URL)
-  url       = env("Neon_data_DATABASE_URL")
-  directUrl = env("Neon_data_DATABASE_URL_UNPOOLED")
+  // Use DATABASE_URL (pooled) and DIRECT_URL (direct) - works with Supabase, Neon, etc.
+  // For Vercel+Neon: set DATABASE_URL and DIRECT_URL in env (or use Neon_data_* if preferred)
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Category {

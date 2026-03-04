@@ -1,13 +1,14 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Metadata } from 'next'
 import { RANDOM_IMAGES } from '@/lib/randomImages'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Location de chariots élévateurs',
+export const metadata = createMetadata({
+  title: 'Service location chariots | Forklift rental Casablanca',
   description:
-    'Service de location de chariots élévateurs au Maroc. Solutions flexibles pour vos besoins ponctuels ou à long terme.',
-}
+    "Service de location de chariots au Maroc : courte ou longue durée. Flexibilité et réactivité. Demandez un devis.",
+  canonical: '/services/location',
+})
 
 export default function LocationPage() {
   return (
@@ -35,6 +36,13 @@ export default function LocationPage() {
       {/* Content Section */}
       <section className="py-10 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <nav className="flex flex-wrap items-center gap-2 text-sm text-[var(--grey)] mb-8" aria-label="Fil d'Ariane">
+            <Link href="/" className="hover:text-[var(--accent)]">Accueil</Link>
+            <span>/</span>
+            <Link href="/services" className="hover:text-[var(--accent)]">Services</Link>
+            <span>/</span>
+            <span className="text-[var(--foreground)] font-medium">Location</span>
+          </nav>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-6">
@@ -150,6 +158,25 @@ export default function LocationPage() {
               </div>
             </div>
           </div>
+
+          <div className="bg-white p-6 border-t-4 border-[var(--accent)] mb-8">
+            <h2 className="font-bold text-[#333333] mb-4">Voir aussi</h2>
+            <p className="text-[var(--grey)] text-sm mb-3">
+              Consultez nos{' '}
+              <Link href="/produits/chariots/location" className="text-[var(--accent)] font-medium hover:underline">
+                chariots disponibles à la location
+              </Link>
+              . Besoin de{' '}
+              <Link href="/services/maintenance" className="text-[var(--accent)] font-medium hover:underline">
+                maintenance
+              </Link>
+              {' '}ou de{' '}
+              <Link href="/produits/chariots/occasion" className="text-[var(--accent)] font-medium hover:underline">
+                chariots d&apos;occasion
+              </Link>
+              {' '}? Nos équipes vous accompagnent.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -163,7 +190,7 @@ export default function LocationPage() {
             Contactez-nous pour obtenir un devis personnalisé selon vos besoins
           </p>
           <Link
-            href="/contact"
+            href="/demander-chariot?category=chariots-de-location"
             className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-white text-[var(--grey)] font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
           >
             Demander un devis

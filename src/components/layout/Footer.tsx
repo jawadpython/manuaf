@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 const contactInfo = {
   address: '26, Avenue Mers Sultan Appt N°3 Etage 1, Casablanca-Maroc',
@@ -21,15 +22,19 @@ const footerLinks = {
   produits: [
     { href: '/demander-chariot', label: 'Demander un chariot' },
     { href: '/produits/chariots/location', label: 'Location de chariots' },
+    { href: '/location/casablanca', label: 'Location Casablanca' },
+    { href: '/location/rabat', label: 'Location Rabat' },
+    { href: '/location/tanger', label: 'Location Tanger' },
+    { href: '/location/marrakech', label: 'Location Marrakech' },
     { href: '/produits/chariots/occasion', label: "Chariots d'occasion" },
     { href: '/produits/pieces?category=batteries', label: 'Batteries' },
     { href: '/produits/pieces?category=accessoires', label: 'Accessoires' },
     { href: '/produits/pieces?category=commandes', label: 'Commandes' },
   ],
   services: [
-    { href: '/services?service=maintenance', label: 'Maintenance' },
-    { href: '/services?service=reconditionnement', label: 'Reconditionnement' },
-    { href: '/services?service=location', label: 'Location' },
+    { href: '/services/maintenance', label: 'Maintenance chariots' },
+    { href: '/services/reconditionnement', label: 'Reconditionnement' },
+    { href: '/services/location', label: 'Location d\'équipements' },
   ],
 }
 
@@ -43,23 +48,16 @@ export function Footer() {
             <div className="sm:col-span-2 lg:col-span-2">
               <Link
                 href="/"
-                className="inline-block mb-3 sm:mb-4 h-12 sm:h-14 w-[200px] sm:w-[220px] flex items-center"
+                className="inline-block mb-3 sm:mb-4 h-12 sm:h-14 w-[200px] sm:w-[220px] relative flex items-center"
               >
-                <img
+                <Image
                   src="/images/NEW-logo-MANUAF-1-.png"
                   alt="MANUAF"
                   width={220}
                   height={64}
                   className="h-full w-auto max-w-full object-contain object-left"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none'
-                    const fallback = e.currentTarget.nextElementSibling
-                    if (fallback) (fallback as HTMLElement).style.display = 'inline'
-                  }}
+                  sizes="220px"
                 />
-                <span className="text-xl sm:text-2xl font-bold text-[var(--accent)]" style={{ display: 'none' }}>
-                  MANUAF
-                </span>
               </Link>
               <p className="text-white/70 text-xs sm:text-sm mb-4 uppercase tracking-wider font-medium">
                 We lighten your load

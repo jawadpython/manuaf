@@ -1,9 +1,11 @@
-import type { Metadata } from 'next'
 import { PageHero } from '@/components/layout/PageHero'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Politique de confidentialité',
-}
+  description: 'Politique de confidentialité MANUAF. Protection des données personnelles et conformité RGPD. Location chariots élévateurs Casablanca.',
+  canonical: '/confidentialite',
+})
 
 export default function ConfidentialitePage() {
   return (
