@@ -29,43 +29,55 @@ export async function FeaturedProducts() {
             </p>
           </div>
 
-          {/* 5 cards in one line, bigger size */}
+          {/* 5 cards in one line, bigger size — or empty state until admin creates posts */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 items-stretch">
-            {displayPosts.map((post) => (
-              <Link
-                key={post.id}
-                href={`/blog/${post.slug}`}
-                className="flex flex-col bg-white overflow-hidden shadow-md h-full"
-              >
-                {/* Image */}
-                <div className="relative w-full aspect-[2/1] overflow-hidden bg-[#f0f0f0] flex-shrink-0">
-                  <Image
-                    src={post.image || '/images/products/chr5-min-276x300.jpg'}
-                    alt={post.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-                    unoptimized={post.image?.startsWith('http')}
-                  />
-                </div>
+            {displayPosts.length > 0 ? (
+              displayPosts.map((post) => (
+                <Link
+                  key={post.id}
+                  href={`/blog/${post.slug}`}
+                  className="flex flex-col bg-white overflow-hidden shadow-md h-full"
+                >
+                  {/* Image */}
+                  <div className="relative w-full aspect-[2/1] overflow-hidden bg-[#f0f0f0] flex-shrink-0">
+                    <Image
+                      src={post.image || '/images/products/chr5-min-276x300.jpg'}
+                      alt={post.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                      unoptimized={post.image?.startsWith('http')}
+                    />
+                  </div>
 
-                {/* Content */}
-                <div className="flex flex-col flex-1 p-4 min-h-[calc(140px+4cm)]">
-                  <p className="text-[10px] sm:text-xs text-[#6b7280] mb-2 font-semibold uppercase tracking-widest">
-                    {formatBlogDate(post.createdAt)}
-                  </p>
-                  <h3 className="text-xs sm:text-sm font-bold text-[#1a1a1a] mb-2 leading-snug line-clamp-2 tracking-tight">
-                    {post.title}
-                  </h3>
-                  <p className="text-[10px] sm:text-xs text-[#4b5563] leading-relaxed flex-1 line-clamp-3 mb-3 font-medium">
-                    {post.excerpt}
-                  </p>
-                  <span className="block w-full text-center py-2 px-4 bg-[#1f2937] text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest">
-                    EN SAVOIR PLUS
-                  </span>
+                  {/* Content */}
+                  <div className="flex flex-col flex-1 p-4 min-h-[calc(140px+4cm)]">
+                    <p className="text-[10px] sm:text-xs text-[#6b7280] mb-2 font-semibold uppercase tracking-widest">
+                      {formatBlogDate(post.createdAt)}
+                    </p>
+                    <h3 className="text-xs sm:text-sm font-bold text-[#1a1a1a] mb-2 leading-snug line-clamp-2 tracking-tight">
+                      {post.title}
+                    </h3>
+                    <p className="text-[10px] sm:text-xs text-[#4b5563] leading-relaxed flex-1 line-clamp-3 mb-3 font-medium">
+                      {post.excerpt}
+                    </p>
+                    <span className="block w-full text-center py-2 px-4 bg-[#1f2937] text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest">
+                      EN SAVOIR PLUS
+                    </span>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div className="col-span-full flex flex-col items-center justify-center py-12 md:py-16 bg-white rounded-lg border border-dashed border-[#d1d5db] text-center">
+                <div className="w-16 h-16 rounded-full bg-[#F5F6F7] flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-[#9ca3af]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                  </svg>
                 </div>
-              </Link>
-            ))}
+                <p className="text-[#6b7280] font-medium mb-1">Aucun article pour le moment</p>
+                <p className="text-sm text-[#9ca3af]">Les articles seront ajoutés prochainement via l&apos;admin.</p>
+              </div>
+            )}
           </div>
         </div>
       </section>

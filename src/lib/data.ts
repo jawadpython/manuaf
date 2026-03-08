@@ -1,5 +1,4 @@
 import { prisma } from './prisma'
-import { RANDOM_IMAGES } from './randomImages'
 
 // Product images from local folder
 const localImages = {
@@ -555,80 +554,16 @@ export async function getCategoryBySlug(slug: string) {
   }
 }
 
-const fallbackPosts = [
-  {
-    id: '1',
-    title: 'Comment choisir la bonne société pour l\'entretien de vos équipements de manutention ?',
-    slug: 'choisir-societe-entretien-manutention',
-    excerpt: 'Dans le domaine de la manutention, la fiabilité des équipements est primordiale. Découvrez nos conseils pour choisir le bon partenaire.',
-    content: '<p>Le choix d\'une société de maintenance pour vos équipements de manutention est crucial pour garantir la sécurité et la productivité de vos opérations.</p><h2>Les critères essentiels</h2><p>Lors de votre sélection, assurez-vous de vérifier l\'expertise technique, les certifications, la disponibilité du service après-vente et la qualité des pièces de rechange utilisées.</p><h2>L\'importance de la réactivité</h2><p>Un bon partenaire doit pouvoir intervenir rapidement en cas de panne pour minimiser les temps d\'arrêt de vos équipements.</p>',
-    image: RANDOM_IMAGES[0],
-    published: true,
-    createdAt: new Date('2024-01-15'),
-  },
-  {
-    id: '2',
-    title: 'Louer des chariots supplémentaires lors d\'un pic de saisonnalité',
-    slug: 'louer-chariots-pic-saisonnalite',
-    excerpt: 'En tant qu\'acteur majeur du secteur de la logistique, vous devez anticiper les périodes de forte activité. Voici comment gérer vos besoins.',
-    content: '<p>Les pics de saisonnalité peuvent mettre à rude épreuve votre flotte de chariots élévateurs. La location de chariots supplémentaires est une solution flexible et économique.</p><h2>Avantages de la location</h2><p>La location vous permet d\'adapter votre capacité de manutention sans investissement lourd, tout en bénéficiant d\'équipements récents et bien entretenus.</p><h2>Comment planifier</h2><p>Anticipez vos besoins en analysant les données des années précédentes et contactez votre fournisseur plusieurs semaines à l\'avance.</p>',
-    image: RANDOM_IMAGES[1],
-    published: true,
-    createdAt: new Date('2024-01-10'),
-  },
-  {
-    id: '3',
-    title: 'Optimiser la gestion de sa logistique lors d\'un pic de saisonnalité',
-    slug: 'optimiser-logistique-saisonnalite',
-    excerpt: 'Lorsqu\'un pic de saisonnalité survient, la gestion de la logistique devient un défi majeur. Découvrez nos stratégies d\'optimisation.',
-    content: '<p>Une gestion efficace de la logistique pendant les périodes de forte activité est essentielle pour maintenir la satisfaction client et la rentabilité.</p><h2>Stratégies d\'optimisation</h2><p>Optimisez vos flux en réorganisant votre entrepôt, en formant du personnel temporaire et en utilisant des équipements adaptés à vos besoins spécifiques.</p><h2>L\'importance de l\'anticipation</h2><p>Préparez-vous en amont en renforçant vos stocks, en planifiant les rotations d\'équipes et en vérifiant l\'état de vos équipements de manutention.</p>',
-    image: RANDOM_IMAGES[2],
-    published: true,
-    createdAt: new Date('2024-01-05'),
-  },
-  {
-    id: '4',
-    title: 'Chariots électriques vs thermiques : lequel choisir pour votre entrepôt ?',
-    slug: 'chariots-electriques-vs-thermiques',
-    excerpt: 'Comparaison des chariots électriques et thermiques pour vous aider à faire le bon choix selon vos contraintes d\'utilisation et votre environnement.',
-    content: '<p>Le choix entre un chariot électrique et un chariot thermique dépend de nombreux facteurs : utilisation intérieure ou extérieure, durée de travail quotidienne, budget et normes environnementales.</p><h2>Chariots électriques</h2><p>Idéaux pour les espaces fermés, silencieux, sans émission directe. Parfaits pour les environnements alimentaires ou pharmaceutiques.</p><h2>Chariots thermiques</h2><p>Plus adaptés aux utilisations extérieures intensives et aux charges lourdes. Plus longue autonomie et capacité de charge.</p>',
-    image: RANDOM_IMAGES[3],
-    published: true,
-    createdAt: new Date('2024-01-02'),
-  },
-  {
-    id: '5',
-    title: 'Les avantages du reconditionnement de chariots élévateurs',
-    slug: 'avantages-reconditionnement-chariots',
-    excerpt: 'Découvrez pourquoi le reconditionnement de vos chariots peut vous faire économiser tout en garantissant des performances optimales.',
-    content: '<p>Le reconditionnement professionnel prolonge la durée de vie de vos équipements tout en réduisant vos coûts d\'investissement.</p><h2>Économies substantielles</h2><p>Un chariot reconditionné coûte jusqu\'à 50 % moins cher qu\'un neuf, avec des performances équivalentes après une révision complète.</p><h2>Garantie et traçabilité</h2><p>Choisissez un partenaire qui propose une garantie et une traçabilité complète des interventions réalisées.</p>',
-    image: RANDOM_IMAGES[4],
-    published: true,
-    createdAt: new Date('2023-12-28'),
-  },
-  {
-    id: '6',
-    title: 'Sécurité en entrepôt : les bonnes pratiques de manutention',
-    slug: 'securite-entrepot-bonnes-pratiques',
-    excerpt: 'La sécurité en entrepôt passe par des équipements adaptés et des formations régulières. Voici nos recommandations.',
-    content: '<p>La manutention en entrepôt présente des risques qu\'il convient de maîtriser par une combinaison d\'équipements conformes et de formations du personnel.</p><h2>Équipements</h2><p>Vérifiez régulièrement l\'état de vos chariots, transpalettes et gerbeurs. Les contrôles périodiques sont obligatoires.</p><h2>Formation</h2><p>Formez vos opérateurs aux gestes de sécurité et assurez-vous que les habilitations sont à jour.</p>',
-    image: RANDOM_IMAGES[5],
-    published: true,
-    createdAt: new Date('2023-12-20'),
-  },
-]
-
 export async function getBlogPosts() {
   try {
     const posts = await prisma.blogPost.findMany({
       where: { published: true },
       orderBy: { createdAt: 'desc' },
     })
-    if (posts.length > 0) return posts
+    return posts
   } catch {
-    //
+    return []
   }
-  return fallbackPosts
 }
 
 export async function getBlogPostBySlug(slug: string) {
@@ -636,11 +571,10 @@ export async function getBlogPostBySlug(slug: string) {
     const post = await prisma.blogPost.findUnique({
       where: { slug, published: true },
     })
-    if (post) return post
+    return post
   } catch {
-    //
+    return null
   }
-  return fallbackPosts.find((p) => p.slug === slug) || null
 }
 
 // Services

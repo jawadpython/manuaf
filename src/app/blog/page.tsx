@@ -23,6 +23,7 @@ export default async function BlogPage() {
   const posts = await getBlogPosts()
   const featuredPost = posts[0]
   const otherPosts = posts.slice(1)
+  const hasPosts = posts.length > 0
 
   return (
     <div className="bg-[#f5f5f5] min-h-screen">
@@ -33,7 +34,7 @@ export default async function BlogPage() {
         imageIndex={2}
       />
 
-      {/* Featured Post */}
+      {/* Featured Post — only when admin has created posts */}
       {featuredPost && (
         <section className="py-10 md:py-16 lg:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -89,6 +90,25 @@ export default async function BlogPage() {
                 </div>
               </div>
             </Link>
+          </div>
+        </section>
+      )}
+
+      {/* Empty state — when no posts until admin creates them */}
+      {!hasPosts && (
+        <section className="py-16 md:py-24 lg:py-28 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col items-center justify-center py-12 md:py-16 rounded-lg border-2 border-dashed border-[#e5e7eb] text-center bg-[#fafafa]">
+              <div className="w-20 h-20 rounded-full bg-[#f5f5f5] flex items-center justify-center mb-6">
+                <svg className="w-10 h-10 text-[#9ca3af]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+              </div>
+              <h2 className="text-xl md:text-2xl font-bold text-[#333333] mb-2">Aucun article pour le moment</h2>
+              <p className="text-[#6b7280] max-w-md mb-4">
+                Les articles de blog seront ajoutés prochainement via le panneau d&apos;administration.
+              </p>
+            </div>
           </div>
         </section>
       )}
