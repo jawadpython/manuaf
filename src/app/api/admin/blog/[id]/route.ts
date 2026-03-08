@@ -1,5 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { slugify } from '@/lib/utils'
@@ -37,6 +38,10 @@ export async function PUT(
       },
     })
 
+    revalidatePath('/')
+    revalidatePath('/blog')
+    revalidatePath(`/blog/${post.slug}`)
+
     return NextResponse.json(post)
   } catch (error) {
     console.error('Error updating blog post:', error)
@@ -55,10 +60,15 @@ export async function DELETE(
   if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
   const { id } = await params
+  const post = await prisma.blogPost.findUnique({ where: { id }, select: { slug: true } })
 
   await prisma.blogPost.delete({
     where: { id },
   })
+
+  revalidatePath('/')
+  revalidatePath('/blog')
+  if (post?.slug) revalidatePath(`/blog/${post.slug}`)
 
   return NextResponse.json({ success: true })
 }
