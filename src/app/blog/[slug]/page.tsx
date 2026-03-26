@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getBlogPostBySlug(slug)
   if (!post) return { title: 'Article non trouvé' }
   return createMetadata({
-    title: post.title,
-    description: post.excerpt,
+    title: post.title || 'Article',
+    description: typeof post.excerpt === 'string' ? post.excerpt : '',
     canonical: `/blog/${slug}`,
   })
 }

@@ -7,14 +7,44 @@ import DOMPurify from 'isomorphic-dompurify'
  */
 export function sanitizeHtml(html: string): string {
   if (!html || typeof html !== 'string') return ''
-  return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: [
-      'p', 'br', 'strong', 'em', 'u', 's', 'a', 'ul', 'ol', 'li',
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'hr',
-      'table', 'thead', 'tbody', 'tr', 'th', 'td', 'img',
-      'span', 'div', 'section', 'article',
-    ],
-    ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'class'],
-    ALLOW_DATA_ATTR: false,
-  })
+  try {
+    return DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: [
+        'p',
+        'br',
+        'strong',
+        'em',
+        'u',
+        's',
+        'a',
+        'ul',
+        'ol',
+        'li',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'blockquote',
+        'hr',
+        'table',
+        'thead',
+        'tbody',
+        'tr',
+        'th',
+        'td',
+        'img',
+        'span',
+        'div',
+        'section',
+        'article',
+      ],
+      ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'class'],
+      ALLOW_DATA_ATTR: false,
+    })
+  } catch {
+    // Fail-safe: never crash the blog page because of malformed/unexpected HTML
+    return ''
+  }
 }
