@@ -1,50 +1,59 @@
-import DOMPurify from 'isomorphic-dompurify'
+import sanitizeHtmlLib from 'sanitize-html'
+
+const ALLOWED_TAGS = [
+  'p',
+  'br',
+  'strong',
+  'em',
+  'u',
+  's',
+  'a',
+  'ul',
+  'ol',
+  'li',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'blockquote',
+  'hr',
+  'table',
+  'thead',
+  'tbody',
+  'tr',
+  'th',
+  'td',
+  'img',
+  'span',
+  'div',
+  'section',
+  'article',
+]
 
 /**
- * Sanitize HTML content to prevent XSS when rendering with dangerouslySetInnerHTML.
- * Allows safe tags (p, h1-h6, ul, ol, li, a, strong, em, br, blockquote, etc.)
- * and strips scripts, iframes, event handlers, and javascript: URLs.
+ * Sanitize HTML for blog content (dangerouslySetInnerHTML).
+ * Uses `sanitize-html` (htmlparser2) — reliable on Vercel serverless.
+ * `isomorphic-dompurify` depends on JSDOM and often breaks in serverless.
  */
 export function sanitizeHtml(html: string): string {
   if (!html || typeof html !== 'string') return ''
   try {
-    return DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: [
-        'p',
-        'br',
-        'strong',
-        'em',
-        'u',
-        's',
-        'a',
-        'ul',
-        'ol',
-        'li',
-        'h1',
-        'h2',
-        'h3',
-        'h4',
-        'h5',
-        'h6',
-        'blockquote',
-        'hr',
-        'table',
-        'thead',
-        'tbody',
-        'tr',
-        'th',
-        'td',
-        'img',
-        'span',
-        'div',
-        'section',
-        'article',
-      ],
-      ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'class'],
-      ALLOW_DATA_ATTR: false,
+    return sanitizeHtmlLib(html, {
+      allowedTags: ALLOWED_TAGS,
+      allowedAttributes: {
+        '*': ['class'],
+        a: ['href', 'target', 'rel', 'class'],
+        img: ['src', 'alt', 'class'],
+      },
+      allowedSchemes: ['http', 'https', 'mailto', 'tel'],
+      allowedSchemesByTag: {
+        img: ['http', 'https'],
+      },
+      allowProtocolRelative: false,
     })
   } catch {
-    // Fail-safe: never crash the blog page because of malformed/unexpected HTML
     return ''
   }
 }

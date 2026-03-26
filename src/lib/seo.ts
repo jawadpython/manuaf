@@ -1,7 +1,18 @@
 import type { Metadata } from 'next'
 
 const SITE_NAME = 'MANUAF'
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.manuaf.com'
+
+/** Never throw from `new URL()` — invalid NEXT_PUBLIC_SITE_URL breaks root layout metadataBase on Vercel. */
+function getSafeSiteUrl(): string {
+  const raw = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.manuaf.com').trim()
+  try {
+    return new URL(raw).origin
+  } catch {
+    return 'https://www.manuaf.com'
+  }
+}
+
+const SITE_URL = getSafeSiteUrl()
 const DEFAULT_OG_IMAGE = `${SITE_URL}/images/NEW-logo-MANUAF-1-.png`
 const TWITTER_HANDLE = '@manuaf'
 

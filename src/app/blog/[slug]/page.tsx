@@ -60,8 +60,8 @@ export default async function ArticlePage({ params }: Props) {
     <article className="bg-[#f5f5f5] min-h-screen">
       <PageHero
         label="Blog"
-        title={post.title}
-        subtitle={post.excerpt}
+        title={String(post.title ?? '')}
+        subtitle={String(post.excerpt ?? '')}
         image={heroImage}
       />
       <section className="py-12 md:py-16">
@@ -91,7 +91,7 @@ export default async function ArticlePage({ params }: Props) {
               <div className="relative aspect-[21/9] overflow-hidden">
                 <RemoteSafeImage
                   src={heroImage}
-                  alt={post.title}
+                  alt={String(post.title ?? '')}
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 896px"
@@ -104,18 +104,20 @@ export default async function ArticlePage({ params }: Props) {
                 {formatDate(post.createdAt)}
               </p>
               <h1 className="text-2xl md:text-3xl font-bold text-[#333333] mb-4">
-                {post.title}
+                {String(post.title ?? '')}
               </h1>
               <div className="w-16 h-1 bg-[var(--accent)] mb-8"></div>
 
               <div className="prose prose-lg max-w-none">
                 <p className="text-[#666666] text-lg leading-relaxed mb-6">
-                  {post.excerpt}
+                  {String(post.excerpt ?? '')}
                 </p>
                 {post.content ? (
                   <div
                     className="text-[#666666] leading-relaxed space-y-4"
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHtml(typeof post.content === 'string' ? post.content : String(post.content ?? '')),
+                    }}
                   />
                 ) : (
                   <p className="text-[#999999] italic">
