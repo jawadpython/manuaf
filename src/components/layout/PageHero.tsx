@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { RANDOM_IMAGES } from '@/lib/randomImages'
+import { isRemoteImageUrl } from '@/components/ui/RemoteSafeImage'
 
 export type PageHeroProps = {
   /** Short label above title (e.g. "Nos services", "Pièces de rechange") */
@@ -28,21 +29,31 @@ export function PageHero({
   className = '',
 }: PageHeroProps) {
   const bgImage = image ?? RANDOM_IMAGES[imageIndex % RANDOM_IMAGES.length]
+  /** Remote URLs use <img> so Next/Image never throws on unlisted hostnames (e.g. Blob variants). */
+  const useNativeImg = isRemoteImageUrl(bgImage)
 
   return (
     <section
       className={`relative overflow-hidden -mt-[var(--header-height)] pt-[calc(var(--header-height)+3rem)] md:pt-[calc(var(--header-height)+4rem)] lg:pt-[calc(var(--header-height)+6rem)] pb-12 md:pb-16 lg:pb-24 bg-[var(--grey)] ${className}`}
     >
       <div className="absolute inset-0">
-        <Image
-          src={bgImage}
-          alt=""
-          fill
-          className="object-cover"
-          sizes="100vw"
-          priority
-          unoptimized={bgImage.startsWith('http')}
-        />
+        {useNativeImg ? (
+          <img
+            src={bgImage}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+            decoding="async"
+          />
+        ) : (
+          <Image
+            src={bgImage}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/60" />
       </div>
       <div

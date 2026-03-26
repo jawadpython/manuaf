@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { getBlogPosts } from '@/lib/data'
+import { RemoteSafeImage } from '@/components/ui/RemoteSafeImage'
 
 function formatBlogDate(date: Date) {
   return new Intl.DateTimeFormat('fr-FR', {
@@ -40,13 +40,12 @@ export async function FeaturedProducts() {
                 >
                   {/* Image */}
                   <div className="relative w-full aspect-[2/1] overflow-hidden bg-[#f0f0f0] flex-shrink-0">
-                    <Image
+                    <RemoteSafeImage
                       src={post.image || '/images/products/chr5-min-276x300.jpg'}
                       alt={post.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-                      unoptimized={post.image?.startsWith('http')}
                     />
                   </div>
 

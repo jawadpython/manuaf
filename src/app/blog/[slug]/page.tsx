@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import { getBlogPostBySlug } from '@/lib/data'
 import { sanitizeHtml } from '@/lib/sanitize'
 import { PageHero } from '@/components/layout/PageHero'
+import { RemoteSafeImage } from '@/components/ui/RemoteSafeImage'
 import { RANDOM_IMAGES } from '@/lib/randomImages'
 import { createMetadata } from '@/lib/seo'
 import type { Metadata } from 'next'
@@ -21,12 +21,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
 }
 
-function formatDate(date: Date) {
+function formatDate(date: Date | string) {
+  const d = date instanceof Date ? date : new Date(date)
+  if (Number.isNaN(d.getTime())) return ''
   return new Intl.DateTimeFormat('fr-FR', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
-  }).format(date)
+  }).format(d)
 }
 
 export default async function ArticlePage({ params }: Props) {
@@ -70,14 +72,13 @@ export default async function ArticlePage({ params }: Props) {
           <div className="bg-white">
             {heroImage && (
               <div className="relative aspect-[21/9] overflow-hidden">
-                <Image
+                <RemoteSafeImage
                   src={heroImage}
                   alt={post.title}
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 896px"
                   priority
-                  unoptimized={heroImage.startsWith('http')}
                 />
               </div>
             )}

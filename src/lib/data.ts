@@ -568,7 +568,7 @@ export async function getBlogPosts() {
 
 export async function getBlogPostBySlug(slug: string) {
   try {
-    const post = await prisma.blogPost.findUnique({
+    const post = await prisma.blogPost.findFirst({
       where: { slug, published: true },
     })
     return post

@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { getBlogPosts } from '@/lib/data'
 import { PageHero } from '@/components/layout/PageHero'
+import { RemoteSafeImage } from '@/components/ui/RemoteSafeImage'
 import { createMetadata } from '@/lib/seo'
 
 export const metadata = createMetadata({
@@ -54,7 +54,7 @@ export default async function BlogPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 {/* Image */}
                 <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[300px] md:min-h-[400px] overflow-hidden bg-[#f8f8f8]">
-                  <Image
+                  <RemoteSafeImage
                     src={featuredPost.image || '/images/products/chr5-min-276x300.jpg'}
                     alt={featuredPost.title}
                     fill
@@ -135,7 +135,7 @@ export default async function BlogPage() {
                 >
                   {/* Image */}
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    <Image
+                    <RemoteSafeImage
                       src={post.image || '/images/products/chr5-min-276x300.jpg'}
                       alt={post.title}
                       fill
