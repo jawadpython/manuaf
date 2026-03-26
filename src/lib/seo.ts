@@ -8,7 +8,8 @@ const TWITTER_HANDLE = '@manuaf'
 /** Max length for meta description (SEO best practice) */
 const MAX_DESCRIPTION_LENGTH = 155
 
-function truncateDescription(desc: string, max = MAX_DESCRIPTION_LENGTH): string {
+function truncateDescription(desc: string | undefined | null, max = MAX_DESCRIPTION_LENGTH): string {
+  if (desc == null || typeof desc !== 'string') return ''
   if (desc.length <= max) return desc
   return desc.slice(0, max - 3).trim() + '...'
 }
@@ -30,7 +31,7 @@ export type PageMetadata = {
  */
 export function createMetadata(input: PageMetadata): Metadata {
   const description = truncateDescription(input.description)
-  const title = input.title
+  const title = typeof input.title === 'string' && input.title.trim() ? input.title : 'MANUAF'
   const ogUrl = input.canonical
     ? (input.canonical.startsWith('http') ? input.canonical : `${SITE_URL}${input.canonical}`)
     : SITE_URL

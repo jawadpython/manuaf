@@ -567,9 +567,11 @@ export async function getBlogPosts() {
 }
 
 export async function getBlogPostBySlug(slug: string) {
+  const s = typeof slug === 'string' ? slug.trim() : ''
+  if (!s) return null
   try {
     const post = await prisma.blogPost.findFirst({
-      where: { slug, published: true },
+      where: { slug: s, published: true },
     })
     return post
   } catch {

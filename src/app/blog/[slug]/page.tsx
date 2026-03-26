@@ -8,17 +8,31 @@ import { RANDOM_IMAGES } from '@/lib/randomImages'
 import { createMetadata } from '@/lib/seo'
 import type { Metadata } from 'next'
 
-type Props = { params: Promise<{ slug: string }> }
+/** Prisma requires Node; avoid any Edge mis-detection on serverless. */
+export const runtime = 'nodejs'
+
+type Props = { params: Promise<{ slug: string }> | { slug: string } }
+
+async function getSlugFromParams(params: Props['params']): Promise<string> {
+  const resolved = await Promise.resolve(params)
+  const raw = resolved && typeof resolved === 'object' && 'slug' in resolved ? String(resolved.slug ?? '') : ''
+  return raw.trim()
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const post = await getBlogPostBySlug(slug)
-  if (!post) return { title: 'Article non trouvé' }
-  return createMetadata({
-    title: post.title || 'Article',
-    description: typeof post.excerpt === 'string' ? post.excerpt : '',
-    canonical: `/blog/${slug}`,
-  })
+  try {
+    const slug = await getSlugFromParams(params)
+    if (!slug) return { title: 'Article non trouvé' }
+    const post = await getBlogPostBySlug(slug)
+    if (!post) return { title: 'Article non trouvé' }
+    return createMetadata({
+      title: post.title || 'Article',
+      description: typeof post.excerpt === 'string' ? post.excerpt : '',
+      canonical: `/blog/${slug}`,
+    })
+  } catch {
+    return { title: 'Blog' }
+  }
 }
 
 function formatDate(date: Date | string) {
@@ -32,12 +46,15 @@ function formatDate(date: Date | string) {
 }
 
 export default async function ArticlePage({ params }: Props) {
-  const { slug } = await params
+  const slug = await getSlugFromParams(params)
+  if (!slug) notFound()
+
   const post = await getBlogPostBySlug(slug)
 
   if (!post) notFound()
 
-  const heroImage = post.image || RANDOM_IMAGES[2]
+  const img = post.image?.trim()
+  const heroImage = img || RANDOM_IMAGES[2]
 
   return (
     <article className="bg-[#f5f5f5] min-h-screen">
