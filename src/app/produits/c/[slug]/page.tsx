@@ -35,6 +35,15 @@ export default async function CategoryPage({ params }: Props) {
     }
   }
 
+  if (category.type === 'nacelles') {
+    if (category.slug === 'nacelles-de-location') {
+      redirect('/produits/nacelles/location')
+    }
+    if (category.slug === 'nacelles-d-occasion') {
+      redirect('/produits/nacelles/occasion')
+    }
+  }
+
   // Redirect pieces categories to main pieces page with category filter (no dedicated /produits/c/ pages for pieces)
   if (category.type === 'pieces') {
     redirect(`/produits/pieces?category=${category.slug}`)
@@ -45,13 +54,20 @@ export default async function CategoryPage({ params }: Props) {
     getAllCategories(),
   ])
 
-  const categoryType = category.type as 'chariots' | 'pieces'
-  const breadcrumbHref = categoryType === 'chariots' ? '/produits/chariots' : '/produits/pieces'
+  const categoryType = category.type as 'chariots' | 'pieces' | 'nacelles'
+  const breadcrumbHref =
+    categoryType === 'chariots'
+      ? '/produits/chariots'
+      : categoryType === 'nacelles'
+        ? '/produits/nacelles/location'
+        : '/produits/pieces'
+  const heroLabel =
+    categoryType === 'chariots' ? 'Chariots' : categoryType === 'nacelles' ? 'Nacelles' : 'Pièces de rechange'
 
   return (
     <div className="bg-[#f5f5f5] min-h-screen">
       <PageHero
-        label={categoryType === 'chariots' ? 'Chariots' : 'Pièces de rechange'}
+        label={heroLabel}
         title={category.name}
         subtitle={category.description ?? undefined}
         imageIndex={7}
@@ -63,7 +79,7 @@ export default async function CategoryPage({ params }: Props) {
           <Link href="/" className="hover:text-[var(--accent)]">Accueil</Link>
           <span>/</span>
           <Link href={breadcrumbHref} className="hover:text-[var(--accent)]">
-            {categoryType === 'chariots' ? 'Chariots' : 'Pièces'}
+            {categoryType === 'chariots' ? 'Chariots' : categoryType === 'nacelles' ? 'Nacelles' : 'Pièces'}
           </Link>
           <span>/</span>
           <span className="text-[var(--foreground)]">{category.name}</span>

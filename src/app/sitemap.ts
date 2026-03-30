@@ -3,8 +3,9 @@ import { prisma } from '@/lib/prisma'
 import { SITE_URL } from '@/lib/seo'
 import { getAllCitySlugs } from '@/lib/cities'
 
-/** Chariots categories that redirect to dedicated pages - exclude from /produits/c/[slug] */
+/** Categories that redirect to dedicated pages - exclude from /produits/c/[slug] */
 const CHARIOTS_REDIRECT_SLUGS = ['chariots-de-location', 'chariots-d-occasion']
+const NACELLES_REDIRECT_SLUGS = ['nacelles-de-location', 'nacelles-d-occasion']
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = SITE_URL
@@ -51,9 +52,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }),
       prisma.category.findMany({
         where: {
-          type: 'chariots',
           published: true,
-          slug: { notIn: CHARIOTS_REDIRECT_SLUGS },
+          OR: [
+            { type: 'chariots', slug: { notIn: CHARIOTS_REDIRECT_SLUGS } },
+            { type: 'nacelles', slug: { notIn: NACELLES_REDIRECT_SLUGS } },
+          ],
         },
         select: { slug: true, updatedAt: true },
       }),

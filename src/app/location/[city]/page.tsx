@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import {
   getProductsForChariotsLocation,
-  getSubcategoriesForChariotsPage,
+  getSubcategoriesForChariotsLocationPage,
 } from '@/lib/data'
 import { ChariotsGridWithForm } from '@/components/chariots/ChariotsGridWithForm'
 import { PageHero } from '@/components/layout/PageHero'
@@ -42,8 +42,8 @@ export default async function CityLocationPage({ params }: Props) {
   if (!cityConfig) notFound()
 
   const [rentalProducts, subcategories] = await Promise.all([
-    getProductsForChariotsLocation(),
-    getSubcategoriesForChariotsPage('chariots-de-location'),
+    getProductsForChariotsLocation({ applyLocationTypeAllowlist: true }),
+    getSubcategoriesForChariotsLocationPage(),
   ])
 
   const otherCities = getOtherCitiesFor(cityConfig.slug)

@@ -44,7 +44,11 @@ export default async function ProductDetailPage({ params }: Props) {
     (product.category as { parent?: { slug?: string } }).parent
       ? ((product.category as { parent: { slug?: string } }).parent?.slug)
       : undefined
-  const isLocation = categorySlug === 'chariots-de-location' || parentSlug === 'chariots-de-location'
+  const isLocation =
+    categorySlug === 'chariots-de-location' ||
+    parentSlug === 'chariots-de-location' ||
+    categorySlug === 'nacelles-de-location' ||
+    parentSlug === 'nacelles-de-location'
   const initialFormFields = isLocation ? await getFormFieldsForLocation() : undefined
 
   // Parse features: support newlines, \r\n, and pipe as separators

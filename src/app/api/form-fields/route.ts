@@ -4,10 +4,11 @@ import { prisma } from '@/lib/prisma'
 // Map category slugs to form context (showFor values in DB)
 const CONTEXT_ALIASES: Record<string, string> = {
   'chariots-de-location': 'chariots-location',
+  'nacelles-de-location': 'chariots-location',
   'chariots-d-occasion': 'chariots-occasion',
 }
 
-// Only location gets custom fields. Occasion = client info only, no custom fields.
+// Location rentals (chariots + nacelles) share the same custom fields in admin.
 const LOCATION_CONTEXT = 'chariots-location'
 
 /**

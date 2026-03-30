@@ -1,0 +1,83 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-16, 16px);
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.figure {
+  margin: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--background-muted, #f3f4f6);
+  border: 1px solid var(--border, #e5e7eb);
+  aspect-ratio: 16 / 10;
+  position: relative;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  font-family: inherit;
+  line-height: 1.25;
+  color: var(--foreground, #212121);
+  letter-spacing: -0.02em;
+}
+
+.body {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--foreground-muted, #4b5563);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+  width: fit-content;
+  transition: color 0.2s ease, gap 0.2s ease;
+}
+
+.cta:hover {
+  color: var(--grey-dark, #1f2937);
+}
+
+.cta:focus-visible {
+  outline: var(--focus-ring, 2px solid var(--accent));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.ctaArrow {
+  transition: transform 0.2s ease;
+}
+
+.cta:hover .ctaArrow {
+  transform: translateX(3px);
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 1rem;
+  }
+
+  .body {
+    font-size: 0.875rem;
+  }
+}

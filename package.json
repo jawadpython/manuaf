@@ -8,6 +8,9 @@
   "description": "Site web moderne pour entreprise d'intralogistique et de manutention",
   "author": "",
   "license": "UNLICENSED",
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev --webpack -p 8080",
     "dev:3000": "next dev --webpack -p 3000",

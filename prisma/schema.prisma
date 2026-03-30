@@ -125,7 +125,7 @@ model QuoteRequest {
   company    String?
   phone      String?
   message    String
-  product    String?  // Product name when from product page
+  product    String?  // Product name from product page
   chariotType String? // Kept for backward compat
   heures     String?
   capacite   String?
@@ -136,4 +136,17 @@ model QuoteRequest {
 
   @@index([status])
   @@index([createdAt])
+}
+
+// MegaMenuPanel: image + text + CTA for Chariots mega menu (occasion panels)
+model MegaMenuPanel {
+  id        String   @id @default(cuid())
+  key       String   @unique // chariots_occasion | nacelle_occasion
+  imageSrc  String
+  imageAlt  String
+  title     String
+  body      String   @db.Text
+  ctaLabel  String
+  ctaHref   String
+  updatedAt DateTime @updatedAt
 }

@@ -369,6 +369,7 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
                 >
                   <option value="all">Tous les types</option>
                   <option value="chariots">Chariots</option>
+                  <option value="nacelles">Nacelles</option>
                   <option value="pieces">Pièces de rechange</option>
                 </select>
               </div>

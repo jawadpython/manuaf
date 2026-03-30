@@ -93,10 +93,12 @@ export function CategoryManager({
   }
 
   // Separate categories by type
-  const chariotsCategories = categories.filter(c => c.type === 'chariots')
-  const piecesCategories = categories.filter(c => c.type === 'pieces')
-  
+  const chariotsCategories = categories.filter((c) => c.type === 'chariots')
+  const nacellesCategories = categories.filter((c) => c.type === 'nacelles')
+  const piecesCategories = categories.filter((c) => c.type === 'pieces')
+
   const chariotsTree = buildTree(chariotsCategories)
+  const nacellesTree = buildTree(nacellesCategories)
   const piecesTree = buildTree(piecesCategories)
 
   const renderCategory = (category: Category, level: number = 0): React.ReactNode[] => {
@@ -210,6 +212,36 @@ export function CategoryManager({
                 <tr>
                   <td colSpan={6} className="p-4 text-gray-500 text-center">
                     Aucune catégorie Chariots
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Nacelles */}
+      <div className="mb-8">
+        <h2 className="text-base text-gray-900 mb-4 font-display">Nacelles</h2>
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-gray-200 bg-gray-50">
+                <th className="p-4 text-gray-700 text-sm font-semibold">Nom</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Parent</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Sous-catégories</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Produits</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Statut</th>
+                <th className="p-4 text-gray-700 text-sm font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {nacellesTree.length > 0 ? (
+                nacellesTree.flatMap((category) => renderCategory(category))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="p-4 text-gray-500 text-center">
+                    Aucune catégorie Nacelles
                   </td>
                 </tr>
               )}

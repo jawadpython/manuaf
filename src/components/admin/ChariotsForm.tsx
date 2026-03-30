@@ -21,15 +21,20 @@ export function ChariotsForm({
   onCancel,
   defaultCategorySlug,
   showSoldOption = false,
+  categoryType = 'chariots',
 }: {
   product?: Product
   onSave: (p: Product) => void
   onCancel: () => void
-  /** Preselect category when creating (e.g. chariots-d-occasion, chariots-de-location) */
+  /** Preselect category when creating (e.g. chariots-d-occasion, nacelles-de-location) */
   defaultCategorySlug?: string
-  /** Show "Marquer comme vendu" only for Chariots d'occasion */
+  /** Show "Marquer comme vendu" only for d'occasion */
   showSoldOption?: boolean
+  /** Filtre les catégories API (type Prisma) */
+  categoryType?: 'chariots' | 'nacelles'
 }) {
+  const productNoun = categoryType === 'nacelles' ? 'nacelle' : 'chariot'
+  const familyLabel = categoryType === 'nacelles' ? 'Nacelles' : 'Chariots'
   const [name, setName] = useState(product?.name ?? '')
   const [description, setDescription] = useState(product?.description ?? '')
   const [images, setImages] = useState<string[]>(
@@ -49,10 +54,16 @@ export function ChariotsForm({
 
   async function createDefaultChariotsCategories() {
     try {
-      const toCreate = [
-        { name: 'Chariots de location', type: 'chariots' as const, description: 'Chariots disponibles à la location' },
-        { name: "Chariots d'occasion", type: 'chariots' as const, description: "Chariots d'occasion reconditionnés" },
-      ]
+      const toCreate =
+        categoryType === 'nacelles'
+          ? [
+              { name: 'Nacelles de location', type: 'nacelles' as const, description: 'Nacelles en location' },
+              { name: "Nacelles d'occasion", type: 'nacelles' as const, description: "Nacelles d'occasion" },
+            ]
+          : [
+              { name: 'Chariots de location', type: 'chariots' as const, description: 'Chariots disponibles à la location' },
+              { name: "Chariots d'occasion", type: 'chariots' as const, description: "Chariots d'occasion reconditionnés" },
+            ]
       const created: Array<{ id: string; name: string; slug: string }> = []
       for (const cat of toCreate) {
         const res = await fetch('/api/admin/categories', {
@@ -70,7 +81,11 @@ export function ChariotsForm({
         setChariotsCategoryId(created[0].id)
         setNoCategories(false)
       } else {
-        setError('Impossible de créer les catégories. Créez « Chariots de location » et « Chariots d\'occasion » dans Catégories.')
+        setError(
+          categoryType === 'nacelles'
+            ? 'Impossible de créer les catégories. Créez « Nacelles de location » et « Nacelles d\'occasion » dans Catégories.'
+            : 'Impossible de créer les catégories. Créez « Chariots de location » et « Chariots d\'occasion » dans Catégories.'
+        )
       }
     } catch (error) {
       console.error('Error creating default categories:', error)
@@ -85,7 +100,7 @@ export function ChariotsForm({
     fetch('/api/admin/categories')
       .then((res) => res.json())
       .then((data) => {
-        const chariotsCats = data.filter((cat: { type?: string }) => cat.type === 'chariots')
+        const chariotsCats = data.filter((cat: { type?: string }) => cat.type === categoryType)
         if (chariotsCats.length > 0) {
           const main = chariotsCats.filter((c: { parentId?: string | null }) => !c.parentId).sort((a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name))
           // Only subcategories (children) - "Chariots d'occasion" and "Chariots de location" are page types, not categories
@@ -120,7 +135,7 @@ export function ChariotsForm({
         setNoCategories(true)
         setCategoriesLoading(false)
       })
-  }, [product?.categoryId, defaultCategorySlug])
+  }, [product?.categoryId, defaultCategorySlug, categoryType])
 
   useEffect(() => {
     if (product) {
@@ -214,7 +229,7 @@ export function ChariotsForm({
       className="bg-white border border-gray-200 rounded-lg shadow-lg p-6 space-y-6 max-w-2xl"
     >
       <h3 className="font-display text-base text-gray-900">
-        {product ? 'Modifier le chariot' : 'Nouveau chariot'}
+        {product ? `Modifier la ${productNoun}` : `Nouvelle ${productNoun}`}
       </h3>
 
       {error && (
@@ -231,7 +246,9 @@ export function ChariotsForm({
 
       {noCategories && !categoriesLoading && (
         <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 text-sm rounded-lg">
-          Création des catégories Chariots de location et Chariots d&apos;occasion...
+          {categoryType === 'nacelles'
+            ? "Création des catégories Nacelles de location et Nacelles d'occasion..."
+            : 'Création des catégories Chariots de location et Chariots d&apos;occasion...'}
         </div>
       )}
 
@@ -252,7 +269,7 @@ export function ChariotsForm({
             ))}
           </select>
           <p className="text-gray-500 text-xs mt-1">
-            La catégorie détermine où ce chariot sera affiché.
+            La catégorie détermine où ce {productNoun} sera affiché.
           </p>
         </div>
       )}
@@ -394,7 +411,7 @@ Pneus arrière:
           </label>
           {sold && (
             <p className="text-yellow-700 bg-yellow-50 border border-yellow-200 text-xs mt-2 px-3 py-2 rounded-lg">
-              ⚠️ Ce chariot sera marqué comme vendu et affichera un badge &quot;Vendu&quot; sur l&apos;image
+              ⚠️ Cette {productNoun} sera marquée comme vendue et affichera un badge &quot;Vendu&quot; sur l&apos;image
             </p>
           )}
         </div>
@@ -418,7 +435,7 @@ Pneus arrière:
       </div>
       {!chariotsCategoryId && !categoriesLoading && (
         <p className="text-gray-600 text-xs bg-gray-50 border border-gray-200 px-4 py-3 rounded-lg">
-          ⚠️ Aucune catégorie Chariots trouvée. Créez-en une dans{' '}
+          ⚠️ Aucune catégorie {familyLabel} trouvée. Créez-en une dans{' '}
           <a href="/admin/categories" className="text-[var(--accent)] hover:underline font-medium">
             Catégories
           </a>

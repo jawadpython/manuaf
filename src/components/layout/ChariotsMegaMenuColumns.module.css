@@ -1,0 +1,87 @@
+/**
+ * Chariots mega menu — 3 columns.
+ * Desktop: same grid logic as .megaMenu__grid (4fr + …) so the grey column matches Pièces / Services.
+ */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  background: var(--mega-menu-right-bg, #ffffff);
+}
+
+/*
+ * First column = 4/12 of row — same share as .megaMenu__grid (4fr | 8fr).
+ * Remaining 8fr split: middle 3fr, right 5fr (more room for product links).
+ */
+@media (min-width: 768px) {
+  .wrap {
+    display: grid;
+    grid-template-columns: 4fr 3fr 5fr;
+    grid-template-rows: 1fr;
+    align-items: stretch;
+  }
+}
+
+/* LEFT — match .megaMenu__sidebar width (4fr) + padding */
+.left {
+  box-sizing: border-box;
+  background: #3c464b;
+  padding: var(--mm-24, 24px) var(--mm-16, 16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .left {
+    border-bottom: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    padding: var(--mm-32, 32px) var(--mm-24, 24px);
+  }
+}
+
+/* MIDDLE — same padding as .megaMenu__right content area */
+.middle {
+  box-sizing: border-box;
+  background: var(--mega-menu-right-bg, #ffffff);
+  padding: var(--mm-24, 24px);
+  border-bottom: 1px solid var(--border, #e5e7eb);
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .middle {
+    border-bottom: none;
+    border-right: 1px solid var(--border, #e5e7eb);
+    padding: var(--mm-32, 32px);
+  }
+}
+
+/* RIGHT — same as .megaMenu__right / .megaMenu__rightShell */
+.right {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: var(--mega-menu-right-bg, #ffffff);
+  padding: var(--mm-24, 24px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .right {
+    padding: var(--mm-32, 32px);
+  }
+}

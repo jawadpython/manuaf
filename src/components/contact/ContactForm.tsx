@@ -98,9 +98,46 @@ export function ContactForm({
     : 'block text-xs text-[#999999] uppercase tracking-wider mb-2'
   const sectionGap = isLocation ? 'space-y-6' : 'space-y-5'
   const gridGap = isLocation ? 'gap-6' : 'gap-5'
+  const isNacelleLocation = formContext === 'nacelles-de-location'
+  const characteristicsHeading = isNacelleLocation
+    ? 'Caractéristiques de la nacelle'
+    : 'Caractéristiques du chariot'
+  const selectedProductHint = isNacelleLocation
+    ? 'Votre demande sera enregistrée pour ce type de nacelle. Précisez vos contraintes (durée, lieu, hauteur de travail) dans le message.'
+    : 'Votre demande sera enregistrée pour ce type de chariot. Précisez vos contraintes (durée, lieu, capacité) dans le message.'
 
   return (
     <form onSubmit={handleSubmit} className={sectionGap}>
+      {productName && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={
+            isLocation
+              ? 'rounded-xl border border-[var(--accent)]/35 bg-[var(--accent)]/[0.07] p-4 sm:p-5 mb-1 shadow-sm'
+              : 'rounded-lg border-l-4 border-[var(--accent)] bg-[var(--accent)]/[0.06] px-4 py-3.5 mb-1'
+          }
+        >
+          <p
+            className={
+              isLocation
+                ? 'text-xs font-semibold uppercase tracking-[0.12em] text-[var(--accent)] mb-2'
+                : 'text-[10px] font-semibold uppercase tracking-wider text-[var(--accent)] mb-1'
+            }
+          >
+            Produit sélectionné
+          </p>
+          <p
+            className={
+              isLocation ? 'text-xl md:text-2xl font-bold text-[#1a1a1a] leading-snug' : 'text-lg font-bold text-[#333333]'
+            }
+          >
+            {productName}
+          </p>
+          <p className="text-sm text-[#666666] mt-2 max-w-2xl">{selectedProductHint}</p>
+        </div>
+      )}
+
       <div className={`grid grid-cols-1 sm:grid-cols-2 ${gridGap}`}>
         <div>
           <label htmlFor="name" className={labelClass}>Nom *</label>
@@ -126,7 +163,7 @@ export function ContactForm({
       {formFields.length > 0 && (
         <div className={`${isLocation ? 'bg-[#f8f9fa] p-5 sm:p-6 rounded-xl border border-[var(--border)]' : ''}`}>
           {isLocation && (
-            <h4 className="text-base font-semibold text-[#333333] mb-4">Caractéristiques du chariot</h4>
+            <h4 className="text-base font-semibold text-[#333333] mb-4">{characteristicsHeading}</h4>
           )}
           <div className={`grid grid-cols-1 sm:grid-cols-2 ${formFields.length >= 3 ? 'lg:grid-cols-3' : ''} ${gridGap}`}>
           {formFields.map((f) => (

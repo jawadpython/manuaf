@@ -1,4 +1,14 @@
 import { prisma } from './prisma'
+import { ensureMissingChariotsLocationProducts } from './ensureChariotsLocationProducts'
+import { ensureMissingNacellesLocationProducts } from './ensureNacellesLocationProducts'
+import {
+  filterAndSortChariotsLocationProducts,
+  filterSubcategoriesForChariotsLocationCatalog,
+} from './chariotsLocationTypes'
+import {
+  filterAndSortNacellesLocationProducts,
+  filterSubcategoriesForNacellesLocationCatalog,
+} from './nacellesLocationTypes'
 
 // Product images from local folder
 const localImages = {
@@ -245,7 +255,7 @@ export async function getAllCategories() {
 }
 
 // Optimized function to get products by type
-export async function getProductsByType(type: 'chariots' | 'pieces') {
+export async function getProductsByType(type: 'chariots' | 'pieces' | 'nacelles') {
   try {
     // First get category IDs of the specified type
     const categoryIds = await prisma.category.findMany({
@@ -312,8 +322,19 @@ export async function getSubcategoriesForChariotsPage(categorySlug: string) {
 }
 
 // Get products for Chariots de location page (category slug: chariots-location)
-export async function getProductsForChariotsLocation() {
+/** @param applyLocationTypeAllowlist - when true (public catalog), only the 6 defined location types; admin omits this */
+export async function getProductsForChariotsLocation(options?: {
+  applyLocationTypeAllowlist?: boolean
+}) {
   try {
+    if (options?.applyLocationTypeAllowlist) {
+      try {
+        await ensureMissingChariotsLocationProducts()
+      } catch (e) {
+        console.error('ensureMissingChariotsLocationProducts:', e)
+      }
+    }
+
     const categories = await prisma.category.findMany({
       where: {
         type: 'chariots',
@@ -346,14 +367,24 @@ export async function getProductsForChariotsLocation() {
       },
       orderBy: [{ order: 'asc' }, { name: 'asc' }],
     })
-    return products.map((p) => ({
+    const mapped = products.map((p) => ({
       ...p,
       category: p.category || { id: '', name: 'Non catégorisé', slug: '', type: '' },
     }))
+    if (options?.applyLocationTypeAllowlist) {
+      return filterAndSortChariotsLocationProducts(mapped)
+    }
+    return mapped
   } catch (error) {
     console.error('Error fetching products for chariots location:', error)
     return []
   }
+}
+
+/** Subcategory chips for public location pages — only types that belong to the 6-type catalog. */
+export async function getSubcategoriesForChariotsLocationPage() {
+  const children = await getSubcategoriesForChariotsPage('chariots-de-location')
+  return filterSubcategoriesForChariotsLocationCatalog(children)
 }
 
 // Get products for Chariots d'occasion page (category slug: chariots-occasion)
@@ -401,6 +432,128 @@ export async function getProductsForChariotsOccasion() {
   }
 }
 
+export async function getSubcategoriesForNacellesPage(categorySlug: string) {
+  try {
+    const parent = await prisma.category.findUnique({
+      where: { slug: categorySlug, type: 'nacelles', published: true },
+      select: { id: true },
+    })
+    if (!parent) return []
+
+    const children = await prisma.category.findMany({
+      where: { parentId: parent.id, published: true },
+      select: { id: true, name: true, slug: true },
+      orderBy: { order: 'asc' },
+    })
+    return children
+  } catch {
+    return []
+  }
+}
+
+/** Sous-catégories pour la page location — uniquement les 3 types du catalogue. */
+export async function getSubcategoriesForNacellesLocationPage() {
+  const children = await getSubcategoriesForNacellesPage('nacelles-de-location')
+  return filterSubcategoriesForNacellesLocationCatalog(children)
+}
+
+export async function getProductsForNacellesOccasion() {
+  try {
+    const categories = await prisma.category.findMany({
+      where: {
+        type: 'nacelles',
+        published: true,
+        OR: [{ slug: 'nacelles-d-occasion' }, { parent: { slug: 'nacelles-d-occasion' } }],
+      },
+      select: { id: true },
+    })
+    const ids = categories.map((c) => c.id)
+    if (ids.length === 0) return []
+
+    const products = await prisma.product.findMany({
+      where: { categoryId: { in: ids } },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        image: true,
+        features: true,
+        order: true,
+        sold: true,
+        categoryId: true,
+        category: {
+          select: { id: true, name: true, slug: true, type: true, parent: { select: { id: true, name: true, slug: true } } },
+        },
+      },
+      orderBy: [{ order: 'asc' }, { name: 'asc' }],
+    })
+    return products.map((p) => ({
+      ...p,
+      category: p.category || { id: '', name: 'Non catégorisé', slug: '', type: '' },
+    }))
+  } catch (error) {
+    console.error('Error fetching products for nacelles occasion:', error)
+    return []
+  }
+}
+
+/** @param applyLocationTypeAllowlist - sur le catalogue public, uniquement les 3 types de location */
+export async function getProductsForNacellesLocation(options?: {
+  applyLocationTypeAllowlist?: boolean
+}) {
+  try {
+    if (options?.applyLocationTypeAllowlist) {
+      try {
+        await ensureMissingNacellesLocationProducts()
+      } catch (e) {
+        console.error('ensureMissingNacellesLocationProducts:', e)
+      }
+    }
+
+    const categories = await prisma.category.findMany({
+      where: {
+        type: 'nacelles',
+        published: true,
+        OR: [{ slug: 'nacelles-de-location' }, { parent: { slug: 'nacelles-de-location' } }],
+      },
+      select: { id: true },
+    })
+    const ids = categories.map((c) => c.id)
+    if (ids.length === 0) return []
+
+    const products = await prisma.product.findMany({
+      where: { categoryId: { in: ids } },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        image: true,
+        features: true,
+        order: true,
+        sold: true,
+        categoryId: true,
+        category: {
+          select: { id: true, name: true, slug: true, type: true, parent: { select: { id: true, name: true, slug: true } } },
+        },
+      },
+      orderBy: [{ order: 'asc' }, { name: 'asc' }],
+    })
+    const mapped = products.map((p) => ({
+      ...p,
+      category: p.category || { id: '', name: 'Non catégorisé', slug: '', type: '' },
+    }))
+    if (options?.applyLocationTypeAllowlist) {
+      return filterAndSortNacellesLocationProducts(mapped)
+    }
+    return mapped
+  } catch (error) {
+    console.error('Error fetching products for nacelles location:', error)
+    return []
+  }
+}
+
 /** Default images for principal categories when none set in DB */
 const categoryDefaultImages: Record<string, string> = {
   chariots: '/images/Chariots de location (2).webp',
@@ -408,6 +561,9 @@ const categoryDefaultImages: Record<string, string> = {
   'chariots-location': '/images/Chariots de location (2).webp',
   'chariots-d-occasion': "/images/Chariots d'occasion.webp",
   'chariots-occasion': "/images/Chariots d'occasion.webp",
+  nacelles: '/images/services/reconditionnement.webp',
+  'nacelles-de-location': '/images/services/location.webp',
+  'nacelles-d-occasion': '/images/services/reconditionnement.webp',
   pieces: '/images/products/chr6-min-276x300.jpg',
   'pieces-de-rechange': '/images/products/chr6-min-276x300.jpg',
   batteries: '/images/products/chr8-min-276x300.jpg',
@@ -429,8 +585,8 @@ export type MegaMenuItemProduits = {
   description?: string | null
 }
 
-/** Build mega-menu by category type (chariots | pieces) */
-export async function getMegaMenuByType(type: 'chariots' | 'pieces'): Promise<MegaMenuItemProduits[]> {
+/** Build mega-menu by category type (chariots | pieces | nacelles) */
+export async function getMegaMenuByType(type: 'chariots' | 'pieces' | 'nacelles'): Promise<MegaMenuItemProduits[]> {
   try {
     const categories = await prisma.category.findMany({
       where: { published: true, type },
@@ -463,10 +619,11 @@ export async function getMegaMenuByType(type: 'chariots' | 'pieces'): Promise<Me
     for (const cat of rootCats) {
       const subLinks: { href: string; label: string }[] = []
 
-      // Add child categories as sub-links (pieces: stay on /produits/pieces with filter; chariots: dedicated page)
+      // Add child categories as sub-links (pieces: filter; chariots/nacelles: category page)
       for (const child of cat.children || []) {
         subLinks.push({
-          href: type === 'pieces' ? `/produits/pieces?category=${child.slug}` : `/produits/c/${child.slug}`,
+          href:
+            type === 'pieces' ? `/produits/pieces?category=${child.slug}` : `/produits/c/${child.slug}`,
           label: child.name,
         })
       }
@@ -493,15 +650,24 @@ export async function getMegaMenuByType(type: 'chariots' | 'pieces'): Promise<Me
         return true
       })
 
-      // Chariots: no subLinks on right (user prefers image + description only)
-      const finalSubLinks = type === 'chariots' ? [] : uniqueSubLinks
+      // Chariots / nacelles: no subLinks on right (mega menu custom columns)
+      const finalSubLinks = type === 'chariots' || type === 'nacelles' ? [] : uniqueSubLinks
+
+      const mainHref =
+        type === 'chariots' && (cat.slug === 'chariots-de-location' || cat.slug === 'chariots-d-occasion')
+          ? cat.slug === 'chariots-de-location'
+            ? '/produits/chariots/location'
+            : '/produits/chariots/occasion'
+          : type === 'nacelles' && (cat.slug === 'nacelles-de-location' || cat.slug === 'nacelles-d-occasion')
+            ? cat.slug === 'nacelles-de-location'
+              ? '/produits/nacelles/location'
+              : '/produits/nacelles/occasion'
+            : type === 'pieces'
+              ? `/produits/pieces?category=${cat.slug}`
+              : `/produits/c/${cat.slug}`
 
       items.push({
-        href: type === 'chariots' && (cat.slug === 'chariots-de-location' || cat.slug === 'chariots-d-occasion')
-          ? (cat.slug === 'chariots-de-location' ? '/produits/chariots/location' : '/produits/chariots/occasion')
-          : type === 'pieces'
-          ? `/produits/pieces?category=${cat.slug}`
-          : `/produits/c/${cat.slug}`,
+        href: mainHref,
         label: cat.name,
         subLinks: finalSubLinks,
         image: getCategoryImage(cat as { slug: string; image?: string | null }),

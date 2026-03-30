@@ -187,6 +187,7 @@ export function CategoryForm({
           className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent disabled:opacity-50 disabled:bg-gray-100"
         >
           <option value="chariots">Chariots</option>
+          <option value="nacelles">Nacelles</option>
           <option value="pieces">Pièces de rechange</option>
         </select>
         <p className="text-gray-500 text-xs mt-1">

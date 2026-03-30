@@ -24,12 +24,19 @@ interface ProductDevisInlineProps {
   sold?: boolean
 }
 
-// Only Chariots de location gets custom fields. Occasion = client info only.
-const LOCATION_SLUG = 'chariots-de-location'
+/** Location rental categories → same custom fields (API maps nacelles-de-location → chariots-location). */
+function rentalDevisFormContext(categorySlug?: string, parentCategorySlug?: string): string | undefined {
+  if (categorySlug === 'nacelles-de-location' || parentCategorySlug === 'nacelles-de-location') {
+    return 'nacelles-de-location'
+  }
+  if (categorySlug === 'chariots-de-location' || parentCategorySlug === 'chariots-de-location') {
+    return 'chariots-de-location'
+  }
+  return undefined
+}
 
 export function ProductDevisInline({ productName, label = 'Demander un devis', categorySlug, parentCategorySlug, initialFormFields, sold = false }: ProductDevisInlineProps) {
-  const formContext =
-    (categorySlug === LOCATION_SLUG || parentCategorySlug === LOCATION_SLUG) ? LOCATION_SLUG : undefined
+  const formContext = rentalDevisFormContext(categorySlug, parentCategorySlug)
   const [showForm, setShowForm] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
   const previousActiveRef = useRef<HTMLElement | null>(null)

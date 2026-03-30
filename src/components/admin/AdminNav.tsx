@@ -8,8 +8,11 @@ import { signOut } from 'next-auth/react'
 
 const contentLinks = [
   { href: '/admin/categories', label: 'Catégories' },
+  { href: '/admin/mega-menu', label: 'Mega-menu Chariots' },
   { href: '/admin/chariots/occasion', label: "Chariots d'occasion" },
   { href: '/admin/chariots/location', label: 'Chariots de location' },
+  { href: '/admin/nacelles/occasion', label: "Nacelles d'occasion" },
+  { href: '/admin/nacelles/location', label: 'Nacelles de location' },
   { href: '/admin/produits', label: 'Pièces de rechange' },
   { href: '/admin/rental-requests', label: 'Demandes location' },
   { href: '/admin/quote-requests', label: 'Demandes devis' },

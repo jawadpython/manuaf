@@ -19,16 +19,26 @@ interface Product {
 export function ChariotsManager({
   initialChariots,
   defaultCategorySlug,
+  variant = 'chariots',
 }: {
   initialChariots: Product[]
-  /** Preselect category when creating (e.g. chariots-d-occasion, chariots-de-location) */
+  /** Preselect category when creating (e.g. chariots-d-occasion, nacelles-de-location) */
   defaultCategorySlug?: string
+  /** Même UI : chariots ou nacelles (API /api/admin/chariots | nacelles) */
+  variant?: 'chariots' | 'nacelles'
 }) {
+  const adminApi = variant === 'nacelles' ? 'nacelles' : 'chariots'
+  const productNoun = variant === 'nacelles' ? 'nacelle' : 'chariot'
+  const showSoldColumn =
+    variant === 'nacelles'
+      ? defaultCategorySlug === 'nacelles-d-occasion'
+      : defaultCategorySlug === 'chariots-d-occasion'
   const [chariots, setChariots] = useState(initialChariots)
   const [editing, setEditing] = useState<Product | null>(null)
   const [creating, setCreating] = useState(false)
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'name' | 'category' | 'order'>('order')
+  const [ensuringDefaults, setEnsuringDefaults] = useState(false)
 
   const categoriesForFilter = useMemo(() => {
     const seen = new Map<string, string>()
@@ -63,8 +73,48 @@ export function ChariotsManager({
     })
   }, [chariots, categoryFilter, sortBy])
 
+  async function handleEnsureLocationDefaults() {
+    const isNacellesLoc = variant === 'nacelles' && defaultCategorySlug === 'nacelles-de-location'
+    if (
+      !confirm(
+        isNacellesLoc
+          ? 'Créer les sous-catégories et fiches manquantes pour les 3 types de nacelles (sans modifier les fiches existantes) ?'
+          : 'Créer les fiches manquantes pour les 6 types de location (sans modifier les fiches existantes) ?'
+      )
+    )
+      return
+    setEnsuringDefaults(true)
+    try {
+      const ensureUrl = isNacellesLoc ? '/api/admin/nacelles/ensure-defaults' : '/api/admin/chariots/ensure-defaults'
+      const res = await fetch(ensureUrl, { method: 'POST' })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        alert(data.error || 'Erreur')
+        return
+      }
+      alert(
+        data.created > 0
+          ? `${data.created} fiche(s) créée(s).`
+          : isNacellesLoc
+            ? 'Les 3 fiches sont déjà présentes.'
+            : 'Les 6 fiches sont déjà présentes.'
+      )
+      const url = defaultCategorySlug
+        ? `/api/admin/${adminApi}?categorySlug=${encodeURIComponent(defaultCategorySlug)}`
+        : `/api/admin/${adminApi}`
+      const listRes = await fetch(url)
+      const list = await listRes.json()
+      if (Array.isArray(list)) setChariots(list)
+    } catch (e) {
+      console.error(e)
+      alert('Erreur de connexion')
+    } finally {
+      setEnsuringDefaults(false)
+    }
+  }
+
   async function handleDelete(id: string) {
-    if (!confirm('Supprimer ce chariot ?')) return
+    if (!confirm(`Supprimer cette ${productNoun} ?`)) return
     try {
       const res = await fetch(`/api/admin/products/${id}`, { method: 'DELETE' })
       if (res.ok) {
@@ -89,8 +139,8 @@ export function ChariotsManager({
     }
     // Refresh the list to ensure consistency
     const url = defaultCategorySlug
-      ? `/api/admin/chariots?categorySlug=${encodeURIComponent(defaultCategorySlug)}`
-      : '/api/admin/chariots'
+      ? `/api/admin/${adminApi}?categorySlug=${encodeURIComponent(defaultCategorySlug)}`
+      : `/api/admin/${adminApi}`
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
@@ -98,25 +148,43 @@ export function ChariotsManager({
           setChariots(data)
         }
       })
-      .catch((err) => console.error('Error refreshing chariots:', err))
+      .catch((err) => console.error('Error refreshing list:', err))
   }
 
   return (
     <div className="space-y-8">
-      <button
-        type="button"
-        onClick={() => setCreating(true)}
-        className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] transition-colors rounded-lg shadow-md hover:shadow-lg"
-      >
-        Nouveau chariot
-      </button>
+      <div className="flex flex-wrap gap-3 items-center">
+        <button
+          type="button"
+          onClick={() => setCreating(true)}
+          className="bg-[var(--accent)] text-white px-6 py-2 font-semibold hover:bg-[var(--accent-hover)] transition-colors rounded-lg shadow-md hover:shadow-lg"
+        >
+          {variant === 'nacelles' ? 'Nouvelle nacelle' : 'Nouveau chariot'}
+        </button>
+        {((variant === 'chariots' && defaultCategorySlug === 'chariots-de-location') ||
+          (variant === 'nacelles' && defaultCategorySlug === 'nacelles-de-location')) && (
+          <button
+            type="button"
+            onClick={handleEnsureLocationDefaults}
+            disabled={ensuringDefaults}
+            className="border border-[var(--accent)] text-[var(--accent)] px-6 py-2 font-semibold hover:bg-[var(--accent)] hover:text-white transition-colors rounded-lg disabled:opacity-50"
+          >
+            {ensuringDefaults
+              ? 'Patience…'
+              : variant === 'nacelles'
+                ? 'Ajouter les 3 types location (manquants)'
+                : 'Ajouter les 6 types location (manquants)'}
+          </button>
+        )}
+      </div>
 
       {(creating || editing) && (
         <ChariotsForm
           product={editing || undefined}
           onSave={handleSaved}
           defaultCategorySlug={defaultCategorySlug}
-          showSoldOption={defaultCategorySlug === 'chariots-d-occasion'}
+          categoryType={variant === 'nacelles' ? 'nacelles' : 'chariots'}
+          showSoldOption={showSoldColumn}
           onCancel={() => {
             setCreating(false)
             setEditing(null)
@@ -159,7 +227,7 @@ export function ChariotsManager({
               <th className="p-4 text-gray-700 text-sm font-semibold">Image</th>
               <th className="p-4 text-gray-700 text-sm font-semibold">Nom</th>
               <th className="p-4 text-gray-700 text-sm font-semibold">Catégorie</th>
-              {defaultCategorySlug === 'chariots-d-occasion' && (
+              {showSoldColumn && (
                 <th className="p-4 text-gray-700 text-sm font-semibold">Statut</th>
               )}
               <th className="p-4 text-gray-700 text-sm font-semibold">Actions</th>
@@ -193,7 +261,7 @@ export function ChariotsManager({
                 <td className="p-4 text-gray-600 text-sm">
                   {chariot.category?.name ?? '—'}
                 </td>
-                {defaultCategorySlug === 'chariots-d-occasion' && (
+                {showSoldColumn && (
                   <td className="p-4">
                     {chariot.sold ? (
                       <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-50 border border-red-200 text-red-700 text-xs font-semibold rounded-full">
@@ -236,7 +304,7 @@ export function ChariotsManager({
         </table>
         {filteredAndSortedChariots.length === 0 && (
           <div className="p-8 text-center text-gray-500">
-            Aucun chariot pour le moment
+            {variant === 'nacelles' ? 'Aucune nacelle pour le moment' : 'Aucun chariot pour le moment'}
           </div>
         )}
       </div>

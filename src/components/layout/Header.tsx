@@ -8,7 +8,6 @@ import {
   type MegaMenuItem,
   type FeaturedContent,
   PANEL_LEAVE_CLOSE_DELAY_MS,
-  BUTTON_LEAVE_CLOSE_DELAY_MS,
   MIN_OPEN_DURATION_MS,
 } from './MegaMenu'
 import headerStyles from './Header.module.css'
@@ -24,16 +23,10 @@ const topLevelLinks: NavLink[] = [
   { href: '/contact', label: 'Contact' },
 ]
 
-/** Descriptions for each chariots submenu (shown on hover) */
-const CHARIOTS_LOCATION_DESC =
-  "Pour une journée ou pour un an — si vous avez besoin rapidement d'un chariot élévateur, vous pouvez compter sur notre service de location."
-const CHARIOTS_OCCASION_DESC =
-  "Équipements reconditionnés et garantis pour optimiser votre budget sans compromettre la qualité."
-
 /** Fallback when API returns empty */
 const chariotsGroupFallback: MegaMenuItem[] = [
-  { href: '/produits/chariots/location', label: 'Location', image: '/images/Chariots de location (2).webp', subLinks: [], description: CHARIOTS_LOCATION_DESC },
-  { href: '/produits/chariots/occasion', label: "Chariots d'occasion", image: "/images/Chariots d'occasion.webp", subLinks: [], description: CHARIOTS_OCCASION_DESC },
+  { href: '/produits/chariots/location', label: 'Location' },
+  { href: '/produits/chariots/occasion', label: "Chariots d'occasion" },
 ]
 const piecesGroupFallback: MegaMenuItem[] = [
   { href: '/produits/pieces', label: 'Pièces de rechange', subLinks: [] },
@@ -44,16 +37,6 @@ const servicesGroup: MegaMenuItem[] = [
   { href: '/services/reconditionnement', label: 'Reconditionnement', image: '/images/services/reconditionnement.webp', subLinks: [] },
   { href: '/services/location', label: 'Location', image: '/images/services/location.webp', subLinks: [] },
 ]
-
-const chariotsFeatured: FeaturedContent = {
-  subtitle: 'NOUS SOMMES À VOTRE ENTIÈRE DISPOSITION',
-  title: 'Location de chariots élévateurs',
-  description:
-    'Pour une journée ou pour un an — si vous avez besoin rapidement d\'un chariot élévateur, vous pouvez compter sur notre service de location.',
-  href: '/produits/chariots/location',
-  cta: 'EN SAVOIR PLUS',
-  image: '/images/Chariots de location (2).webp',
-}
 
 const piecesFeatured: FeaturedContent = {
   subtitle: 'PIÈCES ET ACCESSOIRES',
@@ -100,13 +83,7 @@ export function Header() {
     ])
       .then(([chariots, pieces]: MegaMenuItem[][]) => {
         if (Array.isArray(chariots) && chariots.length > 0) {
-          const enriched = chariots.map((item: MegaMenuItem) => {
-            if (item.description) return item
-            if (item.href?.includes('/location')) return { ...item, description: CHARIOTS_LOCATION_DESC }
-            if (item.href?.includes('/occasion')) return { ...item, description: CHARIOTS_OCCASION_DESC }
-            return item
-          })
-          setChariotsGroup(enriched)
+          setChariotsGroup(chariots.map(({ href, label }) => ({ href, label })))
         }
         if (Array.isArray(pieces) && pieces.length > 0) setPiecesGroup(pieces)
       })
@@ -418,47 +395,14 @@ export function Header() {
 
       <MegaMenuOverlay
         id="mega-menu"
+        variant={chariotsOpen ? 'chariotsShell' : 'default'}
         title={chariotsOpen ? 'Chariots' : piecesOpen ? 'Pièces de rechange' : 'Services'}
         items={chariotsOpen ? chariotsGroup : piecesOpen ? piecesGroup : servicesGroup}
-        featured={chariotsOpen ? chariotsFeatured : piecesOpen ? piecesFeatured : servicesFeatured}
+        featured={chariotsOpen ? undefined : piecesOpen ? piecesFeatured : servicesFeatured}
         open={chariotsOpen || piecesOpen || servicesOpen}
         onClose={closeAll}
         onMouseEnterPanel={isDesktop ? () => { clearButtonLeaveDelay(); clearCloseTimer() } : undefined}
         onMouseLeavePanel={isDesktop ? () => scheduleClose(closeAll, PANEL_LEAVE_CLOSE_DELAY_MS) : undefined}
-        highlights={
-          chariotsOpen
-            ? [
-                { icon: 'clock' as const, label: 'Location flexible courte ou longue durée' },
-                { icon: 'shield' as const, label: 'Équipements récents et entretenus' },
-                { icon: 'check' as const, label: 'Maintenance incluse' },
-                { icon: 'check' as const, label: 'Sans investissement initial important' },
-                { icon: 'zap' as const, label: 'Service réactif' },
-                { icon: 'clock' as const, label: 'Disponibilité rapide' },
-              ]
-            : undefined
-        }
-        highlightsByHref={
-          chariotsOpen
-            ? {
-                '/produits/chariots/location': [
-                  { icon: 'clock' as const, label: 'Location flexible courte ou longue durée' },
-                  { icon: 'shield' as const, label: 'Équipements récents et entretenus' },
-                  { icon: 'check' as const, label: 'Maintenance incluse' },
-                  { icon: 'check' as const, label: 'Sans investissement initial important' },
-                  { icon: 'zap' as const, label: 'Service réactif' },
-                  { icon: 'clock' as const, label: 'Disponibilité rapide' },
-                ],
-                '/produits/chariots/occasion': [
-                  { icon: 'shield' as const, label: 'Matériel fiable et contrôlé' },
-                  { icon: 'zap' as const, label: 'Électriques ou thermiques' },
-                  { icon: 'check' as const, label: 'Révisés et prêts à l\'emploi' },
-                  { icon: 'shield' as const, label: 'Garantie selon modèle' },
-                  { icon: 'check' as const, label: 'Prix compétitifs' },
-                  { icon: 'clock' as const, label: 'Disponibilité immédiate' },
-                ],
-              }
-            : undefined
-        }
       />
 
       {/* Mobile: slide-in drawer + accordion */}

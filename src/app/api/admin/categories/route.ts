@@ -42,9 +42,9 @@ export async function POST(request: Request) {
     )
   }
 
-  if (!['chariots', 'pieces'].includes(type)) {
+  if (!['chariots', 'pieces', 'nacelles'].includes(type)) {
     return NextResponse.json(
-      { error: 'Type doit être "chariots" ou "pieces"' },
+      { error: 'Type doit être "chariots", "pieces" ou "nacelles"' },
       { status: 400 }
     )
   }

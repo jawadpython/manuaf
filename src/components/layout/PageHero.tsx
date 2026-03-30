@@ -81,16 +81,18 @@ export function PageHero({
         ) : (
           <>
             {label && (
-              <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4">
+              <p className="!text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4 [text-shadow:0_1px_12px_rgba(0,0,0,0.75)]">
                 {label}
               </p>
             )}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
+            <h1
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold !text-white mb-3 sm:mb-4 [text-shadow:0_2px_24px_rgba(0,0,0,0.85),0_1px_3px_rgba(0,0,0,0.9)]"
+            >
               {title}
             </h1>
             <div className="w-16 sm:w-20 h-1 bg-[var(--accent)] mx-auto mb-4 sm:mb-6" aria-hidden />
             {subtitle && (
-              <p className="text-white/80 max-w-2xl mx-auto text-sm sm:text-base md:text-lg px-4">
+              <p className="!text-white/95 max-w-2xl mx-auto text-sm sm:text-base md:text-lg px-4 [text-shadow:0_1px_16px_rgba(0,0,0,0.8)]">
                 {subtitle}
               </p>
             )}
