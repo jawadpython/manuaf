@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { PageHero } from '@/components/layout/PageHero'
 import { getFormFieldsForLocation } from '@/lib/data'
+import { resolveDevisTypeForSubmit } from '@/lib/devisTypes'
 import { createMetadata } from '@/lib/seo'
 
 export const metadata = createMetadata({
@@ -24,6 +25,12 @@ export default async function DemanderChariotPage({
     category === 'chariots-de-location' || category === 'nacelles-de-location'
 
   const initialFormFields = isRentalLocationForm ? await getFormFieldsForLocation() : undefined
+
+  const devisType = resolveDevisTypeForSubmit(
+    category || undefined,
+    undefined,
+    isRentalLocationForm ? category : undefined
+  )
 
   const categoryLabel =
     category === 'nacelles-de-location'
@@ -89,6 +96,7 @@ export default async function DemanderChariotPage({
               formContext={isRentalLocationForm ? category : undefined}
               initialFormFields={initialFormFields}
               variant={isRentalLocationForm ? 'location' : 'default'}
+              devisType={devisType}
             />
           </div>
         </div>

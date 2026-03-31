@@ -432,6 +432,73 @@ export async function getProductsForChariotsOccasion() {
   }
 }
 
+/** Ensures the chariots category for /produits/transpalette-manuel exists (idempotent). */
+export async function ensureTranspaletteManuelCategory(): Promise<void> {
+  try {
+    const existing = await prisma.category.findFirst({
+      where: { slug: 'transpalette-manuel', type: 'chariots' },
+    })
+    if (existing) return
+    await prisma.category.create({
+      data: {
+        name: 'Transpalette manuel',
+        slug: 'transpalette-manuel',
+        type: 'chariots',
+        description: 'Transpalettes manuels — catalogue géré par l’admin.',
+        published: true,
+        order: 0,
+      },
+    })
+  } catch (error) {
+    console.error('ensureTranspaletteManuelCategory:', error)
+  }
+}
+
+export async function getProductsForTranspaletteManuel() {
+  await ensureTranspaletteManuelCategory()
+  try {
+    const categories = await prisma.category.findMany({
+      where: {
+        type: 'chariots',
+        published: true,
+        OR: [
+          { slug: 'transpalette-manuel' },
+          { parent: { slug: 'transpalette-manuel' } },
+        ],
+      },
+      select: { id: true },
+    })
+    const ids = categories.map((c) => c.id)
+    if (ids.length === 0) return []
+
+    const products = await prisma.product.findMany({
+      where: { categoryId: { in: ids } },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        image: true,
+        features: true,
+        order: true,
+        sold: true,
+        categoryId: true,
+        category: {
+          select: { id: true, name: true, slug: true, type: true, parent: { select: { id: true, name: true, slug: true } } },
+        },
+      },
+      orderBy: [{ order: 'asc' }, { name: 'asc' }],
+    })
+    return products.map((p) => ({
+      ...p,
+      category: p.category || { id: '', name: 'Non catégorisé', slug: '', type: '' },
+    }))
+  } catch (error) {
+    console.error('Error fetching products for transpalette manuel:', error)
+    return []
+  }
+}
+
 export async function getSubcategoriesForNacellesPage(categorySlug: string) {
   try {
     const parent = await prisma.category.findUnique({

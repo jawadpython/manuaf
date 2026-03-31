@@ -23,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     })),
     { url: `${base}/produits/chariots/occasion`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${base}/produits/transpalette-manuel`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.85 },
     { url: `${base}/produits/pieces`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85 },
     { url: `${base}/produits/pieces/batteries`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/produits/pieces/commandes`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },

@@ -7,8 +7,8 @@ import { MEGA_MENU_PANEL_DEFAULTS } from '@/lib/megaMenuPanelDefaults'
 import { panelsFromDb } from '@/lib/megaMenuPanels'
 
 export const metadata = {
-  title: 'Mega-menu Chariots - Administration',
-  description: "Panneaux image + texte du menu Chariots (occasion)",
+  title: 'Mega-menu Produits - Administration',
+  description: 'Panneaux image + texte du menu Produits (transpalette, occasion)',
   robots: { index: false, follow: false },
 }
 

@@ -138,10 +138,10 @@ model QuoteRequest {
   @@index([createdAt])
 }
 
-// MegaMenuPanel: image + text + CTA for Chariots mega menu (occasion panels)
+// MegaMenuPanel: image + text + CTA for mega menu Produits (occasion, transpalette, etc.)
 model MegaMenuPanel {
   id        String   @id @default(cuid())
-  key       String   @unique // chariots_occasion | nacelle_occasion
+  key       String   @unique // chariots_occasion | nacelle_occasion | transpalette_manuel
   imageSrc  String
   imageAlt  String
   title     String

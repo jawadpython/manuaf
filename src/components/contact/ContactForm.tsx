@@ -18,6 +18,7 @@ export function ContactForm({
   formContext,
   initialFormFields,
   variant = 'default',
+  devisType,
 }: {
   initialMessage?: string
   productName?: string
@@ -25,6 +26,8 @@ export function ContactForm({
   initialFormFields?: FormFieldConfig[]
   /** 'location' = wider layout, better spacing for chariots de location */
   variant?: 'default' | 'location'
+  /** Persisted on QuoteRequest for admin filters */
+  devisType?: string
 }) {
   const [message, setMessage] = useState(initialMessage)
   const [formFields, setFormFields] = useState<FormFieldConfig[]>(initialFormFields ?? [])
@@ -66,11 +69,13 @@ export function ContactForm({
       phone: formData.get('phone'),
       message: formData.get('message'),
       ...(productName && { product: productName }),
+      ...(devisType && { devisType }),
       ...(Object.keys(customData).length > 0 && { customData }),
     }
 
     try {
-      const url = productName ? '/api/quote-requests' : '/api/contact'
+      const url =
+        productName || devisType ? '/api/quote-requests' : '/api/contact'
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

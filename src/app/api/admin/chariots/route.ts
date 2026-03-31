@@ -11,7 +11,11 @@ export async function GET(request: NextRequest) {
   const categorySlug = searchParams.get('categorySlug') // chariots-d-occasion | chariots-de-location
 
   let categoryIds: string[]
-  if (categorySlug === 'chariots-d-occasion' || categorySlug === 'chariots-de-location') {
+  if (
+    categorySlug === 'chariots-d-occasion' ||
+    categorySlug === 'chariots-de-location' ||
+    categorySlug === 'transpalette-manuel'
+  ) {
     const categories = await prisma.category.findMany({
       where: {
         type: 'chariots',

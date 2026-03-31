@@ -1,5 +1,6 @@
 'use client'
 
+import type { FocusEvent } from 'react'
 import Link from 'next/link'
 import type { ChariotsMiddleAction } from './chariotsMenuContent'
 import styles from './ChariotsMegaMenuMiddleColumn.module.css'
@@ -9,6 +10,10 @@ export type ChariotsMegaMenuMiddleColumnProps = {
   activeMiddle: string
   onActiveMiddleChange: (id: string) => void
   onNavigate?: () => void
+  /** Survol d’une ligne du milieu (id) ou fin de survol (null) — ex. afficher la liste Louez pour la location. */
+  onMiddleItemHover?: (id: string | null) => void
+  /** Blur clavier : le parent peut ignorer si le focus va vers la colonne droite. */
+  onMiddleItemBlur?: (e: FocusEvent<HTMLElement>) => void
 }
 
 /**
@@ -21,6 +26,8 @@ export function ChariotsMegaMenuMiddleColumn({
   activeMiddle,
   onActiveMiddleChange,
   onNavigate,
+  onMiddleItemHover,
+  onMiddleItemBlur,
 }: ChariotsMegaMenuMiddleColumnProps) {
   if (items.length === 0) return null
 
@@ -37,8 +44,16 @@ export function ChariotsMegaMenuMiddleColumn({
                 <Link
                   href={m.href}
                   className={`${className} ${styles.buttonLink}`}
-                  onMouseEnter={() => onActiveMiddleChange(m.id)}
-                  onFocus={() => onActiveMiddleChange(m.id)}
+                  onMouseEnter={() => {
+                    onActiveMiddleChange(m.id)
+                    onMiddleItemHover?.(m.id)
+                  }}
+                  onMouseLeave={() => onMiddleItemHover?.(null)}
+                  onFocus={() => {
+                    onActiveMiddleChange(m.id)
+                    onMiddleItemHover?.(m.id)
+                  }}
+                  onBlur={(e) => onMiddleItemBlur?.(e)}
                   onClick={onNavigate}
                   aria-current={isActive ? 'true' : undefined}
                 >
@@ -53,8 +68,16 @@ export function ChariotsMegaMenuMiddleColumn({
               <button
                 type="button"
                 className={className}
-                onMouseEnter={() => onActiveMiddleChange(m.id)}
-                onFocus={() => onActiveMiddleChange(m.id)}
+                onMouseEnter={() => {
+                  onActiveMiddleChange(m.id)
+                  onMiddleItemHover?.(m.id)
+                }}
+                onMouseLeave={() => onMiddleItemHover?.(null)}
+                onFocus={() => {
+                  onActiveMiddleChange(m.id)
+                  onMiddleItemHover?.(m.id)
+                }}
+                onBlur={(e) => onMiddleItemBlur?.(e)}
                 aria-current={isActive ? 'true' : undefined}
               >
                 {m.label}

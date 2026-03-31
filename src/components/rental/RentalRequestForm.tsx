@@ -2,17 +2,14 @@
 
 import { useState } from 'react'
 
-const MOTORISATION_OPTIONS = [
-  { value: 'electrique', label: 'Électrique' },
-  { value: 'thermique', label: 'Thermique' },
-]
-
 type Props = {
   defaultChariotType?: string
   onSuccess?: () => void
+  /** Tighter labels/inputs (sidebar on dense catalog pages e.g. transpalette-manuel) */
+  compact?: boolean
 }
 
-export function RentalRequestForm({ defaultChariotType = '', onSuccess }: Props) {
+export function RentalRequestForm({ defaultChariotType = '', onSuccess, compact = false }: Props) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -58,26 +55,33 @@ export function RentalRequestForm({ defaultChariotType = '', onSuccess }: Props)
     }
   }
 
-  const inputClass =
-    'w-full bg-[var(--background-muted)] border border-[var(--border)] text-[var(--foreground)] px-3 py-2 text-sm rounded-[var(--radius-md)] placeholder-[var(--foreground-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-[var(--transition-base)]'
-  const labelClass = 'block text-xs text-[var(--foreground-subtle)] font-medium uppercase tracking-wider mb-1'
+  const inputClass = compact
+    ? 'w-full bg-[var(--background-muted)] border border-[var(--border)] text-[var(--foreground)] px-2 py-1.5 text-[11px] leading-snug rounded-[var(--radius-md)] placeholder-[var(--foreground-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-[var(--transition-base)]'
+    : 'w-full bg-[var(--background-muted)] border border-[var(--border)] text-[var(--foreground)] px-2.5 py-1.5 text-xs leading-snug rounded-[var(--radius-md)] placeholder-[var(--foreground-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-[var(--transition-base)]'
+  const labelClass = compact
+    ? 'block text-[9px] text-[var(--foreground-subtle)] font-medium uppercase tracking-wide mb-0.5'
+    : 'block text-[11px] text-[var(--foreground-subtle)] font-medium uppercase tracking-wide mb-0.5'
+  const sectionHeadingClass = compact
+    ? 'text-[9px] font-semibold text-[var(--foreground-muted)] uppercase tracking-wide'
+    : 'text-[11px] font-semibold text-[var(--foreground-muted)] uppercase tracking-wide'
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
+    <form onSubmit={handleSubmit} className={compact ? 'space-y-2.5' : 'space-y-3'}>
       <input type="hidden" name="chariot_type" value={defaultChariotType} />
 
       {defaultChariotType && (
-        <div className="p-2.5 rounded-[var(--radius-md)] bg-[var(--background-muted)] border border-[var(--border-strong)]">
-          <p className="text-sm text-[var(--foreground-muted)]">
+        <div
+          className={`rounded-[var(--radius-md)] bg-[var(--background-muted)] border border-[var(--border-strong)] ${
+            compact ? 'p-2' : 'p-2.5'
+          }`}
+        >
+          <p className={compact ? 'text-[11px] text-[var(--foreground-muted)] leading-snug break-words' : 'text-xs text-[var(--foreground-muted)]'}>
             <strong className="text-[var(--foreground)]">Type sélectionné :</strong>{' '}
             {defaultChariotType.replace(/-/g, ' ')}
           </p>
         </div>
       )}
 
-      <h3 className="text-xs font-semibold text-[var(--foreground-muted)] uppercase tracking-wider">
-        Coordonnées
-      </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label htmlFor="client_name" className={labelClass}>
@@ -109,61 +113,8 @@ export function RentalRequestForm({ defaultChariotType = '', onSuccess }: Props)
         </div>
       </div>
 
-      <div className="pt-3 border-t border-[var(--border)] space-y-3">
-        <h3 className="text-xs font-semibold text-[var(--foreground-muted)] uppercase tracking-wider">
-          Caractéristiques
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label htmlFor="motorisation" className={labelClass}>
-              Motorisation *
-            </label>
-        <select id="motorisation" name="motorisation" required className={inputClass + ' appearance-none cursor-pointer'}>
-          <option value="">Sélectionnez</option>
-          {MOTORISATION_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-          </div>
-          <div>
-            <label htmlFor="capacite_kg" className={labelClass}>
-              Capacité (kg)
-            </label>
-          <input
-            id="capacite_kg"
-            name="capacite_kg"
-            type="number"
-            min={0}
-            max={10000}
-            step={100}
-            className={inputClass}
-            placeholder="Ex: 2500"
-          />
-          </div>
-          <div>
-            <label htmlFor="hauteur_m" className={labelClass}>
-              Hauteur (m)
-            </label>
-          <input
-            id="hauteur_m"
-            name="hauteur_m"
-            type="number"
-            min={0}
-            max={20}
-            step={0.1}
-            className={inputClass}
-            placeholder="Ex: 3.5"
-          />
-          </div>
-        </div>
-      </div>
-
-      <div className="pt-3 border-t border-[var(--border)] space-y-3">
-        <h3 className="text-xs font-semibold text-[var(--foreground-muted)] uppercase tracking-wider">
-          Location
-        </h3>
+      <div className={`${compact ? 'pt-2' : 'pt-3'} border-t border-[var(--border)] ${compact ? 'space-y-2.5' : 'space-y-3'}`}>
+        <h3 className={sectionHeadingClass}>Location</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label htmlFor="ville" className={labelClass}>
@@ -210,22 +161,26 @@ export function RentalRequestForm({ defaultChariotType = '', onSuccess }: Props)
       </div>
 
       {status === 'success' && (
-        <div className="p-3 rounded-[var(--radius-md)] bg-emerald-50 border border-emerald-200">
-          <p className="text-sm text-emerald-800">
+        <div className={`rounded-[var(--radius-md)] bg-emerald-50 border border-emerald-200 ${compact ? 'p-2' : 'p-3'}`}>
+          <p className={compact ? 'text-xs text-emerald-800' : 'text-sm text-emerald-800'}>
             Demande envoyée. Nous vous recontacterons rapidement.
           </p>
         </div>
       )}
       {status === 'error' && (
-        <div className="p-3 rounded-[var(--radius-md)] bg-red-50 border border-red-200">
-          <p className="text-sm text-red-700">{errorMsg}</p>
+        <div className={`rounded-[var(--radius-md)] bg-red-50 border border-red-200 ${compact ? 'p-2' : 'p-3'}`}>
+          <p className={compact ? 'text-xs text-red-700' : 'text-sm text-red-700'}>{errorMsg}</p>
         </div>
       )}
 
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="w-full sm:w-auto px-6 py-2.5 bg-[var(--grey)] text-white font-semibold text-sm uppercase tracking-wider rounded-[var(--radius-md)] hover:bg-[var(--grey-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-[var(--transition-base)] disabled:opacity-60 disabled:cursor-not-allowed"
+        className={
+          compact
+            ? 'w-full px-3 py-1.5 bg-[var(--grey)] text-white font-semibold text-[11px] uppercase tracking-wide rounded-[var(--radius-md)] hover:bg-[var(--grey-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-[var(--transition-base)] disabled:opacity-60 disabled:cursor-not-allowed'
+            : 'w-full sm:w-auto px-5 py-2 bg-[var(--grey)] text-white font-semibold text-xs uppercase tracking-wide rounded-[var(--radius-md)] hover:bg-[var(--grey-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-[var(--transition-base)] disabled:opacity-60 disabled:cursor-not-allowed'
+        }
       >
         {status === 'loading' ? 'Envoi en cours...' : 'Envoyer la demande'}
       </button>

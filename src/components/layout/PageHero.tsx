@@ -17,6 +17,8 @@ export type PageHeroProps = {
   whiteCard?: boolean
   /** Custom className for the section */
   className?: string
+  /** Smaller H1/subtitle (e.g. product catalog pages where title repeats panel copy) */
+  compactTitle?: boolean
 }
 
 export function PageHero({
@@ -27,6 +29,7 @@ export function PageHero({
   imageIndex = 0,
   whiteCard = false,
   className = '',
+  compactTitle = false,
 }: PageHeroProps) {
   const bgImage = image ?? RANDOM_IMAGES[imageIndex % RANDOM_IMAGES.length]
   /** Remote URLs use <img> so Next/Image never throws on unlisted hostnames (e.g. Blob variants). */
@@ -86,13 +89,23 @@ export function PageHero({
               </p>
             )}
             <h1
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold !text-white mb-3 sm:mb-4 [text-shadow:0_2px_24px_rgba(0,0,0,0.85),0_1px_3px_rgba(0,0,0,0.9)]"
+              className={`font-bold !text-white mb-3 sm:mb-4 [text-shadow:0_2px_24px_rgba(0,0,0,0.85),0_1px_3px_rgba(0,0,0,0.9)] ${
+                compactTitle
+                  ? 'text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight px-2'
+                  : 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl'
+              }`}
             >
               {title}
             </h1>
             <div className="w-16 sm:w-20 h-1 bg-[var(--accent)] mx-auto mb-4 sm:mb-6" aria-hidden />
             {subtitle && (
-              <p className="!text-white/95 max-w-2xl mx-auto text-sm sm:text-base md:text-lg px-4 [text-shadow:0_1px_16px_rgba(0,0,0,0.8)]">
+              <p
+                className={`!text-white/95 max-w-2xl mx-auto px-4 [text-shadow:0_1px_16px_rgba(0,0,0,0.8)] ${
+                  compactTitle
+                    ? 'text-xs sm:text-sm leading-relaxed'
+                    : 'text-sm sm:text-base md:text-lg'
+                }`}
+              >
                 {subtitle}
               </p>
             )}

@@ -10,7 +10,11 @@ export async function POST(request: Request) {
     const body = await request.json()
 
     const chariot_type = sanitizeInput(body.chariot_type) || 'Non spécifié'
-    const motorisation = sanitizeInput(body.motorisation)
+    const motorisationRaw = sanitizeInput(body.motorisation)
+    const motorisation =
+      motorisationRaw && MOTORISATION_VALUES.includes(motorisationRaw)
+        ? motorisationRaw
+        : 'electrique'
     const capacite_kg = body.capacite_kg != null ? Math.max(0, Math.min(10000, Number(body.capacite_kg) || 0)) : null
     const hauteur_m = body.hauteur_m != null ? Math.max(0, Math.min(20, parseFloat(String(body.hauteur_m)) || 0)) : null
     const ville = sanitizeInput(body.ville) || null
@@ -27,10 +31,6 @@ export async function POST(request: Request) {
     if (!client_phone || client_phone.length < 6) {
       return NextResponse.json({ error: 'Téléphone requis (min. 6 caractères)' }, { status: 400 })
     }
-    if (!motorisation || !MOTORISATION_VALUES.includes(motorisation)) {
-      return NextResponse.json({ error: 'Motorisation invalide' }, { status: 400 })
-    }
-
     const rental = await prisma.rentalRequest.create({
       data: {
         chariot_type,

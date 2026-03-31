@@ -35,7 +35,7 @@ export type ChariotsMegaMenuLeftColumnProps = {
  * le survol / focus met à jour la sélection pour l’aperçu au centre et à droite.
  */
 export function ChariotsMegaMenuLeftColumn({
-  title = 'Chariots',
+  title = 'Produits',
   activeItem,
   onActiveItemChange,
   onNavigate,

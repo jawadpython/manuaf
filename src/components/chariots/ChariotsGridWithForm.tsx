@@ -40,6 +40,10 @@ interface ChariotsGridWithFormProps {
   showFormOnSelect?: boolean
   /** When true, hide the sidebar form entirely (e.g. Chariots de location) */
   hideForm?: boolean
+  /** Smaller filter/sort bar (e.g. transpalette-manuel — avoids huge uppercase chips colliding) */
+  compactToolbar?: boolean
+  /** Override product grid classes (e.g. 1 col on narrow mobile for wider cards) */
+  productGridClassName?: string
 }
 
 export function ChariotsGridWithForm({
@@ -49,6 +53,8 @@ export function ChariotsGridWithForm({
   subcategories,
   showFormOnSelect = false,
   hideForm = false,
+  compactToolbar = false,
+  productGridClassName,
 }: ChariotsGridWithFormProps) {
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>('all')
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -81,16 +87,26 @@ export function ChariotsGridWithForm({
       {/* Main content: filter + grid */}
       <div className="flex-1 min-w-0">
         {/* Category filter + sort */}
-        <div className="flex flex-wrap gap-4 items-center mb-8">
+        <div
+          className={`flex flex-wrap gap-3 sm:gap-4 items-center mb-6 sm:mb-8 ${compactToolbar ? 'min-w-0' : ''}`}
+        >
           {subcategories.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 min-w-0 flex-1">
               <button
                 type="button"
                 onClick={() => setSelectedSubcategory('all')}
-                className={`px-4 py-2.5 text-sm font-semibold uppercase tracking-wider transition-colors ${
-                  selectedSubcategory === 'all'
-                    ? 'bg-[var(--accent)] text-white'
-                    : 'bg-white border border-[var(--border)] text-[var(--grey)] hover:border-[var(--accent)] hover:text-[var(--accent)]'
+                className={`font-semibold transition-colors rounded-md ${
+                  compactToolbar
+                    ? `px-3 py-1.5 text-xs tracking-wide ${
+                        selectedSubcategory === 'all'
+                          ? 'bg-[var(--accent)] text-[#141414]'
+                          : 'bg-white border border-[var(--border)] text-[var(--grey)] hover:border-[var(--accent)] hover:text-[var(--accent)]'
+                      }`
+                    : `px-4 py-2.5 text-sm uppercase tracking-wider ${
+                        selectedSubcategory === 'all'
+                          ? 'bg-[var(--accent)] text-white'
+                          : 'bg-white border border-[var(--border)] text-[var(--grey)] hover:border-[var(--accent)] hover:text-[var(--accent)]'
+                      }`
                 }`}
               >
                 Tous
@@ -100,10 +116,18 @@ export function ChariotsGridWithForm({
                   key={sub.id}
                   type="button"
                   onClick={() => setSelectedSubcategory(sub.slug)}
-                  className={`px-4 py-2.5 text-sm font-semibold uppercase tracking-wider transition-colors ${
-                    selectedSubcategory === sub.slug
-                      ? 'bg-[var(--accent)] text-white'
-                      : 'bg-white border border-[var(--border)] text-[var(--grey)] hover:border-[var(--accent)] hover:text-[var(--accent)]'
+                  className={`font-semibold transition-colors rounded-md max-w-full ${
+                    compactToolbar
+                      ? `px-3 py-1.5 text-xs tracking-wide truncate ${
+                          selectedSubcategory === sub.slug
+                            ? 'bg-[var(--accent)] text-[#141414]'
+                            : 'bg-white border border-[var(--border)] text-[var(--grey)] hover:border-[var(--accent)] hover:text-[var(--accent)]'
+                        }`
+                      : `px-4 py-2.5 text-sm uppercase tracking-wider ${
+                          selectedSubcategory === sub.slug
+                            ? 'bg-[var(--accent)] text-white'
+                            : 'bg-white border border-[var(--border)] text-[var(--grey)] hover:border-[var(--accent)] hover:text-[var(--accent)]'
+                        }`
                   }`}
                 >
                   {sub.name}
@@ -111,12 +135,18 @@ export function ChariotsGridWithForm({
               ))}
             </div>
           )}
-          <label className="flex items-center gap-2 text-sm text-[var(--grey)] ml-auto">
-            <span>Trier par :</span>
+          <label
+            className={`flex flex-wrap items-center gap-2 text-[var(--grey)] min-w-0 sm:ml-auto ${
+              compactToolbar ? 'text-xs' : 'text-sm'
+            }`}
+          >
+            <span className="shrink-0">Trier par :</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'default' | 'name' | 'category')}
-              className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-sm bg-white"
+              className={`rounded-lg border border-[var(--border)] bg-white min-w-0 max-w-[11rem] ${
+                compactToolbar ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'
+              }`}
             >
               <option value="default">Ordre d&apos;affichage</option>
               <option value="name">Nom</option>
@@ -127,7 +157,12 @@ export function ChariotsGridWithForm({
 
         {/* Products grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+          <div
+            className={
+              productGridClassName ??
+              'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4'
+            }
+          >
             {filteredProducts.map((product) => (
               <ChariotProductCard
                 key={product.id}
@@ -163,8 +198,12 @@ export function ChariotsGridWithForm({
 
       {/* Request form sidebar — hidden when hideForm, or when showFormOnSelect and no product selected */}
       {!hideForm && (!showFormOnSelect || selectedProduct) && (
-        <aside className="w-full lg:w-80 flex-shrink-0">
-          <div className="bg-white border border-[var(--border)] shadow-md p-6 sticky top-24">
+        <aside className={`w-full flex-shrink-0 ${compactToolbar ? 'lg:w-72' : 'lg:w-80'}`}>
+          <div
+            className={`bg-white border border-[var(--border)] shadow-md sticky top-24 ${
+              compactToolbar ? 'p-4 sm:p-5' : 'p-6'
+            }`}
+          >
             {showFormOnSelect && selectedProduct && (
               <button
                 type="button"
@@ -175,14 +214,23 @@ export function ChariotsGridWithForm({
                 ← Changer de produit
               </button>
             )}
-            <h3 className="text-lg font-bold text-[var(--grey)] mb-1">Demander un devis</h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <h3
+              className={`font-bold text-[var(--grey)] mb-1 leading-snug ${
+                compactToolbar ? 'text-base' : 'text-lg'
+              }`}
+            >
+              Demander un devis
+            </h3>
+            <p
+              className={`text-gray-600 mb-4 break-words ${compactToolbar ? 'text-xs leading-relaxed' : 'text-sm'}`}
+            >
               {selectedProduct
                 ? `Devis pour : ${selectedProduct.name}`
                 : `Remplissez le formulaire pour une demande de ${categoryLabel.toLowerCase()}.`}
             </p>
             <RentalRequestForm
               defaultChariotType={selectedProduct ? selectedProduct.name : categorySlug}
+              compact={compactToolbar}
             />
           </div>
         </aside>
@@ -252,7 +300,7 @@ function ChariotProductCard({
 
   return (
     <article
-      className={`relative bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-shadow duration-300 ${
+      className={`relative min-w-0 overflow-hidden bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-shadow duration-300 ${
         isSold ? 'opacity-70' : ''
       }`}
     >
@@ -283,39 +331,30 @@ function ChariotProductCard({
         </div>
       </Link>
 
-      <div className="p-3 sm:p-4">
-        <p className="text-[10px] font-semibold text-[var(--accent)] uppercase tracking-wider mb-1">
+      <div className="p-2.5 sm:p-3 min-w-0">
+        <p className="text-[9px] sm:text-[10px] font-semibold text-[var(--accent)] uppercase tracking-wide mb-0.5 line-clamp-1 break-words">
           {categoryName}
         </p>
-        <Link href={`/produits/${product.slug}`}>
-          <h3 className="text-[var(--grey)] text-xs font-bold mb-1 hover:text-[var(--accent)] transition-colors line-clamp-2">
+        <Link href={`/produits/${product.slug}`} className="block min-w-0">
+          <h3 className="text-[var(--grey)] text-[11px] sm:text-xs font-bold leading-snug mb-1 hover:text-[var(--accent)] transition-colors line-clamp-2 break-words">
             {product.name}
           </h3>
         </Link>
         {cardFeatures.length > 0 && (
-          <dl className="grid grid-cols-2 gap-x-2 gap-y-1 mb-2 text-[10px] sm:text-xs">
+          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-0.5 mb-1.5 text-[9px] sm:text-[10px]">
             {cardFeatures.map(({ label, value }) => (
-              <div key={label} className="flex gap-1 truncate">
+              <div key={label} className="flex gap-1 min-w-0">
                 <dt className="text-[var(--foreground-muted)] shrink-0">{label}:</dt>
-                <dd className="text-[var(--grey)] truncate font-medium">{value}</dd>
+                <dd className="text-[var(--grey)] font-medium min-w-0 break-words line-clamp-1">{value}</dd>
               </div>
             ))}
           </dl>
         )}
-        <p className="text-[var(--foreground-muted)] text-xs leading-snug line-clamp-2 mb-3">
+        <p className="text-[var(--foreground-muted)] text-[10px] sm:text-xs leading-snug line-clamp-2 mb-2.5">
           {product.description}
         </p>
 
         <div className="flex flex-col gap-1.5">
-          <Link
-            href={`/produits/${product.slug}`}
-            className="inline-flex items-center justify-center gap-1.5 py-2 bg-[var(--grey)] text-white text-xs font-semibold hover:bg-[var(--grey-dark)] transition-colors w-full"
-          >
-            Voir la fiche
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
           {showRequestQuote && onRequestQuote && (
             <button
               type="button"
@@ -324,11 +363,38 @@ function ChariotProductCard({
                 e.preventDefault()
                 if (!isSold) onRequestQuote()
               }}
-              className="inline-flex items-center justify-center gap-1.5 py-2 border border-[var(--grey)] text-[var(--grey)] text-xs font-semibold w-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[var(--grey)] hover:bg-[var(--grey)] hover:text-white"
+              className="group/quote inline-flex items-center justify-center gap-1.5 py-2 px-2 rounded-md bg-[var(--accent)] text-[#141414] text-[10px] sm:text-[11px] font-semibold leading-tight tracking-normal shadow-[0_1px_2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_14px_rgba(0,0,0,0.12)] hover:bg-[var(--accent-hover)] transition-all duration-200 w-full min-w-0 disabled:opacity-45 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:bg-[var(--accent)] text-center"
             >
-              Demander un devis
+              <svg
+                className="w-3.5 h-3.5 shrink-0 opacity-90 group-hover/quote:opacity-100"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <span className="break-words">Demander un devis</span>
             </button>
           )}
+          <Link
+            href={`/produits/${product.slug}`}
+            className={`inline-flex items-center justify-center gap-1 py-2 px-2 rounded-md text-[10px] sm:text-[11px] font-semibold leading-tight transition-colors w-full min-w-0 border ${
+              showRequestQuote
+                ? 'border-[var(--border)] bg-white text-[var(--grey)] hover:border-[var(--grey)] hover:bg-[#fafafa]'
+                : 'bg-[var(--grey)] text-white border-transparent hover:bg-[var(--grey-dark)]'
+            }`}
+          >
+            <span className="break-words">Voir la fiche</span>
+            <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
         </div>
       </div>
     </article>

@@ -37,5 +37,6 @@ export function panelsFromDb(
   return {
     chariots_occasion: mergeMegaMenuPanel(byKey.get('chariots_occasion') ?? null, defaults.chariots_occasion),
     nacelle_occasion: mergeMegaMenuPanel(byKey.get('nacelle_occasion') ?? null, defaults.nacelle_occasion),
+    transpalette_manuel: mergeMegaMenuPanel(byKey.get('transpalette_manuel') ?? null, defaults.transpalette_manuel),
   }
 }

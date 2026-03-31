@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { ContactForm } from '@/components/contact/ContactForm'
+import { resolveDevisTypeForSubmit } from '@/lib/devisTypes'
 
 interface FormFieldConfig {
   id: string
@@ -37,6 +38,7 @@ function rentalDevisFormContext(categorySlug?: string, parentCategorySlug?: stri
 
 export function ProductDevisInline({ productName, label = 'Demander un devis', categorySlug, parentCategorySlug, initialFormFields, sold = false }: ProductDevisInlineProps) {
   const formContext = rentalDevisFormContext(categorySlug, parentCategorySlug)
+  const devisType = resolveDevisTypeForSubmit(categorySlug, parentCategorySlug, formContext)
   const [showForm, setShowForm] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
   const previousActiveRef = useRef<HTMLElement | null>(null)
@@ -135,6 +137,7 @@ export function ProductDevisInline({ productName, label = 'Demander un devis', c
                 formContext={formContext}
                 initialFormFields={initialFormFields}
                 variant={initialFormFields?.length ? 'location' : 'default'}
+                devisType={devisType}
               />
             </div>
           </div>

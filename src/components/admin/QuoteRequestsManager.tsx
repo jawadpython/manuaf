@@ -1,6 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import {
+  DEVIS_TYPE_KEYS,
+  DEVIS_TYPE_LABELS,
+  inferDevisTypeForAdminRecord,
+  type DevisTypeKey,
+} from '@/lib/devisTypes'
 
 function getCustomDataValues(r: QuoteRequest): Record<string, string | null> {
   const legacy: Record<string, string | null> = {}
@@ -69,6 +75,14 @@ function QuoteRequestDetail({
         {r.phone && <p><strong>Téléphone:</strong> <a href={`tel:${r.phone}`} className="text-[var(--accent)]">{r.phone}</a></p>}
         {r.company && <p><strong>Société:</strong> {r.company}</p>}
         {r.product && <p><strong>Produit:</strong> {r.product}</p>}
+        {(() => {
+          const t = inferDevisTypeForAdminRecord(r)
+          return t ? (
+            <p>
+              <strong>Type de devis :</strong> {DEVIS_TYPE_LABELS[t]}
+            </p>
+          ) : null
+        })()}
 
         <div className="border-t border-gray-200 pt-3 mt-3">
           <div className="flex items-center justify-between gap-2 mb-2">
@@ -186,6 +200,7 @@ export function QuoteRequestsManager() {
   const [formFields, setFormFields] = useState<FormField[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<string>('all')
+  const [typeFilter, setTypeFilter] = useState<'all' | DevisTypeKey | 'unset'>('all')
 
   async function fetchRequests() {
     try {
@@ -248,7 +263,35 @@ export function QuoteRequestsManager() {
     }
   }
 
-  const filtered = filter === 'all' ? requests : requests.filter((r) => r.status === filter)
+  const filtered = useMemo(() => {
+    let list = filter === 'all' ? requests : requests.filter((r) => r.status === filter)
+    if (typeFilter !== 'all') {
+      list = list.filter((r) => {
+        const t = inferDevisTypeForAdminRecord(r)
+        if (typeFilter === 'unset') return !t
+        return t === typeFilter
+      })
+    }
+    return list
+  }, [requests, filter, typeFilter])
+
+  const typeCounts = useMemo(() => {
+    const counts: Record<DevisTypeKey | 'unset', number> = {
+      'transpalette-manuel': 0,
+      'chariots-occasion': 0,
+      'chariots-location': 0,
+      'nacelles-occasion': 0,
+      'nacelles-location': 0,
+      unset: 0,
+    }
+    const base = filter === 'all' ? requests : requests.filter((r) => r.status === filter)
+    for (const r of base) {
+      const t = inferDevisTypeForAdminRecord(r)
+      if (!t) counts.unset += 1
+      else counts[t] += 1
+    }
+    return counts
+  }, [requests, filter])
 
   if (loading) {
     return <p className="text-[var(--foreground-muted)]">Chargement...</p>
@@ -256,32 +299,76 @@ export function QuoteRequestsManager() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => setFilter('all')}
-          className={`px-4 py-2 text-sm font-medium rounded ${
-            filter === 'all' ? 'bg-[var(--accent)] text-[var(--foreground)]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
-        >
-          Tous ({requests.length})
-        </button>
-        {STATUS_OPTIONS.map((o) => (
+      <div className="space-y-3">
+        <div className="flex flex-wrap gap-2">
           <button
-            key={o.value}
             type="button"
-            onClick={() => setFilter(o.value)}
+            onClick={() => setFilter('all')}
             className={`px-4 py-2 text-sm font-medium rounded ${
-              filter === o.value ? 'bg-[var(--accent)] text-[var(--foreground)]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              filter === 'all' ? 'bg-[var(--accent)] text-[var(--foreground)]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            {o.label} ({requests.filter((r) => r.status === o.value).length})
+            Tous ({requests.length})
           </button>
-        ))}
+          {STATUS_OPTIONS.map((o) => (
+            <button
+              key={o.value}
+              type="button"
+              onClick={() => setFilter(o.value)}
+              className={`px-4 py-2 text-sm font-medium rounded ${
+                filter === o.value ? 'bg-[var(--accent)] text-[var(--foreground)]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {o.label} ({requests.filter((r) => r.status === o.value).length})
+            </button>
+          ))}
+        </div>
+
+        <div>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Type de devis</p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setTypeFilter('all')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md border ${
+                typeFilter === 'all'
+                  ? 'bg-[var(--grey)] text-white border-[var(--grey)]'
+                  : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              Tous types
+            </button>
+            {DEVIS_TYPE_KEYS.map((key) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setTypeFilter(key)}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md border text-left max-w-[220px] ${
+                  typeFilter === key
+                    ? 'bg-[var(--accent)] text-[#141414] border-[var(--accent)]'
+                    : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                {DEVIS_TYPE_LABELS[key]} ({typeCounts[key]})
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => setTypeFilter('unset')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md border ${
+                typeFilter === 'unset'
+                  ? 'bg-amber-100 text-amber-900 border-amber-300'
+                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              Non classé ({typeCounts.unset})
+            </button>
+          </div>
+        </div>
       </div>
 
       <div className="border border-gray-200 overflow-x-auto rounded-lg">
-        <table className="w-full text-left min-w-[700px]">
+        <table className="w-full text-left min-w-[880px]">
           <thead>
             <tr className="border-b border-gray-200 bg-gray-50">
               <th className="p-3 text-gray-600 text-xs font-semibold uppercase">Date</th>
@@ -295,7 +382,7 @@ export function QuoteRequestsManager() {
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={6} className="p-8 text-center text-gray-500">
+                <td colSpan={7} className="p-8 text-center text-gray-500">
                   Aucune demande de devis
                 </td>
               </tr>
@@ -314,6 +401,18 @@ export function QuoteRequestsManager() {
                     <a href={`mailto:${r.email}`} className="text-[var(--accent)] hover:underline text-sm">
                       {r.email}
                     </a>
+                  </td>
+                  <td className="p-3 text-xs text-gray-700 max-w-[200px]">
+                    {(() => {
+                      const t = inferDevisTypeForAdminRecord(r)
+                      return t ? (
+                        <span className="inline-block px-2 py-0.5 rounded bg-gray-100 text-gray-800 border border-gray-200">
+                          {DEVIS_TYPE_LABELS[t]}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">—</span>
+                      )
+                    })()}
                   </td>
                   <td className="p-3 text-sm text-gray-700 max-w-[180px] truncate" title={r.product || ''}>
                     {r.product || '-'}

@@ -268,7 +268,7 @@ export function Header() {
                 chariotsOpen ? 'text-[var(--accent)]' : 'text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)]'
               }`}
             >
-              Chariots
+              Produits
               <svg
                 className={`w-3.5 h-3.5 transition-transform duration-300 ease-out ${chariotsOpen ? 'rotate-180' : ''}`}
                 fill="none"
@@ -396,7 +396,7 @@ export function Header() {
       <MegaMenuOverlay
         id="mega-menu"
         variant={chariotsOpen ? 'chariotsShell' : 'default'}
-        title={chariotsOpen ? 'Chariots' : piecesOpen ? 'Pièces de rechange' : 'Services'}
+        title={chariotsOpen ? 'Produits' : piecesOpen ? 'Pièces de rechange' : 'Services'}
         items={chariotsOpen ? chariotsGroup : piecesOpen ? piecesGroup : servicesGroup}
         featured={chariotsOpen ? undefined : piecesOpen ? piecesFeatured : servicesFeatured}
         open={chariotsOpen || piecesOpen || servicesOpen}
@@ -427,7 +427,7 @@ export function Header() {
               Accueil
             </Link>
 
-          {/* Accordion: Chariots */}
+          {/* Accordion: Produits */}
           <div className="border-b border-white/10">
             <button
               type="button"
@@ -436,7 +436,7 @@ export function Header() {
               aria-expanded={mobileChariotsExpanded}
               aria-controls="mobile-chariots-list"
             >
-              Chariots
+              Produits
               <svg
                 className={`w-5 h-5 transition-transform duration-200 ${mobileChariotsExpanded ? 'rotate-180' : ''}`}
                 fill="none"

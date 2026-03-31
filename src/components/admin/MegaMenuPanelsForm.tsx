@@ -5,6 +5,7 @@ import type { MegaMenuPanelKey, MegaMenuPanelPayload } from '@/lib/megaMenuPanel
 import { MEGA_MENU_PANEL_KEYS } from '@/lib/megaMenuPanelDefaults'
 
 const LABELS: Record<MegaMenuPanelKey, string> = {
+  transpalette_manuel: 'Colonne droite — Transpalette manuel',
   chariots_occasion: "Colonne droite — Chariots d'occasion",
   nacelle_occasion: "Colonne droite — Nacelle d'occasion",
 }
@@ -51,11 +52,11 @@ export function MegaMenuPanelsForm({ initialPanels }: Props) {
     <form onSubmit={handleSubmit} className="space-y-10">
       <header>
         <h1 className="font-display text-xl lg:text-2xl text-[var(--foreground)] tracking-tight">
-          Mega-menu Chariots
+          Mega-menu Produits
         </h1>
         <p className="mt-1 text-sm text-[var(--foreground-muted)] max-w-2xl">
-          Texte, image et lien du panneau de droite lorsque l&apos;utilisateur choisit « Chariots d&apos;occasion » ou «
-          Nacelle d&apos;occasion » dans le menu Produits → Chariots.
+          Texte, image et bouton d’action des panneaux de droite du menu Produits (Transpalette manuel, Chariots
+          d&apos;occasion, Nacelle d&apos;occasion).
         </p>
       </header>
 

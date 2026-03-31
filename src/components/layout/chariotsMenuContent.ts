@@ -1,5 +1,4 @@
 import type { ChariotsLeftMenuKey } from './ChariotsMegaMenuLeftColumn'
-import { louezLineToProductHref } from '@/lib/utils'
 
 /** One contextual action in the middle column (Jungheinrich-style). */
 export type ChariotsMiddleAction = {
@@ -20,13 +19,16 @@ export type ChariotsLeftMenuData = {
  */
 export const chariotsMenuByLeft: Record<ChariotsLeftMenuKey, ChariotsLeftMenuData> = {
   transpalette: {
-    middle: [{ id: 'tp_main', label: 'Transpalette manuel' }],
+    middle: [
+      {
+        id: 'tp_main',
+        label: 'Transpalette manuel',
+        href: '/produits/transpalette-manuel',
+      },
+    ],
+    /** Pas de liste « Louez… » : panneau image + texte éditable (admin) + page dédiée. */
     rightByMiddle: {
-      tp_main: [
-        'Louez votre transpalette manuel standard',
-        'Louez votre transpalette manuel longue fourche',
-        'Louez votre transpalette manuel galvanisé',
-      ],
+      tp_main: [],
     },
   },
   chariots_occasion: {
@@ -105,10 +107,8 @@ export function getRightLines(left: ChariotsLeftMenuKey, middleId: string): stri
 /** Cible du clic sur un item de la colonne gauche du méga-menu Chariots. */
 export function getLeftNavHref(key: ChariotsLeftMenuKey): string {
   switch (key) {
-    case 'transpalette': {
-      const first = chariotsMenuByLeft.transpalette.rightByMiddle.tp_main[0]
-      return first ? louezLineToProductHref(first) : '/produits/chariots/location'
-    }
+    case 'transpalette':
+      return '/produits/transpalette-manuel'
     case 'chariots_occasion':
       return '/produits/chariots/occasion'
     case 'chariots_location':

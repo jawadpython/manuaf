@@ -74,7 +74,7 @@ const HIGHLIGHT_ICONS = {
   ),
 }
 
-/** Chariots: flat left nav + empty right column (no nested hover, no previews). */
+/** Produits (chariots / nacelles / transpalettes) : méga-menu 3 colonnes. */
 function ChariotsShellPanel({
   id,
   title,

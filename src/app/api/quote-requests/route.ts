@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sanitizeInput, sanitizeTextarea, isValidEmail } from '@/lib/utils'
+import { isValidDevisType } from '@/lib/devisTypes'
 
 export async function POST(request: Request) {
   try {
@@ -12,6 +13,8 @@ export async function POST(request: Request) {
     const message = sanitizeTextarea(body.message)
     const product = body.product ? sanitizeInput(body.product) : null
     const customData = body.customData
+    const devisTypeRaw = body.devisType != null ? sanitizeInput(String(body.devisType)) : null
+    const devisType = devisTypeRaw && isValidDevisType(devisTypeRaw) ? devisTypeRaw : null
 
     if (!name || name.length < 2) {
       return NextResponse.json(
@@ -38,6 +41,12 @@ export async function POST(request: Request) {
       )
     }
 
+    const mergedCustom: Record<string, unknown> =
+      customData && typeof customData === 'object' && !Array.isArray(customData)
+        ? { ...(customData as Record<string, unknown>) }
+        : {}
+    if (devisType) mergedCustom.devisType = devisType
+
     const quote = await prisma.quoteRequest.create({
       data: {
         name,
@@ -46,9 +55,7 @@ export async function POST(request: Request) {
         company: company || undefined,
         phone: phone || undefined,
         product: product || undefined,
-        ...(customData && typeof customData === 'object' && !Array.isArray(customData)
-          ? { customData }
-          : {}),
+        ...(Object.keys(mergedCustom).length > 0 ? { customData: mergedCustom as object } : {}),
       },
     })
 

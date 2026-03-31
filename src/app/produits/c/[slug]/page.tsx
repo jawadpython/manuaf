@@ -33,6 +33,9 @@ export default async function CategoryPage({ params }: Props) {
     if (category.slug === 'chariots-d-occasion') {
       redirect('/produits/chariots/occasion')
     }
+    if (category.slug === 'transpalette-manuel') {
+      redirect('/produits/transpalette-manuel')
+    }
   }
 
   if (category.type === 'nacelles') {
