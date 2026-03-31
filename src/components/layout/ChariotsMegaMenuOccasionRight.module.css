@@ -46,16 +46,31 @@
   align-items: center;
   gap: 8px;
   margin-top: 4px;
+  padding: 6px 12px 6px 10px;
+  margin-left: -10px;
   font-size: 0.8125rem;
   font-weight: 700;
   color: var(--accent);
   text-decoration: none;
   width: fit-content;
-  transition: color 0.2s ease, gap 0.2s ease;
+  border-radius: 6px;
+  transition:
+    color 0.22s ease,
+    gap 0.22s ease,
+    background 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
-.cta:hover {
-  color: var(--grey-dark, #1f2937);
+@media (hover: hover) {
+  .cta:hover {
+    color: var(--grey-dark, #1f2937);
+    background: linear-gradient(100deg, rgba(255, 185, 0, 0.35) 0%, rgba(255, 185, 0, 0.08) 100%);
+    box-shadow:
+      0 4px 14px rgba(0, 0, 0, 0.08),
+      inset 0 0 0 1px rgba(255, 185, 0, 0.45);
+    transform: translateX(3px) scale(1.02);
+  }
 }
 
 .cta:focus-visible {
@@ -65,11 +80,13 @@
 }
 
 .ctaArrow {
-  transition: transform 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
-.cta:hover .ctaArrow {
-  transform: translateX(3px);
+@media (hover: hover) {
+  .cta:hover .ctaArrow {
+    transform: translateX(6px) scale(1.1);
+  }
 }
 
 @media (min-width: 768px) {

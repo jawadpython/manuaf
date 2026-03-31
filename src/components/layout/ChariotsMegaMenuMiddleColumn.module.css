@@ -16,7 +16,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 3px;
 }
 
 .item {
@@ -48,13 +48,29 @@ a.button {
   cursor: pointer;
   font-family: inherit;
   transition:
-    background-color var(--transition-base, 200ms ease),
-    color var(--transition-base, 200ms ease),
-    border-color var(--transition-base, 200ms ease);
+    background-color 0.22s cubic-bezier(0.33, 1, 0.68, 1),
+    color 0.22s ease,
+    border-color 0.22s ease,
+    border-left-width 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s cubic-bezier(0.33, 1, 0.68, 1);
+  border-left-width: 3px;
 }
 
-.button:hover {
-  background: var(--card-hover, #f9fafb);
+/* Clear hover affordance (non-selected rows) */
+@media (hover: hover) {
+  .button:hover {
+    background: linear-gradient(100deg, rgba(255, 185, 0, 0.28) 0%, rgba(255, 185, 0, 0.06) 38%, var(--card-hover, #f9fafb) 72%);
+    border-left-color: var(--accent, #ffb900);
+    border-left-width: 5px;
+    color: var(--grey, #3c464b);
+    font-weight: 600;
+    transform: translateX(5px) scale(1.01);
+    box-shadow:
+      0 6px 18px rgba(0, 0, 0, 0.09),
+      0 2px 6px rgba(255, 185, 0, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  }
 }
 
 .button:focus-visible {
@@ -69,8 +85,19 @@ a.button {
   border-left-color: var(--accent);
 }
 
-.buttonActive:hover {
-  background: var(--background-muted, #f0f2f5);
+/* Selected row still visibly reacts on hover */
+@media (hover: hover) {
+  .buttonActive:hover {
+    background: linear-gradient(100deg, rgba(255, 185, 0, 0.32) 0%, rgba(255, 185, 0, 0.1) 45%, var(--background-muted, #f0f2f5) 78%);
+    border-left-color: var(--accent-hover, #e6a700);
+    border-left-width: 5px;
+    transform: translateX(4px) scale(1.01);
+    box-shadow:
+      0 8px 22px rgba(0, 0, 0, 0.1),
+      0 0 0 1px rgba(255, 185, 0, 0.45),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+      inset -6px 0 14px rgba(255, 185, 0, 0.12);
+  }
 }
 
 @media (min-width: 768px) {
