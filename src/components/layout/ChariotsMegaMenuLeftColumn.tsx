@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+import { getLeftNavHref } from './chariotsMenuContent'
 import styles from './ChariotsMegaMenuLeftColumn.module.css'
 
 export type ChariotsLeftMenuKey =
@@ -23,17 +25,20 @@ export type ChariotsMegaMenuLeftColumnProps = {
   /** Controlled selection (must match right column). */
   activeItem: ChariotsLeftMenuKey
   onActiveItemChange: (key: ChariotsLeftMenuKey) => void
+  /** Fermer le méga-menu après navigation */
+  onNavigate?: () => void
   className?: string
 }
 
 /**
- * Static left column for the Chariots mega menu: vertical list with hover-driven active state.
- * Selection is controlled by the parent so the right column stays in sync.
+ * Colonne gauche du méga-menu Chariots : chaque entrée est un lien vers la page concernée ;
+ * le survol / focus met à jour la sélection pour l’aperçu au centre et à droite.
  */
 export function ChariotsMegaMenuLeftColumn({
   title = 'Chariots',
   activeItem,
   onActiveItemChange,
+  onNavigate,
   className,
 }: ChariotsMegaMenuLeftColumnProps) {
   return (
@@ -48,15 +53,16 @@ export function ChariotsMegaMenuLeftColumn({
           const isActive = activeItem === row.key
           return (
             <li key={row.key} className={styles.item}>
-              <button
-                type="button"
+              <Link
+                href={getLeftNavHref(row.key)}
                 className={`${styles.button} ${isActive ? styles.buttonActive : ''}`}
                 onMouseEnter={() => onActiveItemChange(row.key)}
                 onFocus={() => onActiveItemChange(row.key)}
+                onClick={onNavigate}
                 aria-current={isActive ? 'true' : undefined}
               >
                 {row.label}
-              </button>
+              </Link>
             </li>
           )
         })}

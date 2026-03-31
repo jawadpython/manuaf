@@ -37,10 +37,20 @@ export function louezLineToProductLabel(line: string): string {
     .trim()
 }
 
+/**
+ * Slug dérivé du libellé menu → slug fiche produit quand ils diffèrent
+ * (ex. pluriel « chariots tracteurs » vs fiche « chariots-tracteur-electrique »).
+ */
+const LOUEZ_LINE_PRODUCT_SLUG_ALIASES: Record<string, string> = {
+  'chariots-tracteurs-electriques': 'chariots-tracteur-electrique',
+}
+
 /** Product URL for mega menu / location lines like « Louez votre … » / « Louez des … ». */
 export function louezLineToProductHref(line: string): string {
   const normalized = louezLineToProductLabel(line)
-  return `/produits/${slugify(normalized)}`
+  const raw = slugify(normalized)
+  const slug = LOUEZ_LINE_PRODUCT_SLUG_ALIASES[raw] ?? raw
+  return `/produits/${slug}`
 }
 
 /** Demande de devis location chariots: prefill category + product from a « Louez … » line. */

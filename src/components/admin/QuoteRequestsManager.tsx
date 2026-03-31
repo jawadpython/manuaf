@@ -14,14 +14,12 @@ function QuoteRequestDetail({
   request: r,
   formFields,
   onUpdate,
-  statusOptions,
-  statusStyles,
+  onDelete,
 }: {
   request: QuoteRequest
   formFields: FormField[]
   onUpdate: (u: { customData?: Record<string, string | null> }) => void
-  statusOptions: { value: string; label: string }[]
-  statusStyles: Record<string, string>
+  onDelete: () => void
 }) {
   const [editing, setEditing] = useState(false)
   const values = getCustomDataValues(r)
@@ -128,6 +126,19 @@ function QuoteRequestDetail({
 
         <p><strong>Message:</strong></p>
         <p className="whitespace-pre-wrap bg-gray-50 p-3 rounded text-gray-700">{r.message}</p>
+
+        <div className="pt-3 border-t border-gray-200">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault()
+              onDelete()
+            }}
+            className="text-sm font-medium text-red-600 hover:text-red-700 hover:underline"
+          >
+            Supprimer cette demande
+          </button>
+        </div>
       </div>
     </details>
   )
@@ -222,6 +233,21 @@ export function QuoteRequestsManager() {
     }
   }
 
+  async function deleteRequest(id: string) {
+    if (!confirm('Supprimer définitivement cette demande de devis ? Cette action est irréversible.')) return
+    try {
+      const res = await fetch(`/api/admin/quote-requests/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        setRequests((prev) => prev.filter((r) => r.id !== id))
+      } else {
+        const data = await res.json().catch(() => ({}))
+        alert(data.error || 'Erreur lors de la suppression')
+      }
+    } catch {
+      alert('Erreur de connexion')
+    }
+  }
+
   const filtered = filter === 'all' ? requests : requests.filter((r) => r.status === filter)
 
   if (loading) {
@@ -298,17 +324,26 @@ export function QuoteRequestsManager() {
                     </span>
                   </td>
                   <td className="p-3">
-                    <select
-                      value={r.status}
-                      onChange={(e) => updateRequest(r.id, { status: e.target.value })}
-                      className="text-sm border border-gray-300 rounded px-2 py-1"
-                    >
-                      {STATUS_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value}>
-                          {o.label}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <select
+                        value={r.status}
+                        onChange={(e) => updateRequest(r.id, { status: e.target.value })}
+                        className="text-sm border border-gray-300 rounded px-2 py-1"
+                      >
+                        {STATUS_OPTIONS.map((o) => (
+                          <option key={o.value} value={o.value}>
+                            {o.label}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        onClick={() => deleteRequest(r.id)}
+                        className="text-sm font-medium text-red-600 hover:text-red-700 hover:underline whitespace-nowrap"
+                      >
+                        Supprimer
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -326,8 +361,7 @@ export function QuoteRequestsManager() {
               request={r}
               formFields={formFields}
               onUpdate={(updates) => updateRequest(r.id, updates)}
-              statusOptions={STATUS_OPTIONS}
-              statusStyles={STATUS_STYLES}
+              onDelete={() => deleteRequest(r.id)}
             />
           ))}
         </div>

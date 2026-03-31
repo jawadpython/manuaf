@@ -1,4 +1,5 @@
 import type { ChariotsLeftMenuKey } from './ChariotsMegaMenuLeftColumn'
+import { louezLineToProductHref } from '@/lib/utils'
 
 /** One contextual action in the middle column (Jungheinrich-style). */
 export type ChariotsMiddleAction = {
@@ -78,19 +79,9 @@ export const chariotsMenuByLeft: Record<ChariotsLeftMenuKey, ChariotsLeftMenuDat
         label: 'Trouver votre nacelle de location',
         href: '/produits/nacelles/location',
       },
-      {
-        id: 'nl_short',
-        label: 'Location courte durée',
-        href: '/produits/nacelles/location',
-      },
     ],
     rightByMiddle: {
       nl_find: [
-        'Louez votre nacelle articulée',
-        'Louez votre nacelle ciseaux',
-        'Louez votre nacelle mât vertical',
-      ],
-      nl_short: [
         'Louez votre nacelle articulée',
         'Louez votre nacelle ciseaux',
         'Louez votre nacelle mât vertical',
@@ -109,5 +100,25 @@ export function getRightLines(left: ChariotsLeftMenuKey, middleId: string): stri
   if (lines?.length) return lines
   const fallbackId = data.middle[0]?.id
   return fallbackId ? data.rightByMiddle[fallbackId] ?? [] : []
+}
+
+/** Cible du clic sur un item de la colonne gauche du méga-menu Chariots. */
+export function getLeftNavHref(key: ChariotsLeftMenuKey): string {
+  switch (key) {
+    case 'transpalette': {
+      const first = chariotsMenuByLeft.transpalette.rightByMiddle.tp_main[0]
+      return first ? louezLineToProductHref(first) : '/produits/chariots/location'
+    }
+    case 'chariots_occasion':
+      return '/produits/chariots/occasion'
+    case 'chariots_location':
+      return '/produits/chariots/location'
+    case 'nacelle_occasion':
+      return '/produits/nacelles/occasion'
+    case 'nacelle_location':
+      return '/produits/nacelles/location'
+    default:
+      return '/produits/chariots/location'
+  }
 }
 

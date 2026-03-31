@@ -64,6 +64,7 @@ export function ChariotsMegaMenuColumns({ title = 'Chariots', onNavigate }: Char
           title={title}
           activeItem={activeLeft}
           onActiveItemChange={setActiveLeft}
+          onNavigate={onNavigate}
         />
       </div>
       <div className={styles.middle}>
@@ -88,17 +89,7 @@ export function ChariotsMegaMenuColumns({ title = 'Chariots', onNavigate }: Char
             regionAriaLabel="Nacelle d'occasion"
           />
         ) : (
-          <ChariotsMegaMenuRightColumn
-            lines={rightLines}
-            onNavigate={onNavigate}
-            lineHrefMode={
-              activeLeft === 'chariots_location'
-                ? 'location_devis'
-                : activeLeft === 'nacelle_location'
-                  ? 'nacelle_location_devis'
-                  : 'product'
-            }
-          />
+          <ChariotsMegaMenuRightColumn lines={rightLines} onNavigate={onNavigate} />
         )}
       </div>
     </div>

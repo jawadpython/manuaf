@@ -19,7 +19,7 @@ export default async function AdminQuoteRequestsPage() {
           Demandes de devis
         </h1>
         <p className="mt-1 text-[var(--foreground-muted)]">
-          Gérer les demandes de devis produits
+          Demandes envoyées depuis le formulaire de devis (produits, location chariots / nacelles, etc.)
         </p>
       </header>
       <QuoteRequestsManager />

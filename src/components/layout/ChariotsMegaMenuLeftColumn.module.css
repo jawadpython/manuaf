@@ -52,6 +52,12 @@
   cursor: pointer;
   font-family: inherit;
   transition: background-color 0.15s ease, color 0.15s ease, filter 0.15s ease;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.button:visited {
+  color: #ffffff;
 }
 
 .button:hover {
@@ -68,6 +74,10 @@
   background: var(--mega-menu-link-active-bg);
   color: #1a1a1a;
   font-weight: 600;
+}
+
+.buttonActive:visited {
+  color: #1a1a1a;
 }
 
 .buttonActive:hover {

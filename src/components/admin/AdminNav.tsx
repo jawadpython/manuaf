@@ -14,8 +14,7 @@ const contentLinks = [
   { href: '/admin/nacelles/occasion', label: "Nacelles d'occasion" },
   { href: '/admin/nacelles/location', label: 'Nacelles de location' },
   { href: '/admin/produits', label: 'Pièces de rechange' },
-  { href: '/admin/rental-requests', label: 'Demandes location' },
-  { href: '/admin/quote-requests', label: 'Demandes devis' },
+  { href: '/admin/quote-requests', label: 'Demandes de devis' },
   { href: '/admin/form-devis', label: 'Formulaire devis' },
   { href: '/admin/blog', label: 'Blog' },
 ]

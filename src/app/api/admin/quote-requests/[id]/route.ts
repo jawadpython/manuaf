@@ -47,3 +47,19 @@ export async function PATCH(
     return NextResponse.json({ error: 'Demande introuvable' }, { status: 404 })
   }
 }
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getServerSession(authOptions)
+  if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+
+  const { id } = await params
+  try {
+    await prisma.quoteRequest.delete({ where: { id } })
+    return NextResponse.json({ ok: true })
+  } catch {
+    return NextResponse.json({ error: 'Demande introuvable' }, { status: 404 })
+  }
+}
