@@ -21,7 +21,8 @@ function sanitizePanel(p: unknown): MegaMenuPanelPayload | null {
   const body = str('body', MAX.body)
   const ctaLabel = str('ctaLabel', MAX.short)
   const ctaHref = str('ctaHref', MAX.href)
-  if (!imageSrc || !title || !body || !ctaLabel || !ctaHref) return null
+  // body may be empty (e.g. transpalette_manuel default in megaMenuPanelDefaults)
+  if (!imageSrc || !title || !ctaLabel || !ctaHref) return null
   return { imageSrc, imageAlt: imageAlt || title, title, body, ctaLabel, ctaHref }
 }
 
@@ -76,6 +77,16 @@ export async function PUT(request: Request) {
     })
   } catch (e) {
     console.error('admin mega-menu-panels PUT:', e)
+    const code = e && typeof e === 'object' && 'code' in e ? String((e as { code: string }).code) : ''
+    if (code === 'P2021') {
+      return NextResponse.json(
+        {
+          error:
+            'Table de base de données manquante ou modèle non synchronisé. Exécutez « npx prisma db push » sur la base utilisée par ce site.',
+        },
+        { status: 503 }
+      )
+    }
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
