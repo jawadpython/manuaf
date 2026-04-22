@@ -1,8 +1,10 @@
 import { slugify } from './utils'
 
 /**
- * Only these chariot types appear on the public « Chariots de location » catalog
- * (/produits/chariots/location and city pages). Admin lists all DB products.
+ * Default ordering for the public « Chariots de location » catalog
+ * (/produits/chariots/location, city pages). All products in the location
+ * tree are shown; these labels define the first block (order), then any other
+ * admin-added types follow (by `order` then name).
  */
 export const CHARIOTS_LOCATION_TYPE_LABELS = [
   'Transpalette électrique',
@@ -44,20 +46,45 @@ export function isChariotsLocationCatalogProduct(slug: string, name: string): bo
   return canonicalSlugFor(slug, name) != null
 }
 
-export function filterAndSortChariotsLocationProducts<T extends { slug: string; name: string }>(
+export function filterAndSortChariotsLocationProducts<T extends { slug: string; name: string; order?: number }>(
   products: T[]
 ): T[] {
-  const order = new Map(CHARIOTS_LOCATION_TYPE_SLUGS.map((s, i) => [s, i]))
-  const filtered = products.filter((p) => isChariotsLocationCatalogProduct(p.slug, p.name))
-  return filtered.sort((a, b) => {
+  const typeOrder = new Map(CHARIOTS_LOCATION_TYPE_SLUGS.map((s, i) => [s, i]))
+  const inCatalog: T[] = []
+  const extra: T[] = []
+  for (const p of products) {
+    if (isChariotsLocationCatalogProduct(p.slug, p.name)) inCatalog.push(p)
+    else extra.push(p)
+  }
+  inCatalog.sort((a, b) => {
     const ca = canonicalSlugFor(a.slug, a.name) ?? ''
     const cb = canonicalSlugFor(b.slug, b.name) ?? ''
-    return (order.get(ca) ?? 999) - (order.get(cb) ?? 999)
+    return (typeOrder.get(ca) ?? 999) - (typeOrder.get(cb) ?? 999)
   })
+  extra.sort(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0) || a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' })
+  )
+  return [...inCatalog, ...extra]
 }
 
 export function filterSubcategoriesForChariotsLocationCatalog<
-  T extends { id: string; name: string; slug: string },
+  T extends { id: string; name: string; slug: string; order?: number },
 >(children: T[]): T[] {
-  return children.filter((c) => isChariotsLocationCatalogProduct(c.slug, c.name))
+  if (children.length === 0) return []
+  const typeOrder = new Map(CHARIOTS_LOCATION_TYPE_SLUGS.map((s, i) => [s, i]))
+  const inCatalog: T[] = []
+  const extra: T[] = []
+  for (const c of children) {
+    if (isChariotsLocationCatalogProduct(c.slug, c.name)) inCatalog.push(c)
+    else extra.push(c)
+  }
+  inCatalog.sort((a, b) => {
+    const ca = canonicalSlugFor(a.slug, a.name) ?? ''
+    const cb = canonicalSlugFor(b.slug, b.name) ?? ''
+    return (typeOrder.get(ca) ?? 999) - (typeOrder.get(cb) ?? 999)
+  })
+  extra.sort(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0) || a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' })
+  )
+  return [...inCatalog, ...extra]
 }

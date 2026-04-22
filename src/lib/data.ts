@@ -312,7 +312,7 @@ export async function getSubcategoriesForChariotsPage(categorySlug: string) {
 
     const children = await prisma.category.findMany({
       where: { parentId: parent.id, published: true },
-      select: { id: true, name: true, slug: true },
+      select: { id: true, name: true, slug: true, order: true },
       orderBy: { order: 'asc' },
     })
     return children
@@ -322,7 +322,7 @@ export async function getSubcategoriesForChariotsPage(categorySlug: string) {
 }
 
 // Get products for Chariots de location page (category slug: chariots-location)
-/** @param applyLocationTypeAllowlist - when true (public catalog), only the 6 defined location types; admin omits this */
+/** @param applyLocationTypeAllowlist - when true, sort the 6 default types first then include all other products in the location tree (admin adds) */
 export async function getProductsForChariotsLocation(options?: {
   applyLocationTypeAllowlist?: boolean
 }) {
@@ -381,7 +381,7 @@ export async function getProductsForChariotsLocation(options?: {
   }
 }
 
-/** Subcategory chips for public location pages — only types that belong to the 6-type catalog. */
+/** Subcategory chips for public location pages — 6 default types first, then any other published child categories. */
 export async function getSubcategoriesForChariotsLocationPage() {
   const children = await getSubcategoriesForChariotsPage('chariots-de-location')
   return filterSubcategoriesForChariotsLocationCatalog(children)
@@ -509,7 +509,7 @@ export async function getSubcategoriesForNacellesPage(categorySlug: string) {
 
     const children = await prisma.category.findMany({
       where: { parentId: parent.id, published: true },
-      select: { id: true, name: true, slug: true },
+      select: { id: true, name: true, slug: true, order: true },
       orderBy: { order: 'asc' },
     })
     return children
@@ -518,7 +518,7 @@ export async function getSubcategoriesForNacellesPage(categorySlug: string) {
   }
 }
 
-/** Sous-catégories pour la page location — uniquement les 3 types du catalogue. */
+/** Sous-catégories page location : 3 types par défaut d’abord, puis les autres publiés. */
 export async function getSubcategoriesForNacellesLocationPage() {
   const children = await getSubcategoriesForNacellesPage('nacelles-de-location')
   return filterSubcategoriesForNacellesLocationCatalog(children)
@@ -565,7 +565,7 @@ export async function getProductsForNacellesOccasion() {
   }
 }
 
-/** @param applyLocationTypeAllowlist - sur le catalogue public, uniquement les 3 types de location */
+/** @param applyLocationTypeAllowlist - si true, ordre 3 types par défaut puis tous les autres produits location */
 export async function getProductsForNacellesLocation(options?: {
   applyLocationTypeAllowlist?: boolean
 }) {

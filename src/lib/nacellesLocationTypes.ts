@@ -1,8 +1,9 @@
 import { slugify } from './utils'
 
 /**
- * Types affichés sur la page publique « Nacelles de location ».
- * L’admin liste tous les produits ; le catalogue filtre sur ces slugs.
+ * Ordre par défaut sur la page « Nacelles de location ». Tous les produits
+ * du périmètre location sont affichés ; ces types passent d’abord, puis le reste
+ * (ajouts admin) par `order` puis nom.
  */
 export const NACELLES_LOCATION_TYPE_LABELS = [
   'Nacelle articulée',
@@ -30,20 +31,45 @@ export function isNacellesLocationCatalogProduct(slug: string, name: string): bo
   return canonicalSlugFor(slug, name) != null
 }
 
-export function filterAndSortNacellesLocationProducts<T extends { slug: string; name: string }>(
+export function filterAndSortNacellesLocationProducts<T extends { slug: string; name: string; order?: number }>(
   products: T[]
 ): T[] {
-  const order = new Map(NACELLES_LOCATION_TYPE_SLUGS.map((s, i) => [s, i]))
-  const filtered = products.filter((p) => isNacellesLocationCatalogProduct(p.slug, p.name))
-  return filtered.sort((a, b) => {
+  const typeOrder = new Map(NACELLES_LOCATION_TYPE_SLUGS.map((s, i) => [s, i]))
+  const inCatalog: T[] = []
+  const extra: T[] = []
+  for (const p of products) {
+    if (isNacellesLocationCatalogProduct(p.slug, p.name)) inCatalog.push(p)
+    else extra.push(p)
+  }
+  inCatalog.sort((a, b) => {
     const ca = canonicalSlugFor(a.slug, a.name) ?? ''
     const cb = canonicalSlugFor(b.slug, b.name) ?? ''
-    return (order.get(ca) ?? 999) - (order.get(cb) ?? 999)
+    return (typeOrder.get(ca) ?? 999) - (typeOrder.get(cb) ?? 999)
   })
+  extra.sort(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0) || a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' })
+  )
+  return [...inCatalog, ...extra]
 }
 
 export function filterSubcategoriesForNacellesLocationCatalog<
-  T extends { id: string; name: string; slug: string },
+  T extends { id: string; name: string; slug: string; order?: number },
 >(children: T[]): T[] {
-  return children.filter((c) => isNacellesLocationCatalogProduct(c.slug, c.name))
+  if (children.length === 0) return []
+  const typeOrder = new Map(NACELLES_LOCATION_TYPE_SLUGS.map((s, i) => [s, i]))
+  const inCatalog: T[] = []
+  const extra: T[] = []
+  for (const c of children) {
+    if (isNacellesLocationCatalogProduct(c.slug, c.name)) inCatalog.push(c)
+    else extra.push(c)
+  }
+  inCatalog.sort((a, b) => {
+    const ca = canonicalSlugFor(a.slug, a.name) ?? ''
+    const cb = canonicalSlugFor(b.slug, b.name) ?? ''
+    return (typeOrder.get(ca) ?? 999) - (typeOrder.get(cb) ?? 999)
+  })
+  extra.sort(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0) || a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' })
+  )
+  return [...inCatalog, ...extra]
 }
