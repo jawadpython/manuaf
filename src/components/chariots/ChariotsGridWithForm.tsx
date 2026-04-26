@@ -64,11 +64,12 @@ export function ChariotsGridWithForm({
     let list = products
     if (selectedSubcategory !== 'all') {
       list = list.filter((p) => {
-        const cat = typeof p.category === 'object' ? p.category : null
-        if (!cat) return false
-        const catId = 'id' in cat ? cat.id : p.categoryId
-        const catSlug = 'slug' in cat ? cat.slug : undefined
-        return catId === selectedSubcategory || catSlug === selectedSubcategory
+        if (p.categoryId === selectedSubcategory) return true
+        const cat =
+          typeof p.category === 'object' && p.category && p.category !== null ? p.category : null
+        if (cat && 'id' in cat && cat.id === selectedSubcategory) return true
+        if (cat && 'slug' in cat && cat.slug === selectedSubcategory) return true
+        return false
       })
     }
     return [...list].sort((a, b) => {
@@ -115,16 +116,16 @@ export function ChariotsGridWithForm({
                 <button
                   key={sub.id}
                   type="button"
-                  onClick={() => setSelectedSubcategory(sub.slug)}
+                  onClick={() => setSelectedSubcategory(sub.id)}
                   className={`font-semibold transition-colors rounded-md max-w-full ${
                     compactToolbar
                       ? `px-3 py-1.5 text-xs tracking-wide truncate ${
-                          selectedSubcategory === sub.slug
+                          selectedSubcategory === sub.id
                             ? 'bg-[var(--accent)] text-[#141414]'
                             : 'bg-white border border-[var(--border)] text-[var(--grey)] hover:border-[var(--accent)] hover:text-[var(--accent)]'
                         }`
                       : `px-4 py-2.5 text-sm uppercase tracking-wider ${
-                          selectedSubcategory === sub.slug
+                          selectedSubcategory === sub.id
                             ? 'bg-[var(--accent)] text-white'
                             : 'bg-white border border-[var(--border)] text-[var(--grey)] hover:border-[var(--accent)] hover:text-[var(--accent)]'
                         }`
