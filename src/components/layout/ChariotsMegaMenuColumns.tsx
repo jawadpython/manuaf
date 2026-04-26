@@ -1,10 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState, type FocusEvent } from 'react'
+import { Fragment, useCallback, useEffect, useRef, useState, type FocusEvent } from 'react'
 import {
   CHARIOTS_LOCATION_MENU_PREVIEW,
   MEGA_MENU_PANEL_DEFAULTS,
   NACELLE_LOCATION_MENU_PREVIEW,
+  type MegaMenuPanelKey,
   type MegaMenuPanelPayload,
 } from '@/lib/megaMenuPanelDefaults'
 import {
@@ -20,6 +21,17 @@ import styles from './ChariotsMegaMenuColumns.module.css'
 const CHARIOTS_LOCATION_MIDDLE_ID = 'loc_find'
 const NACELLE_LOCATION_MIDDLE_ID = 'nl_find'
 const LOCATION_LOUEZ_LEAVE_MS = 220
+
+function OccasionPanelSkeleton() {
+  return (
+    <div className="flex flex-col flex-1 min-h-0 gap-4" aria-hidden>
+      <div className="rounded-lg border border-[var(--border)] aspect-[16/10] bg-[var(--background-muted)] motion-safe:animate-pulse" />
+      <div className="h-4 rounded bg-[var(--background-muted)] motion-safe:animate-pulse w-4/5 max-w-sm" />
+      <div className="h-3 rounded bg-[var(--background-muted)] motion-safe:animate-pulse w-full max-w-md" />
+      <div className="h-3 rounded bg-[var(--background-muted)] motion-safe:animate-pulse w-2/3 max-w-sm" />
+    </div>
+  )
+}
 
 function locationLouezMiddleId(activeLeft: ChariotsLeftMenuKey): string | null {
   if (activeLeft === 'chariots_location') return CHARIOTS_LOCATION_MIDDLE_ID
@@ -40,11 +52,10 @@ export type ChariotsMegaMenuColumnsProps = {
 export function ChariotsMegaMenuColumns({ title = 'Produits', onNavigate }: ChariotsMegaMenuColumnsProps) {
   const [activeLeft, setActiveLeft] = useState<ChariotsLeftMenuKey>('transpalette')
   const [activeMiddle, setActiveMiddle] = useState(() => getDefaultMiddleId('transpalette'))
-  const [occasionPanels, setOccasionPanels] = useState<{
-    chariots_occasion: MegaMenuPanelPayload
-    nacelle_occasion: MegaMenuPanelPayload
-    transpalette_manuel: MegaMenuPanelPayload
-  }>(() => ({ ...MEGA_MENU_PANEL_DEFAULTS }))
+  const [occasionPanels, setOccasionPanels] = useState<Record<
+    MegaMenuPanelKey,
+    MegaMenuPanelPayload
+  > | null>(null)
 
   const [showLocationLouezList, setShowLocationLouezList] = useState(false)
   const listLeaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -117,18 +128,30 @@ export function ChariotsMegaMenuColumns({ title = 'Produits', onNavigate }: Char
 
   useEffect(() => {
     let cancelled = false
+    const applyDefaults = () => ({ ...MEGA_MENU_PANEL_DEFAULTS })
+
     fetch('/api/mega-menu/panels')
-      .then((res) => res.json())
+      .then((res) => (res.ok ? res.json() : null))
       .then((data: unknown) => {
-        if (cancelled || !data || typeof data !== 'object') return
-        const d = data as Record<string, MegaMenuPanelPayload>
-        setOccasionPanels({
-          chariots_occasion: { ...MEGA_MENU_PANEL_DEFAULTS.chariots_occasion, ...d.chariots_occasion },
-          nacelle_occasion: { ...MEGA_MENU_PANEL_DEFAULTS.nacelle_occasion, ...d.nacelle_occasion },
-          transpalette_manuel: { ...MEGA_MENU_PANEL_DEFAULTS.transpalette_manuel, ...d.transpalette_manuel },
-        })
+        if (cancelled) return
+        if (!data || typeof data !== 'object') {
+          setOccasionPanels(applyDefaults())
+          return
+        }
+        const d = data as Record<MegaMenuPanelKey, MegaMenuPanelPayload>
+        if (d.transpalette_manuel && d.chariots_occasion && d.nacelle_occasion) {
+          setOccasionPanels({
+            transpalette_manuel: d.transpalette_manuel,
+            chariots_occasion: d.chariots_occasion,
+            nacelle_occasion: d.nacelle_occasion,
+          })
+        } else {
+          setOccasionPanels(applyDefaults())
+        }
       })
-      .catch(() => {})
+      .catch(() => {
+        if (!cancelled) setOccasionPanels(applyDefaults())
+      })
     return () => {
       cancelled = true
     }
@@ -166,58 +189,98 @@ export function ChariotsMegaMenuColumns({ title = 'Produits', onNavigate }: Char
         />
       </div>
       <div className={styles.right}>
-        {activeLeft === 'transpalette' ? (
-          <ChariotsMegaMenuOccasionRight
-            {...occasionPanels.transpalette_manuel}
-            onNavigate={onNavigate}
-            regionAriaLabel="Transpalette manuel"
-          />
-        ) : activeLeft === 'chariots_occasion' ? (
-          <ChariotsMegaMenuOccasionRight
-            {...occasionPanels.chariots_occasion}
-            onNavigate={onNavigate}
-            regionAriaLabel="Chariots d'occasion"
-          />
-        ) : activeLeft === 'nacelle_occasion' ? (
-          <ChariotsMegaMenuOccasionRight
-            {...occasionPanels.nacelle_occasion}
-            onNavigate={onNavigate}
-            regionAriaLabel="Nacelle d'occasion"
-          />
+        {activeLeft === 'transpalette' ||
+        activeLeft === 'chariots_occasion' ||
+        activeLeft === 'nacelle_occasion' ? (
+          <Fragment>
+            {/* Occasion previews: keep all three mounted; no stale image when switching row */}
+            <div
+              className={`flex flex-col flex-1 min-h-0 w-full ${activeLeft === 'transpalette' ? '' : 'hidden'}`}
+              aria-hidden={activeLeft !== 'transpalette'}
+            >
+              {occasionPanels ? (
+                <ChariotsMegaMenuOccasionRight
+                  {...occasionPanels.transpalette_manuel}
+                  onNavigate={onNavigate}
+                  regionAriaLabel="Transpalette manuel"
+                />
+              ) : (
+                <OccasionPanelSkeleton />
+              )}
+            </div>
+            <div
+              className={`flex flex-col flex-1 min-h-0 w-full ${activeLeft === 'chariots_occasion' ? '' : 'hidden'}`}
+              aria-hidden={activeLeft !== 'chariots_occasion'}
+            >
+              {occasionPanels ? (
+                <ChariotsMegaMenuOccasionRight
+                  {...occasionPanels.chariots_occasion}
+                  onNavigate={onNavigate}
+                  regionAriaLabel="Chariots d'occasion"
+                />
+              ) : (
+                <OccasionPanelSkeleton />
+              )}
+            </div>
+            <div
+              className={`flex flex-col flex-1 min-h-0 w-full ${activeLeft === 'nacelle_occasion' ? '' : 'hidden'}`}
+              aria-hidden={activeLeft !== 'nacelle_occasion'}
+            >
+              {occasionPanels ? (
+                <ChariotsMegaMenuOccasionRight
+                  {...occasionPanels.nacelle_occasion}
+                  onNavigate={onNavigate}
+                  regionAriaLabel="Nacelle d'occasion"
+                />
+              ) : (
+                <OccasionPanelSkeleton />
+              )}
+            </div>
+          </Fragment>
         ) : activeLeft === 'chariots_location' ? (
-          showLocationLouezList ? (
+          <div className="flex flex-col flex-1 min-h-0 w-full">
+            <div
+              className={`flex flex-col flex-1 min-h-0 ${showLocationLouezList ? 'hidden' : ''}`}
+              aria-hidden={showLocationLouezList}
+            >
+              <ChariotsMegaMenuOccasionRight
+                {...CHARIOTS_LOCATION_MENU_PREVIEW}
+                onNavigate={onNavigate}
+                regionAriaLabel="Chariots de location"
+              />
+            </div>
             <div
               ref={locationRightListRef}
-              className="min-h-0 flex flex-col flex-1 w-full"
+              className={`min-h-0 flex flex-col flex-1 w-full ${showLocationLouezList ? '' : 'hidden'}`}
               onMouseEnter={handleRightLouezListMouseEnter}
               onMouseLeave={handleRightLouezListMouseLeave}
+              aria-hidden={!showLocationLouezList}
             >
               <ChariotsMegaMenuRightColumn lines={rightLines} onNavigate={onNavigate} />
             </div>
-          ) : (
-            <ChariotsMegaMenuOccasionRight
-              {...CHARIOTS_LOCATION_MENU_PREVIEW}
-              onNavigate={onNavigate}
-              regionAriaLabel="Chariots de location"
-            />
-          )
+          </div>
         ) : activeLeft === 'nacelle_location' ? (
-          showLocationLouezList ? (
+          <div className="flex flex-col flex-1 min-h-0 w-full">
+            <div
+              className={`flex flex-col flex-1 min-h-0 ${showLocationLouezList ? 'hidden' : ''}`}
+              aria-hidden={showLocationLouezList}
+            >
+              <ChariotsMegaMenuOccasionRight
+                {...NACELLE_LOCATION_MENU_PREVIEW}
+                onNavigate={onNavigate}
+                regionAriaLabel="Nacelles de location"
+              />
+            </div>
             <div
               ref={locationRightListRef}
-              className="min-h-0 flex flex-col flex-1 w-full"
+              className={`min-h-0 flex flex-col flex-1 w-full ${showLocationLouezList ? '' : 'hidden'}`}
               onMouseEnter={handleRightLouezListMouseEnter}
               onMouseLeave={handleRightLouezListMouseLeave}
+              aria-hidden={!showLocationLouezList}
             >
               <ChariotsMegaMenuRightColumn lines={rightLines} onNavigate={onNavigate} />
             </div>
-          ) : (
-            <ChariotsMegaMenuOccasionRight
-              {...NACELLE_LOCATION_MENU_PREVIEW}
-              onNavigate={onNavigate}
-              regionAriaLabel="Nacelles de location"
-            />
-          )
+          </div>
         ) : (
           <ChariotsMegaMenuRightColumn lines={rightLines} onNavigate={onNavigate} />
         )}

@@ -11,7 +11,8 @@ export type ChariotsLeftMenuKey =
   | 'nacelle_occasion'
   | 'nacelle_location'
 
-const ITEMS: { key: ChariotsLeftMenuKey; label: string }[] = [
+/** Same rows as mobile « Produits » accordion — single source of truth with desktop mega-menu. */
+export const CHARIOTS_LEFT_MENU_ROWS: { key: ChariotsLeftMenuKey; label: string }[] = [
   { key: 'transpalette', label: 'Transpalette manuel' },
   { key: 'chariots_occasion', label: "Chariots élévateurs d'occasion" },
   { key: 'chariots_location', label: 'Chariots élévateurs en location' },
@@ -49,7 +50,7 @@ export function ChariotsMegaMenuLeftColumn({
     >
       <h3 className={styles.title}>{title}</h3>
       <ul className={styles.list} role="list">
-        {ITEMS.map((row) => {
+        {CHARIOTS_LEFT_MENU_ROWS.map((row) => {
           const isActive = activeItem === row.key
           return (
             <li key={row.key} className={styles.item}>

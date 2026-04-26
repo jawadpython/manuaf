@@ -10,6 +10,8 @@ import {
   PANEL_LEAVE_CLOSE_DELAY_MS,
   MIN_OPEN_DURATION_MS,
 } from './MegaMenu'
+import { CHARIOTS_LEFT_MENU_ROWS } from './ChariotsMegaMenuLeftColumn'
+import { getLeftNavHref } from './chariotsMenuContent'
 import headerStyles from './Header.module.css'
 
 const DESKTOP_MIN_WIDTH_PX = 1025
@@ -23,11 +25,13 @@ const topLevelLinks: NavLink[] = [
   { href: '/contact', label: 'Contact' },
 ]
 
-/** Fallback when API returns empty */
-const chariotsGroupFallback: MegaMenuItem[] = [
-  { href: '/produits/chariots/location', label: 'Location' },
-  { href: '/produits/chariots/occasion', label: "Chariots d'occasion" },
-]
+/** Mobile + overlay prop for « Produits » — aligned with desktop 3-column mega-menu (no legacy 2-link list). */
+const PRODUITS_NAV_ITEMS: MegaMenuItem[] = CHARIOTS_LEFT_MENU_ROWS.map((row) => ({
+  href: getLeftNavHref(row.key),
+  label: row.label,
+  subLinks: [],
+}))
+
 const piecesGroupFallback: MegaMenuItem[] = [
   { href: '/produits/pieces', label: 'Pièces de rechange', subLinks: [] },
 ]
@@ -68,7 +72,6 @@ export function Header() {
   const [mobilePiecesExpanded, setMobilePiecesExpanded] = useState(false)
   const [mobileServicesExpanded, setMobileServicesExpanded] = useState(false)
   const [isDesktop, setIsDesktop] = useState(true)
-  const [chariotsGroup, setChariotsGroup] = useState<MegaMenuItem[]>(chariotsGroupFallback)
   const [piecesGroup, setPiecesGroup] = useState<MegaMenuItem[]>(piecesGroupFallback)
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const openTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -77,14 +80,9 @@ export function Header() {
   const piecesOpenAtRef = useRef<number>(0)
   const servicesOpenAtRef = useRef<number>(0)
   useEffect(() => {
-    Promise.all([
-      fetch('/api/mega-menu/chariots').then((r) => (r.ok ? r.json() : [])),
-      fetch('/api/mega-menu/pieces').then((r) => (r.ok ? r.json() : [])),
-    ])
-      .then(([chariots, pieces]: MegaMenuItem[][]) => {
-        if (Array.isArray(chariots) && chariots.length > 0) {
-          setChariotsGroup(chariots.map(({ href, label }) => ({ href, label })))
-        }
+    fetch('/api/mega-menu/pieces')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((pieces: MegaMenuItem[]) => {
         if (Array.isArray(pieces) && pieces.length > 0) setPiecesGroup(pieces)
       })
       .catch(() => {})
@@ -397,7 +395,7 @@ export function Header() {
         id="mega-menu"
         variant={chariotsOpen ? 'chariotsShell' : 'default'}
         title={chariotsOpen ? 'Produits' : piecesOpen ? 'Pièces de rechange' : 'Services'}
-        items={chariotsOpen ? chariotsGroup : piecesOpen ? piecesGroup : servicesGroup}
+        items={chariotsOpen ? PRODUITS_NAV_ITEMS : piecesOpen ? piecesGroup : servicesGroup}
         featured={chariotsOpen ? undefined : piecesOpen ? piecesFeatured : servicesFeatured}
         open={chariotsOpen || piecesOpen || servicesOpen}
         onClose={closeAll}
@@ -448,7 +446,7 @@ export function Header() {
               </svg>
             </button>
             <ul id="mobile-chariots-list" className={mobileChariotsExpanded ? 'block pb-2' : 'hidden'} role="list">
-              {chariotsGroup.map((link) => (
+              {PRODUITS_NAV_ITEMS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
