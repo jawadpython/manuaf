@@ -28,7 +28,7 @@ export function CredibilityBand() {
             <p className="text-[var(--accent)] font-semibold text-sm uppercase tracking-wider mb-2 md:mb-3">
               Qui sommes-nous ?
             </p>
-            <h2 id="credibility-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--foreground)] mb-3 md:mb-4 leading-tight">
+            <h2 id="credibility-heading" className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[var(--foreground)] mb-3 md:mb-4 leading-tight">
               L&apos;intralogistique est notre passion
             </h2>
             <div className="w-16 md:w-20 h-1 bg-[var(--accent)] mb-4 md:mb-6" aria-hidden></div>
@@ -57,15 +57,15 @@ export function CredibilityBand() {
             {/* Stats - responsive grid */}
             <div className="grid grid-cols-3 gap-3 sm:gap-5 mb-8 md:mb-10">
               <div className="text-center p-4 sm:p-5 bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
-                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--accent)]">10+</p>
+                <p className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[var(--accent)]">10+</p>
                 <p className="text-[10px] sm:text-xs text-[var(--foreground-muted)] uppercase tracking-[0.1em] mt-1">Années d&apos;exp.</p>
               </div>
               <div className="text-center p-4 sm:p-5 bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
-                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--accent)]">500+</p>
+                <p className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[var(--accent)]">500+</p>
                 <p className="text-[10px] sm:text-xs text-[var(--foreground-muted)] uppercase tracking-[0.1em] mt-1">Clients</p>
               </div>
               <div className="text-center p-4 sm:p-5 bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
-                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--accent)]">24/7</p>
+                <p className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[var(--accent)]">24/7</p>
                 <p className="text-[10px] sm:text-xs text-[var(--foreground-muted)] uppercase tracking-[0.1em] mt-1">Support</p>
               </div>
             </div>

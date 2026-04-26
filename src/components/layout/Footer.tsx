@@ -93,7 +93,7 @@ export function Footer() {
 
             {/* Links */}
             <div>
-              <h2 className="text-white font-bold uppercase tracking-wider mb-2">
+              <h2 className="text-white font-semibold uppercase tracking-wider mb-2">
                 Liens
               </h2>
               <ul className="space-y-2" role="list">
@@ -112,7 +112,7 @@ export function Footer() {
 
             {/* Products */}
             <div>
-              <h2 className="text-white font-bold uppercase tracking-wider mb-2">
+              <h2 className="text-white font-semibold uppercase tracking-wider mb-2">
                 Nos Produits
               </h2>
               <ul className="space-y-2" role="list">
@@ -131,7 +131,7 @@ export function Footer() {
 
             {/* Services + Legal */}
             <div>
-              <h2 className="text-white font-bold uppercase tracking-wider mb-2">
+              <h2 className="text-white font-semibold uppercase tracking-wider mb-2">
                 Nos Services
               </h2>
               <ul className="space-y-2 mb-6" role="list">
@@ -158,7 +158,7 @@ export function Footer() {
 
             {/* Social */}
             <div>
-              <h2 className="text-white font-bold uppercase tracking-wider mb-2">
+              <h2 className="text-white font-semibold uppercase tracking-wider mb-2">
                 Suivez-nous
               </h2>
               <div className="flex gap-2 sm:gap-3" role="list">

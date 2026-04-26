@@ -304,7 +304,7 @@ export async function getProductsByType(type: 'chariots' | 'pieces' | 'nacelles'
 // Get subcategories for occasion/location pages (for filter) - only children, not the main page type
 export async function getSubcategoriesForChariotsPage(categorySlug: string) {
   try {
-    const parent = await prisma.category.findUnique({
+    const parent = await prisma.category.findFirst({
       where: { slug: categorySlug, type: 'chariots', published: true },
       select: { id: true },
     })
@@ -501,7 +501,7 @@ export async function getProductsForTranspaletteManuel() {
 
 export async function getSubcategoriesForNacellesPage(categorySlug: string) {
   try {
-    const parent = await prisma.category.findUnique({
+    const parent = await prisma.category.findFirst({
       where: { slug: categorySlug, type: 'nacelles', published: true },
       select: { id: true },
     })
@@ -760,7 +760,7 @@ export async function getMegaMenuProduits(): Promise<MegaMenuItemProduits[]> {
 
 export async function getCategoryBySlug(slug: string) {
   try {
-    const category = await prisma.category.findUnique({
+    const category = await prisma.category.findFirst({
       where: { slug, published: true },
       include: {
         parent: {

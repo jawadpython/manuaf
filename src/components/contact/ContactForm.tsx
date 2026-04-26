@@ -33,10 +33,6 @@ export function ContactForm({
   const [formFields, setFormFields] = useState<FormFieldConfig[]>(initialFormFields ?? [])
 
   useEffect(() => {
-    if (initialMessage) setMessage(initialMessage)
-  }, [initialMessage])
-
-  useEffect(() => {
     if (!formContext) return
     if (initialFormFields && initialFormFields.length > 0) return
     fetch(`/api/form-fields?context=${encodeURIComponent(formContext)}`)
@@ -134,7 +130,7 @@ export function ContactForm({
           </p>
           <p
             className={
-              isLocation ? 'text-xl md:text-2xl font-bold text-[#1a1a1a] leading-snug' : 'text-lg font-bold text-[#333333]'
+              isLocation ? 'text-xl md:text-2xl font-semibold text-[#1a1a1a] leading-snug' : 'text-lg font-semibold text-[#333333]'
             }
           >
             {productName}

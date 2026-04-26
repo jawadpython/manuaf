@@ -4,10 +4,10 @@ export default function NotFound() {
   return (
     <div className="bg-[#f5f5f5] min-h-screen flex items-center justify-center pt-[72px] md:pt-[96px]">
       <div className="max-w-2xl mx-auto px-6 text-center">
-        <h1 className="text-6xl md:text-8xl font-bold text-[var(--accent)] mb-4">
+        <h1 className="text-6xl md:text-8xl font-semibold text-[var(--accent)] mb-4">
           404
         </h1>
-        <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-4">
+        <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-4">
           Page non trouvée
         </h2>
         <p className="text-[var(--grey)] mb-8 text-lg">

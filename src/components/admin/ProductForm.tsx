@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { uploadAdminImage } from '@/lib/adminImageUpload'
 
 interface Category {
   id: string
@@ -61,42 +62,23 @@ export function ProductForm({
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      setUploadError('Veuillez sélectionner un fichier image')
-      return
-    }
-
-    // Validate file size (10MB max)
-    const maxSize = 10 * 1024 * 1024
-    if (file.size > maxSize) {
-      setUploadError('Fichier trop volumineux (max 10MB)')
-      return
-    }
-
     setUploading(true)
     setUploadError(null)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: formData,
-      })
-      const data = await res.json()
-      
-      if (res.ok && data.url) {
-        setImages((prev) => [...prev, data.url])
+      const result = await uploadAdminImage(file)
+      if (result.ok) {
+        setImages((prev) => [...prev, result.url])
         setUploadError(null)
       } else {
-        setUploadError(data.error || 'Erreur lors du téléchargement')
+        setUploadError(result.error)
       }
     } catch (error) {
       setUploadError('Erreur de connexion lors du téléchargement')
       console.error('Upload error:', error)
     } finally {
       setUploading(false)
+      e.target.value = ''
     }
   }
 

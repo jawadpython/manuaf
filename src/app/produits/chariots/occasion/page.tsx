@@ -30,7 +30,7 @@ export default async function ChariotsOccasionPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           {/* Products Grid */}
           <div className="mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-6">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-6">
               Chariots d&apos;occasion disponibles
             </h2>
             <ChariotsGridWithForm
@@ -47,7 +47,7 @@ export default async function ChariotsOccasionPage() {
       {/* CTA Section */}
       <section className="py-12 md:py-16 bg-[var(--accent)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white mb-3 sm:mb-4">
             Intéressé par un chariot d&apos;occasion ?
           </h2>
           <p className="text-white/90 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">

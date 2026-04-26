@@ -59,7 +59,7 @@ export default async function TranspaletteManuelPage() {
               <div className="mt-8 pt-6 border-t border-[var(--border)]">
                 <Link
                   href={panel.ctaHref}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent)] text-[#1a1a1a] font-bold text-sm uppercase tracking-wider hover:bg-[var(--accent-hover)] transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent)] text-[#1a1a1a] font-semibold text-sm uppercase tracking-wider hover:bg-[var(--accent-hover)] transition-colors"
                 >
                   {panel.ctaLabel}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
@@ -74,7 +74,7 @@ export default async function TranspaletteManuelPage() {
 
       <section className="py-10 md:pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 min-w-0">
-          <h2 className="text-xl sm:text-2xl font-bold text-[var(--grey)] mb-4 sm:mb-6 leading-tight">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[var(--grey)] mb-4 sm:mb-6 leading-tight">
             Transpalettes manuels disponibles
           </h2>
           <ChariotsGridWithForm

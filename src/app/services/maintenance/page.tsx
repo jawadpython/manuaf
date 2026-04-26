@@ -23,7 +23,7 @@ export default function MaintenancePage() {
           <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4">
             Services
           </p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-3 sm:mb-4">
             Maintenance
           </h1>
           <div className="w-16 sm:w-20 h-1 bg-[var(--accent)] mx-auto mb-4 sm:mb-6"></div>
@@ -45,7 +45,7 @@ export default function MaintenancePage() {
           </nav>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
                 Maintenance préventive
               </h2>
               <p className="text-[var(--grey)] mb-6">
@@ -87,7 +87,7 @@ export default function MaintenancePage() {
               </ul>
             </div>
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
                 Maintenance curative
               </h2>
               <p className="text-[var(--grey)] mb-6">
@@ -132,7 +132,7 @@ export default function MaintenancePage() {
 
           {/* Service Section */}
           <div className="bg-white p-6 md:p-8 border-t-4 border-[var(--accent)] mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
               Pourquoi choisir notre service de maintenance ?
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -142,7 +142,7 @@ export default function MaintenancePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Techniciens certifiés</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Techniciens certifiés</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Équipe de techniciens formés et certifiés par les principaux constructeurs
                 </p>
@@ -153,7 +153,7 @@ export default function MaintenancePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Réactivité</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Réactivité</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Intervention rapide pour minimiser vos arrêts de production
                 </p>
@@ -164,7 +164,7 @@ export default function MaintenancePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Toutes marques</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Toutes marques</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Expertise sur toutes les marques : Toyota, Jungheinrich, Yale, Linde, etc.
                 </p>
@@ -173,7 +173,7 @@ export default function MaintenancePage() {
           </div>
 
           <div className="bg-white p-6 border-t-4 border-[var(--accent)] mb-8">
-            <h2 className="font-bold text-[#333333] mb-4">Voir aussi</h2>
+            <h2 className="font-semibold text-[#333333] mb-4">Voir aussi</h2>
             <p className="text-[var(--grey)] text-sm mb-3">
               Besoin de{' '}
               <Link href="/services/reconditionnement" className="text-[var(--accent)] font-medium hover:underline">
@@ -196,7 +196,7 @@ export default function MaintenancePage() {
       {/* CTA Section */}
       <section className="py-12 md:py-16 bg-[var(--accent)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white mb-3 sm:mb-4">
             Besoin d&apos;un service de maintenance ?
           </h2>
           <p className="text-white/90 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">

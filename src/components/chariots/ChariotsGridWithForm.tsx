@@ -215,7 +215,7 @@ export function ChariotsGridWithForm({
               </button>
             )}
             <h3
-              className={`font-bold text-[var(--grey)] mb-1 leading-snug ${
+              className={`font-semibold text-[var(--grey)] mb-1 leading-snug ${
                 compactToolbar ? 'text-base' : 'text-lg'
               }`}
             >
@@ -317,7 +317,7 @@ function ChariotProductCard({
           {isSold && (
             <div className="absolute top-0 right-0 w-[5.5rem] h-[5.5rem] overflow-hidden pointer-events-none z-10">
               <div
-                className="absolute left-0 top-0 w-40 bg-red-600 flex items-center justify-center py-2.5 text-white text-xs font-bold uppercase tracking-widest"
+                className="absolute left-0 top-0 w-40 bg-red-600 flex items-center justify-center py-2.5 text-white text-xs font-semibold uppercase tracking-widest"
                 style={{
                   transform: 'translate(-16px, 16px) rotate(45deg)',
                   boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
@@ -336,7 +336,7 @@ function ChariotProductCard({
           {categoryName}
         </p>
         <Link href={`/produits/${product.slug}`} className="block min-w-0">
-          <h3 className="text-[var(--grey)] text-[11px] sm:text-xs font-bold leading-snug mb-1 hover:text-[var(--accent)] transition-colors line-clamp-2 break-words">
+          <h3 className="text-[var(--grey)] text-[11px] sm:text-xs font-semibold leading-snug mb-1 hover:text-[var(--accent)] transition-colors line-clamp-2 break-words">
             {product.name}
           </h3>
         </Link>

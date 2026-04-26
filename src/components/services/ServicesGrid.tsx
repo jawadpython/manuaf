@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, startTransition } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -51,10 +51,10 @@ export function ServicesGrid() {
   const contentRef = useRef<HTMLDivElement>(null)
   const isInitialMount = useRef(true)
 
-  // Sync from URL ?service= when nav link opens /services?service=xxx
+  // Sync from URL ?service= when Next.js searchParams change (full navigation)
   useEffect(() => {
     const fromParams = getServiceFromParams(searchParams)
-    setSelectedService(fromParams)
+    startTransition(() => setSelectedService(fromParams))
   }, [searchParams])
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export function ServicesGrid() {
               />
               <div className="absolute inset-0 bg-black/35" />
               <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                <h2 className="text-white font-bold text-xs sm:text-sm mb-0.5">
+                <h2 className="text-white font-semibold text-xs sm:text-sm mb-0.5">
                   {card.title}
                 </h2>
                 <span className="en-savoir-plus text-white/90 text-[10px] sm:text-[11px] font-medium flex items-center gap-1">
@@ -114,7 +114,7 @@ export function ServicesGrid() {
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <div>
                   <p className="text-[var(--accent)] font-semibold text-sm uppercase tracking-wider mb-1">Service</p>
-                  <h2 className="text-xl font-bold text-[var(--foreground)]">Maintenance</h2>
+                  <h2 className="text-xl font-semibold text-[var(--foreground)]">Maintenance</h2>
                 </div>
                 <button
                   type="button"
@@ -133,7 +133,7 @@ export function ServicesGrid() {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div>
-                  <h3 className="text-base font-bold text-[var(--foreground)] mb-3 pb-2 border-b border-[var(--border)]">Maintenance préventive</h3>
+                  <h3 className="text-base font-semibold text-[var(--foreground)] mb-3 pb-2 border-b border-[var(--border)]">Maintenance préventive</h3>
                   <p className="text-[var(--foreground-muted)] mb-6 leading-relaxed text-sm">
                     Un entretien régulier est essentiel pour garantir la performance, la sécurité
                     et la longévité de vos équipements. Notre service de maintenance préventive
@@ -155,7 +155,7 @@ export function ServicesGrid() {
                   </ul>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-[var(--foreground)] mb-3 pb-2 border-b border-[var(--border)]">Maintenance curative</h3>
+                  <h3 className="text-base font-semibold text-[var(--foreground)] mb-3 pb-2 border-b border-[var(--border)]">Maintenance curative</h3>
                   <p className="text-[var(--foreground-muted)] mb-6 leading-relaxed text-sm">
                     En cas de panne ou de dysfonctionnement, notre équipe intervient rapidement
                     pour diagnostiquer et réparer vos équipements. Nous disposons d&apos;un
@@ -179,7 +179,7 @@ export function ServicesGrid() {
               </div>
 
               <div className="border-t border-[var(--border)] pt-8 mt-8">
-                <h3 className="text-base font-bold text-[var(--foreground)] mb-4">Pourquoi nous choisir ?</h3>
+                <h3 className="text-base font-semibold text-[var(--foreground)] mb-4">Pourquoi nous choisir ?</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {[
                     { title: 'Techniciens certifiés', desc: 'Équipe de techniciens formés et certifiés par les principaux constructeurs', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
@@ -192,7 +192,7 @@ export function ServicesGrid() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
                         </svg>
                       </div>
-                      <h4 className="text-sm font-bold text-[var(--foreground)] mb-2">{item.title}</h4>
+                      <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">{item.title}</h4>
                       <p className="text-[var(--foreground-muted)] text-sm">{item.desc}</p>
                     </div>
                   ))}
@@ -226,7 +226,7 @@ export function ServicesGrid() {
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <div>
                   <p className="text-[var(--accent)] font-semibold text-sm uppercase tracking-wider mb-1">Service</p>
-                  <h2 className="text-xl font-bold text-[var(--foreground)]">Reconditionnement</h2>
+                  <h2 className="text-xl font-semibold text-[var(--foreground)]">Reconditionnement</h2>
                 </div>
                 <button
                   type="button"
@@ -245,7 +245,7 @@ export function ServicesGrid() {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div>
-                  <h3 className="text-base font-bold text-[var(--foreground)] mb-3 pb-2 border-b border-[var(--border)]">Qu&apos;est-ce que le reconditionnement ?</h3>
+                  <h3 className="text-base font-semibold text-[var(--foreground)] mb-3 pb-2 border-b border-[var(--border)]">Qu&apos;est-ce que le reconditionnement ?</h3>
                   <p className="text-[var(--foreground-muted)] mb-6 leading-relaxed text-sm">
                     Le reconditionnement est un processus complet de remise à neuf de votre chariot élévateur.
                     Cette opération permet de restaurer les performances d&apos;origine de votre équipement
@@ -258,7 +258,7 @@ export function ServicesGrid() {
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-[var(--foreground)] mb-4 pb-2 border-b border-[var(--border)]">Processus de reconditionnement</h3>
+                  <h3 className="text-base font-semibold text-[var(--foreground)] mb-4 pb-2 border-b border-[var(--border)]">Processus de reconditionnement</h3>
                   <div className="space-y-4">
                     {[
                       { n: 1, title: 'Diagnostic complet', desc: 'Inspection approfondie de tous les systèmes : moteur, transmission, hydraulique, électrique' },
@@ -267,11 +267,11 @@ export function ServicesGrid() {
                       { n: 4, title: 'Remontage et tests', desc: 'Remontage professionnel et tests de conformité selon les standards constructeur' },
                     ].map(({ n, title, desc }) => (
                       <div key={n} className="flex gap-4">
-                        <div className="flex-shrink-0 w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-bold">
+                        <div className="flex-shrink-0 w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-semibold">
                           {n}
                         </div>
                         <div>
-                          <h4 className="text-sm font-bold text-[var(--foreground)] mb-2">{title}</h4>
+                          <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">{title}</h4>
                           <p className="text-[var(--foreground-muted)] text-sm">{desc}</p>
                         </div>
                       </div>
@@ -281,7 +281,7 @@ export function ServicesGrid() {
               </div>
 
               <div className="border-t border-[var(--border)] pt-8 mt-8 mb-8">
-                <h3 className="text-base font-bold text-[var(--foreground)] mb-4">Avantages</h3>
+                <h3 className="text-base font-semibold text-[var(--foreground)] mb-4">Avantages</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {[
                     { title: 'Économique', desc: "Coût jusqu'à 60% inférieur à l'achat d'un équipement neuf" },
@@ -294,7 +294,7 @@ export function ServicesGrid() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
-                      <h4 className="text-sm font-bold text-[var(--foreground)] mb-2">{item.title}</h4>
+                      <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">{item.title}</h4>
                       <p className="text-[var(--foreground-muted)] text-sm">{item.desc}</p>
                     </div>
                   ))}
@@ -328,7 +328,7 @@ export function ServicesGrid() {
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <div>
                   <p className="text-[var(--accent)] font-semibold text-sm uppercase tracking-wider mb-1">Service</p>
-                  <h2 className="text-xl font-bold text-[var(--foreground)]">Location</h2>
+                  <h2 className="text-xl font-semibold text-[var(--foreground)]">Location</h2>
                 </div>
                 <button
                   type="button"
@@ -347,7 +347,7 @@ export function ServicesGrid() {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div>
-                  <h3 className="text-base font-bold text-[var(--foreground)] mb-3 pb-2 border-b border-[var(--border)]">Pourquoi choisir la location ?</h3>
+                  <h3 className="text-base font-semibold text-[var(--foreground)] mb-3 pb-2 border-b border-[var(--border)]">Pourquoi choisir la location ?</h3>
                   <p className="text-[var(--foreground-muted)] mb-6 leading-relaxed text-sm">
                     La location de chariots élévateurs est la solution idéale pour répondre à vos besoins
                     temporaires ou tester un équipement avant achat. Elle vous permet de bénéficier
@@ -369,10 +369,10 @@ export function ServicesGrid() {
                   </ul>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-[var(--foreground)] mb-4 pb-2 border-b border-[var(--border)]">Types de location</h3>
+                  <h3 className="text-base font-semibold text-[var(--foreground)] mb-4 pb-2 border-b border-[var(--border)]">Types de location</h3>
                   <div className="space-y-4">
                     <div className="bg-[var(--background-alt)] p-6 shadow-md">
-                      <h4 className="text-sm font-bold text-[var(--foreground)] mb-2">Location courte durée</h4>
+                      <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Location courte durée</h4>
                       <p className="text-[var(--foreground-muted)] text-sm mb-3">
                         Pour vos besoins ponctuels : quelques jours à quelques semaines
                       </p>
@@ -383,7 +383,7 @@ export function ServicesGrid() {
                       </ul>
                     </div>
                     <div className="bg-[var(--background-alt)] p-6 shadow-md">
-                      <h4 className="text-sm font-bold text-[var(--foreground)] mb-2">Location longue durée</h4>
+                      <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">Location longue durée</h4>
                       <p className="text-[var(--foreground-muted)] text-sm mb-3">
                         Pour vos besoins récurrents : plusieurs mois à plusieurs années
                       </p>
@@ -398,7 +398,7 @@ export function ServicesGrid() {
               </div>
 
               <div className="border-t border-[var(--border)] pt-8 mt-8 mb-8">
-                <h3 className="text-base font-bold text-[var(--foreground)] mb-4">Nos avantages</h3>
+                <h3 className="text-base font-semibold text-[var(--foreground)] mb-4">Nos avantages</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {[
                     { title: 'Parc varié', desc: "Large gamme d'équipements électriques et thermiques disponibles" },
@@ -411,7 +411,7 @@ export function ServicesGrid() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
-                      <h4 className="text-sm font-bold text-[var(--foreground)] mb-2">{item.title}</h4>
+                      <h4 className="text-sm font-semibold text-[var(--foreground)] mb-2">{item.title}</h4>
                       <p className="text-[var(--foreground-muted)] text-sm">{item.desc}</p>
                     </div>
                   ))}

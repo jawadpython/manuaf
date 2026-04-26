@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { uploadAdminImage } from '@/lib/adminImageUpload'
 
 interface BlogPost {
   id: string
@@ -35,40 +36,23 @@ export function BlogPostForm({
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (!file.type.startsWith('image/')) {
-      setUploadError('Veuillez sélectionner un fichier image')
-      return
-    }
-
-    const maxSize = 10 * 1024 * 1024
-    if (file.size > maxSize) {
-      setUploadError('Fichier trop volumineux (max 10MB)')
-      return
-    }
-
     setUploading(true)
     setUploadError(null)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: formData,
-      })
-      const data = await res.json()
-      
-      if (res.ok && data.url) {
-        setImage(data.url)
+      const result = await uploadAdminImage(file)
+      if (result.ok) {
+        setImage(result.url)
         setUploadError(null)
       } else {
-        setUploadError(data.error || 'Erreur lors du téléchargement')
+        setUploadError(result.error)
       }
     } catch (error) {
       setUploadError('Erreur de connexion lors du téléchargement')
       console.error('Upload error:', error)
     } finally {
       setUploading(false)
+      e.target.value = ''
     }
   }
 

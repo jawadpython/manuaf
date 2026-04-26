@@ -100,18 +100,18 @@ export default async function ProductDetailPage({ params }: Props) {
             <div className="space-y-4 min-w-0 mr-[3cm]">
               <div>
                 <p className="text-[var(--accent)] text-[10px] font-semibold uppercase tracking-wider mb-1">{categoryName}</p>
-                <h1 className="text-base sm:text-lg font-bold text-[var(--grey)] leading-tight">{product.name}</h1>
+                <h1 className="text-base sm:text-lg font-semibold text-[var(--grey)] leading-tight">{product.name}</h1>
               </div>
 
               {product.description && (
                 <div className="bg-white shadow-sm rounded-lg p-4 sm:p-5">
-                  <h2 className="text-xs font-bold text-[var(--grey)] uppercase tracking-wider mb-2">Description</h2>
+                  <h2 className="text-xs font-semibold text-[var(--grey)] uppercase tracking-wider mb-2">Description</h2>
                   <p className="text-[var(--grey)] text-sm leading-relaxed">{product.description}</p>
                 </div>
               )}
 
               <div className="bg-white shadow-sm rounded-lg p-4 sm:p-5">
-                <h2 className="text-xs font-bold text-[var(--grey)] uppercase tracking-wider mb-2 pb-2 border-b-2 border-[var(--accent)] w-fit">
+                <h2 className="text-xs font-semibold text-[var(--grey)] uppercase tracking-wider mb-2 pb-2 border-b-2 border-[var(--accent)] w-fit">
                   Détails
                 </h2>
                 <p className="text-[var(--foreground-muted)] text-xs mb-3">

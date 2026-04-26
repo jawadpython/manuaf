@@ -91,7 +91,7 @@ export function ProductDevisInline({ productName, label = 'Demander un devis', c
           type="button"
           disabled={sold}
           onClick={() => !sold && setShowForm(true)}
-          className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[var(--accent)] text-[#1a1a1a] font-bold text-xs uppercase tracking-wider hover:bg-[var(--accent-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--accent)]"
+          className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[var(--accent)] text-[#1a1a1a] font-semibold text-xs uppercase tracking-wider hover:bg-[var(--accent-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--accent)]"
         >
           {sold ? 'Produit vendu' : label}
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@ export function ProductDevisInline({ productName, label = 'Demander un devis', c
             onClick={(e) => e.stopPropagation()}
           >
             <div className="sticky top-0 bg-white border-b border-[var(--border)] px-5 py-4 flex items-center justify-between">
-              <h2 id="devis-modal-title" className="text-lg font-bold text-[var(--grey)]">
+              <h2 id="devis-modal-title" className="text-lg font-semibold text-[var(--grey)]">
                 Demande de devis
               </h2>
               <button
@@ -132,6 +132,7 @@ export function ProductDevisInline({ productName, label = 'Demander un devis', c
             </div>
             <div className="p-5 sm:p-6">
               <ContactForm
+                key={`devis-${productName ?? ''}-${formContext ?? ''}`}
                 initialMessage={initialMessage}
                 productName={productName}
                 formContext={formContext}

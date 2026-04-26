@@ -27,18 +27,18 @@ export default function CommandesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
                 Comment commander ?
               </h2>
               <div className="space-y-6">
                 <div className="flex gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-semibold">
                       1
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#333333] mb-2">Identifiez votre pièce</h3>
+                    <h3 className="font-semibold text-[#333333] mb-2">Identifiez votre pièce</h3>
                     <p className="text-[#666666] text-sm">
                       Fournissez-nous la référence de votre chariot ou le numéro de série. 
                       Nos experts identifieront la pièce exacte dont vous avez besoin.
@@ -47,12 +47,12 @@ export default function CommandesPage() {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-semibold">
                       2
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#333333] mb-2">Demandez un devis</h3>
+                    <h3 className="font-semibold text-[#333333] mb-2">Demandez un devis</h3>
                     <p className="text-[#666666] text-sm">
                       Contactez-nous par téléphone, email ou via notre formulaire de contact. 
                       Nous vous enverrons un devis détaillé sous 24h.
@@ -61,12 +61,12 @@ export default function CommandesPage() {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-semibold">
                       3
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#333333] mb-2">Validation et livraison</h3>
+                    <h3 className="font-semibold text-[#333333] mb-2">Validation et livraison</h3>
                     <p className="text-[#666666] text-sm">
                       Après validation de votre commande, nous procédons à la livraison 
                       dans les meilleurs délais partout au Maroc.
@@ -76,7 +76,7 @@ export default function CommandesPage() {
               </div>
             </div>
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
                 Types de pièces disponibles
               </h2>
               <div className="bg-white p-6 border-t-4 border-[var(--accent)]">
@@ -134,7 +134,7 @@ export default function CommandesPage() {
 
           {/* Service Section */}
           <div className="bg-white p-6 md:p-8 border-t-4 border-[var(--accent)] mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
               Nos avantages
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -144,7 +144,7 @@ export default function CommandesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Livraison rapide</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Livraison rapide</h3>
                 <p className="text-[#666666] text-sm">
                   Stock important et livraison express disponible
                 </p>
@@ -155,7 +155,7 @@ export default function CommandesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Pièces d&apos;origine</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Pièces d&apos;origine</h3>
                 <p className="text-[#666666] text-sm">
                   Pièces d&apos;origine et compatibles, toutes marques
                 </p>
@@ -166,7 +166,7 @@ export default function CommandesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Meilleurs prix</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Meilleurs prix</h3>
                 <p className="text-[#666666] text-sm">
                   Tarifs compétitifs et devis gratuits
                 </p>
@@ -179,7 +179,7 @@ export default function CommandesPage() {
       {/* CTA Section */}
       <section className="py-12 md:py-16 bg-[var(--accent)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white mb-3 sm:mb-4">
             Besoin d&apos;une pièce de rechange ?
           </h2>
           <p className="text-white/90 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">

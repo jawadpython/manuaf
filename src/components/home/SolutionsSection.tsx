@@ -26,7 +26,7 @@ function SolutionCard({ title, image, href }: { title: string; image: string; hr
       />
       <div className="absolute inset-0 bg-black/35" />
       <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-        <h3 className="!text-white font-bold text-xs sm:text-sm">
+        <h3 className="!text-white font-semibold text-xs sm:text-sm">
           {title}
         </h3>
       </div>
@@ -40,7 +40,7 @@ export function SolutionsSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--grey)] mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[var(--grey)] mb-4">
             Découvrez nos solutions intralogistiques
           </h2>
           <p className="text-[var(--grey)]/80 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">

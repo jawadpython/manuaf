@@ -141,8 +141,9 @@
   --color-border-strong: var(--border-strong);
   --color-card: var(--card);
   --color-card-hover: var(--card-hover);
-  --font-display: 'JHNeueDIN-XBold', Arial, sans-serif;
-  --font-sans: 'JHNeueDIN-XBold', Arial, sans-serif;
+  /* Next.js sets --font-inter / --font-bebas on <body>; use them for UI text vs display */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bebas), ui-sans-serif, sans-serif;
 }
 
 * {
@@ -161,57 +162,119 @@ html {
 
 body {
   background: var(--background);
-  color: rgb(0, 0, 0);
-  font-family: 'JHNeueDIN-XBold', Arial, sans-serif;
+  color: var(--foreground);
+  font-family: var(--font-sans);
   font-style: normal;
-  font-weight: 800;
+  font-weight: 400;
+  line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
 }
 
+strong,
+b {
+  font-weight: 600;
+}
+
+/* Display / admin accents — Bebas (from Next font variable) */
 .font-display {
-  font-family: 'JHNeueDIN-XBold', Arial, sans-serif;
+  font-family: var(--font-display);
   font-style: normal;
+  font-weight: 400;
+}
+
+/* Industrial brand headline (optional) — use on key marketing blocks only */
+.heading-brand {
+  font-family: 'JHNeueDIN-XBold', Arial, sans-serif;
   font-weight: 800;
+  letter-spacing: 0;
 }
 
 .en-savoir-plus {
-  font-family: 'JHNeueDIN-XBold', Arial, sans-serif;
-  font-weight: 800;
+  font-family: var(--font-sans);
+  font-weight: 600;
 }
 
-/* Titles — JHNeueDIN-XBold, bigger sizes */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'JHNeueDIN-XBold', Arial, sans-serif;
+/* --------------------------------------------------------------------------
+   Semantic headings — Inter, restrained scale (avoids “everything bold”)
+   Explicit utilities (text-xl, font-semibold, etc.) still override when needed.
+   -------------------------------------------------------------------------- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans);
   font-style: normal;
-  font-weight: 800;
-  color: rgb(0, 0, 0);
+  color: var(--foreground);
+  letter-spacing: -0.015em;
 }
 
-h1 { font-size: var(--text-2xl); line-height: var(--leading-tight); }
-h2 { font-size: var(--text-xl); line-height: var(--leading-tight); }
-h3 { font-size: var(--text-lg); line-height: var(--leading-snug); }
-h4 { font-size: var(--text-base); line-height: var(--leading-snug); }
-h5 { font-size: var(--text-base); line-height: var(--leading-normal); }
-h6 { font-size: var(--text-sm); line-height: var(--leading-normal); }
+h1 {
+  font-size: 1.625rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 1.3125rem;
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.0625rem;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+h5 {
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+h6 {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  font-weight: 600;
+}
 
 @media (min-width: 640px) {
-  h1 { font-size: var(--text-3xl); }
-  h2 { font-size: var(--text-2xl); }
-  h3 { font-size: var(--text-xl); }
-  h4 { font-size: var(--text-lg); }
+  h1 {
+    font-size: 1.875rem;
+  }
+  h2 {
+    font-size: 1.375rem;
+  }
+  h3 {
+    font-size: 1.125rem;
+  }
 }
 
-@media (min-width: 768px) {
-  h1 { font-size: var(--text-4xl); }
-  h2 { font-size: var(--text-3xl); }
-  h3 { font-size: var(--text-2xl); }
-  h4 { font-size: var(--text-xl); }
+@media (min-width: 1024px) {
+  h1 {
+    font-size: 2.125rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
 }
 
-/* Footer section titles — smaller than global h2, readable */
+/* Footer section titles */
 footer h2 {
-  font-size: 1.25rem; /* 20px */
-  font-weight: 700;
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  line-height: var(--leading-snug);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 /* Focus visible for keyboard navigation (accessibility) */
@@ -288,7 +351,7 @@ footer h2 {
   padding: 1rem 2rem;
   background: var(--header-main-bg);
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   font-size: var(--text-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;

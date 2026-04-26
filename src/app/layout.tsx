@@ -8,13 +8,13 @@ import './globals.css'
 const bebas = Bebas_Neue({
   weight: '400',
   subsets: ['latin'],
-  variable: '--font-display',
+  variable: '--font-bebas',
   display: 'swap',
 })
 
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-sans',
+  variable: '--font-inter',
   display: 'swap',
 })
 

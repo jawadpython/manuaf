@@ -29,7 +29,7 @@ export default function QuiSommesNousPage() {
               <Image src={RANDOM_IMAGES[11]} alt="MANUAF équipe" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
             </div>
             <div className="order-1 lg:order-2">
-              <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-6">
                 Notre histoire
               </h2>
               <p className="text-[var(--grey)] mb-4">
@@ -71,7 +71,7 @@ export default function QuiSommesNousPage() {
                 <Image src={RANDOM_IMAGES[12]} alt="Notre mission" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 896px" />
               </div>
               <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-6">
                 Notre mission
               </h2>
               <p className="text-[var(--grey)] mb-4">
@@ -113,7 +113,7 @@ export default function QuiSommesNousPage() {
 
           {/* Values Section */}
           <div className="bg-white p-6 md:p-8 border-t-4 border-[var(--accent)] mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-6 text-center">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-6 text-center">
               Nos valeurs
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -123,7 +123,7 @@ export default function QuiSommesNousPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[var(--grey)] mb-2">Fiabilité</h3>
+                <h3 className="font-semibold text-[var(--grey)] mb-2">Fiabilité</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Nous nous engageons à être un partenaire de confiance sur lequel vous pouvez compter
                 </p>
@@ -134,7 +134,7 @@ export default function QuiSommesNousPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[var(--grey)] mb-2">Excellence</h3>
+                <h3 className="font-semibold text-[var(--grey)] mb-2">Excellence</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Nous visons l&apos;excellence dans chaque aspect de notre service
                 </p>
@@ -145,7 +145,7 @@ export default function QuiSommesNousPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[var(--grey)] mb-2">Proximité</h3>
+                <h3 className="font-semibold text-[var(--grey)] mb-2">Proximité</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Nous restons à l&apos;écoute de nos clients et adaptons nos solutions à leurs besoins
                 </p>
@@ -155,30 +155,30 @@ export default function QuiSommesNousPage() {
 
           {/* Expertise Section */}
           <div className="mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-6 text-center">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-6 text-center">
               Notre expertise
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <Link href="/produits/chariots/occasion" className="bg-white p-6 border-t-4 border-[var(--accent)] hover:shadow-lg transition-shadow block">
-                <h3 className="font-bold text-[var(--grey)] mb-3">Vente</h3>
+                <h3 className="font-semibold text-[var(--grey)] mb-3">Vente</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Large gamme de chariots élévateurs neufs et d&apos;occasion
                 </p>
               </Link>
               <Link href="/produits/chariots/location" className="bg-white p-6 border-t-4 border-[var(--accent)] hover:shadow-lg transition-shadow block">
-                <h3 className="font-bold text-[var(--grey)] mb-3">Location</h3>
+                <h3 className="font-semibold text-[var(--grey)] mb-3">Location</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Solutions de location flexibles pour tous vos besoins
                 </p>
               </Link>
               <Link href="/services/maintenance" className="bg-white p-6 border-t-4 border-[var(--accent)] hover:shadow-lg transition-shadow block">
-                <h3 className="font-bold text-[var(--grey)] mb-3">Maintenance</h3>
+                <h3 className="font-semibold text-[var(--grey)] mb-3">Maintenance</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Service de maintenance préventive et curative par des experts
                 </p>
               </Link>
               <Link href="/produits/pieces" className="bg-white p-6 border-t-4 border-[var(--accent)] hover:shadow-lg transition-shadow block">
-                <h3 className="font-bold text-[var(--grey)] mb-3">Pièces</h3>
+                <h3 className="font-semibold text-[var(--grey)] mb-3">Pièces</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Pièces de rechange d&apos;origine et compatibles, toutes marques
                 </p>
@@ -191,7 +191,7 @@ export default function QuiSommesNousPage() {
       {/* CTA Section */}
       <section className="py-12 md:py-16 bg-[var(--accent)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white mb-3 sm:mb-4">
             Travaillons ensemble
           </h2>
           <p className="text-white/90 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">

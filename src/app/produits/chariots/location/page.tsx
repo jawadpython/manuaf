@@ -70,7 +70,7 @@ export default async function ChariotsLocationPage() {
         <section className="py-10 md:py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-6">
                 Chariots disponibles à la location
               </h2>
               <ChariotsGridWithForm
@@ -86,7 +86,7 @@ export default async function ChariotsLocationPage() {
 
         <section className="py-12 md:py-16 bg-[var(--accent)]">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white mb-3 sm:mb-4">
               Besoin d&apos;un devis de location ?
             </h2>
             <p className="text-white/90 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">

@@ -77,7 +77,7 @@ export default async function DemanderChariotPage({
             }`}
           >
             <h3
-              className={`font-bold text-[#333333] mb-4 ${
+              className={`font-semibold text-[#333333] mb-4 ${
                 isRentalLocationForm ? 'text-xl md:text-2xl' : 'text-lg'
               }`}
             >
@@ -91,6 +91,7 @@ export default async function DemanderChariotPage({
               .
             </p>
             <ContactForm
+              key={`devis-${product}-${category}`}
               initialMessage={initialMessage}
               productName={product || undefined}
               formContext={isRentalLocationForm ? category : undefined}

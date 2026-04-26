@@ -193,7 +193,7 @@
 
 .megaMenu__title {
   font-size: var(--mm-title-size);
-  font-weight: 700;
+  font-weight: 600;
   color: #fff;
   margin: 0 0 var(--mm-20);
   letter-spacing: 0.02em;
@@ -351,7 +351,7 @@
 
 .megaMenu__contentTitle {
   font-size: var(--mm-content-title-size);
-  font-weight: 700;
+  font-weight: 600;
   line-height: var(--mm-content-title-line);
   color: #212121;
   margin: 0 0 var(--mm-12);
@@ -497,7 +497,7 @@
 
 .megaMenu__featuredSubtitle {
   font-size: 0.6875rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: #6b7280;
@@ -506,7 +506,7 @@
 
 .megaMenu__featuredHeading {
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.3;
   color: #111827;
   margin: 0;

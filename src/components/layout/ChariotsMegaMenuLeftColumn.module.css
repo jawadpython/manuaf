@@ -7,7 +7,7 @@
 
 .title {
   font-size: var(--mm-title-size, 1rem);
-  font-weight: 700;
+  font-weight: 600;
   color: #fff;
   margin: 0 0 var(--mm-20, 20px);
   letter-spacing: 0.02em;

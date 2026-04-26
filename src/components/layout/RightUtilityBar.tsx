@@ -62,7 +62,7 @@ export function RightUtilityBar() {
             {btn.icon}
           </span>
           <span className="absolute right-11 top-0 h-11 flex items-center justify-end pr-2 pl-4 bg-[var(--accent)] overflow-hidden origin-right transition-[width] duration-300 ease-out w-0 group-hover:w-[170px]">
-            <span className="text-sm font-bold text-[#1a1a1a] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-75 ease-out">
+            <span className="text-sm font-semibold text-[#1a1a1a] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-75 ease-out">
               {btn.label}
             </span>
           </span>

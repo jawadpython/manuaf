@@ -108,10 +108,10 @@ export function HeroSection() {
             {/* White card — fixed with its image, moves with slide */}
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 w-full flex justify-start mb-[3cm]">
               <div className="bg-white p-4 sm:p-5 md:p-6 text-left w-[480px] sm:w-[560px] md:w-[640px] min-h-[140px] border-b-2 border-r-2 border-[#6b21a8] shadow-lg overflow-hidden">
-                <p className="text-xs sm:text-sm font-bold text-[#1a1a1a] uppercase tracking-wider mb-3">
+                <p className="text-xs sm:text-sm font-semibold text-[#1a1a1a] uppercase tracking-wider mb-3">
                   MANUAF — Solutions intralogistiques
                 </p>
-                <h1 className="text-base sm:text-lg md:text-xl font-bold text-[#1a1a1a] leading-tight mb-4 pb-3 border-b-2 border-[#6b21a8] w-fit">
+                <h1 className="text-base sm:text-lg md:text-xl font-semibold text-[#1a1a1a] leading-tight mb-4 pb-3 border-b-2 border-[#6b21a8] w-fit">
                   {s.title}
                 </h1>
                 <p className="text-sm sm:text-base text-[#1a1a1a] mb-6 leading-relaxed line-clamp-3">

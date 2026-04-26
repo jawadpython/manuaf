@@ -11,7 +11,7 @@ export function ProductRequestCTA({ productName, label = 'Demander un devis' }: 
   return (
     <Link
       href={href}
-      className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[var(--accent)] text-[#1a1a1a] font-bold text-xs uppercase tracking-wider hover:bg-[var(--accent-hover)] transition-colors"
+      className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[var(--accent)] text-[#1a1a1a] font-semibold text-xs uppercase tracking-wider hover:bg-[var(--accent-hover)] transition-colors"
     >
       {label}
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -54,13 +54,13 @@ export async function FeaturedProducts() {
                     <p className="text-[10px] sm:text-xs text-[#6b7280] mb-2 font-semibold uppercase tracking-widest">
                       {formatBlogDate(post.createdAt)}
                     </p>
-                    <h3 className="text-xs sm:text-sm font-bold text-[#1a1a1a] mb-2 leading-snug line-clamp-2 tracking-tight">
+                    <h3 className="text-xs sm:text-sm font-semibold text-[#1a1a1a] mb-2 leading-snug line-clamp-2 tracking-tight">
                       {post.title}
                     </h3>
                     <p className="text-[10px] sm:text-xs text-[#4b5563] leading-relaxed flex-1 line-clamp-3 mb-3 font-medium">
                       {post.excerpt}
                     </p>
-                    <span className="block w-full text-center py-2 px-4 bg-[#1f2937] text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest">
+                    <span className="block w-full text-center py-2 px-4 bg-[#1f2937] text-white text-[10px] sm:text-xs font-semibold uppercase tracking-widest">
                       EN SAVOIR PLUS
                     </span>
                   </div>

@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { PageHero } from '@/components/layout/PageHero'
-import { PiecesBreadcrumb } from '@/components/layout/PiecesBreadcrumb'
 import { PiecesRelatedLinks } from '@/components/layout/PiecesRelatedLinks'
 import { createMetadata } from '@/lib/seo'
 
@@ -31,7 +30,7 @@ export default function AccessoiresPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-[#333333] mb-3">Fourches</h3>
+              <h3 className="text-lg font-semibold text-[#333333] mb-3">Fourches</h3>
               <ul className="space-y-2 text-[#666666] text-sm">
                 <li>• Fourches standard et sur mesure</li>
                 <li>• Longueurs variables : 800mm à 2400mm</li>
@@ -46,7 +45,7 @@ export default function AccessoiresPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-[#333333] mb-3">Pinces</h3>
+              <h3 className="text-lg font-semibold text-[#333333] mb-3">Pinces</h3>
               <ul className="space-y-2 text-[#666666] text-sm">
                 <li>• Pinces à cartons</li>
                 <li>• Pinces à palettes</li>
@@ -61,7 +60,7 @@ export default function AccessoiresPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-[#333333] mb-3">Rotateurs</h3>
+              <h3 className="text-lg font-semibold text-[#333333] mb-3">Rotateurs</h3>
               <ul className="space-y-2 text-[#666666] text-sm">
                 <li>• Rotateurs hydrauliques</li>
                 <li>• Rotation 360°</li>
@@ -76,7 +75,7 @@ export default function AccessoiresPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-[#333333] mb-3">Échelles</h3>
+              <h3 className="text-lg font-semibold text-[#333333] mb-3">Échelles</h3>
               <ul className="space-y-2 text-[#666666] text-sm">
                 <li>• Échelles de manutention</li>
                 <li>• Hauteurs ajustables</li>
@@ -91,7 +90,7 @@ export default function AccessoiresPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-[#333333] mb-3">Attaches</h3>
+              <h3 className="text-lg font-semibold text-[#333333] mb-3">Attaches</h3>
               <ul className="space-y-2 text-[#666666] text-sm">
                 <li>• Attaches rapides</li>
                 <li>• Systèmes de fixation</li>
@@ -106,7 +105,7 @@ export default function AccessoiresPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-[#333333] mb-3">Autres accessoires</h3>
+              <h3 className="text-lg font-semibold text-[#333333] mb-3">Autres accessoires</h3>
               <ul className="space-y-2 text-[#666666] text-sm">
                 <li>• Stabilisateurs</li>
                 <li>• Écrans de protection</li>
@@ -122,7 +121,7 @@ export default function AccessoiresPage() {
 
           {/* Service Section */}
           <div className="bg-white p-6 md:p-8 border-t-4 border-[var(--accent)]">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
               Pourquoi choisir nos accessoires ?
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -132,7 +131,7 @@ export default function AccessoiresPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Qualité garantie</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Qualité garantie</h3>
                 <p className="text-[#666666] text-sm">
                   Accessoires certifiés et testés pour une utilisation professionnelle
                 </p>
@@ -143,7 +142,7 @@ export default function AccessoiresPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Prix compétitifs</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Prix compétitifs</h3>
                 <p className="text-[#666666] text-sm">
                   Meilleurs prix du marché avec garantie constructeur
                 </p>
@@ -155,7 +154,7 @@ export default function AccessoiresPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Installation</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Installation</h3>
                 <p className="text-[#666666] text-sm">
                   Service d&apos;installation par nos techniciens experts
                 </p>
@@ -168,7 +167,7 @@ export default function AccessoiresPage() {
       {/* CTA Section */}
       <section className="py-12 md:py-16 bg-[var(--accent)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white mb-3 sm:mb-4">
             Besoin d&apos;un accessoire spécifique ?
           </h2>
           <p className="text-white/90 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">

@@ -514,7 +514,7 @@ function ProductCard({ product }: { product: Product }) {
         {isSold && (
           <div className="absolute top-0 right-0 w-[6.5rem] h-[6.5rem] overflow-hidden pointer-events-none z-10">
             <div
-              className="absolute left-0 top-0 w-48 bg-red-600 flex items-center justify-center py-3 text-white text-sm font-bold uppercase tracking-widest"
+              className="absolute left-0 top-0 w-48 bg-red-600 flex items-center justify-center py-3 text-white text-sm font-semibold uppercase tracking-widest"
               style={{
                 transform: 'translate(-20px, 20px) rotate(45deg)',
                 boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
@@ -529,7 +529,7 @@ function ProductCard({ product }: { product: Product }) {
 
       {/* Content */}
       <div className="p-3 sm:p-4 md:p-5 border-t-4 border-[var(--accent)]">
-        <h3 className="text-[var(--grey)] text-xs md:text-sm font-bold mb-1 sm:mb-2 group-hover:text-[var(--accent)] transition-colors duration-200 leading-tight line-clamp-2">
+        <h3 className="text-[var(--grey)] text-xs md:text-sm font-semibold mb-1 sm:mb-2 group-hover:text-[var(--accent)] transition-colors duration-200 leading-tight line-clamp-2">
           {product.name}
         </h3>
         <p className="text-[var(--grey)] text-[10px] sm:text-xs md:text-sm mb-2 sm:mb-4 line-clamp-2 hidden sm:block">

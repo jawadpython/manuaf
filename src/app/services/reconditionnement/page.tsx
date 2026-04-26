@@ -23,7 +23,7 @@ export default function ReconditionnementPage() {
           <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4">
             Services
           </p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-3 sm:mb-4">
             Reconditionnement
           </h1>
           <div className="w-16 sm:w-20 h-1 bg-[var(--accent)] mx-auto mb-4 sm:mb-6"></div>
@@ -45,7 +45,7 @@ export default function ReconditionnementPage() {
           </nav>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
                 Qu&apos;est-ce que le reconditionnement ?
               </h2>
               <p className="text-[var(--grey)] mb-6">
@@ -60,18 +60,18 @@ export default function ReconditionnementPage() {
               </p>
             </div>
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
                 Processus de reconditionnement
               </h2>
               <div className="space-y-4">
                 <div className="flex gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-semibold">
                       1
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#333333] mb-2">Diagnostic complet</h3>
+                    <h3 className="font-semibold text-[#333333] mb-2">Diagnostic complet</h3>
                     <p className="text-[var(--grey)] text-sm">
                       Inspection approfondie de tous les systèmes : moteur, transmission, hydraulique, électrique
                     </p>
@@ -79,12 +79,12 @@ export default function ReconditionnementPage() {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-semibold">
                       2
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#333333] mb-2">Démontage et nettoyage</h3>
+                    <h3 className="font-semibold text-[#333333] mb-2">Démontage et nettoyage</h3>
                     <p className="text-[var(--grey)] text-sm">
                       Démontage complet, nettoyage et préparation de toutes les pièces
                     </p>
@@ -92,12 +92,12 @@ export default function ReconditionnementPage() {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-semibold">
                       3
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#333333] mb-2">Remplacement des pièces</h3>
+                    <h3 className="font-semibold text-[#333333] mb-2">Remplacement des pièces</h3>
                     <p className="text-[var(--grey)] text-sm">
                       Remplacement de toutes les pièces usées par des pièces d&apos;origine neuves
                     </p>
@@ -105,12 +105,12 @@ export default function ReconditionnementPage() {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 bg-[var(--accent)] rounded-full flex items-center justify-center text-white font-semibold">
                       4
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#333333] mb-2">Remontage et tests</h3>
+                    <h3 className="font-semibold text-[#333333] mb-2">Remontage et tests</h3>
                     <p className="text-[var(--grey)] text-sm">
                       Remontage professionnel et tests de conformité selon les standards constructeur
                     </p>
@@ -122,7 +122,7 @@ export default function ReconditionnementPage() {
 
           {/* Benefits Section */}
           <div className="bg-white p-6 md:p-8 border-t-4 border-[var(--accent)] mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
               Avantages du reconditionnement
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -132,7 +132,7 @@ export default function ReconditionnementPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Économique</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Économique</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Coût jusqu&apos;à 60% inférieur à l&apos;achat d&apos;un équipement neuf
                 </p>
@@ -143,7 +143,7 @@ export default function ReconditionnementPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Garantie</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Garantie</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Garantie complète sur le reconditionnement et les pièces installées
                 </p>
@@ -154,7 +154,7 @@ export default function ReconditionnementPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Performance</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Performance</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Performances restaurées aux standards d&apos;origine du constructeur
                 </p>
@@ -163,7 +163,7 @@ export default function ReconditionnementPage() {
           </div>
 
           <div className="bg-white p-6 border-t-4 border-[var(--accent)] mb-8">
-            <h2 className="font-bold text-[#333333] mb-4">Voir aussi</h2>
+            <h2 className="font-semibold text-[#333333] mb-4">Voir aussi</h2>
             <p className="text-[var(--grey)] text-sm mb-3">
               Découvrez notre{' '}
               <Link href="/services/maintenance" className="text-[var(--accent)] font-medium hover:underline">
@@ -186,7 +186,7 @@ export default function ReconditionnementPage() {
       {/* CTA Section */}
       <section className="py-12 md:py-16 bg-[var(--accent)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white mb-3 sm:mb-4">
             Intéressé par un reconditionnement ?
           </h2>
           <p className="text-white/90 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">

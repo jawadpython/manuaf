@@ -128,7 +128,7 @@ export default async function CityLocationPage({ params }: Props) {
 
             {/* Products */}
             <div className="mb-16">
-              <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-6">
                 Chariots disponibles à la location à {cityConfig.name}
               </h2>
               <ChariotsGridWithForm
@@ -142,12 +142,12 @@ export default async function CityLocationPage({ params }: Props) {
 
             {/* Benefits - city-specific */}
             <div className="mb-16">
-              <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-8">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-8">
                 Pourquoi louer un chariot électrique à {cityConfig.name} ?
               </h2>
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="bg-white p-6 border-t-4 border-[var(--accent)]">
-                  <h3 className="text-lg font-bold text-[var(--grey)] mb-3">
+                  <h3 className="text-lg font-semibold text-[var(--grey)] mb-3">
                     Adapté aux entrepôts et espaces fermés
                   </h3>
                   <p className="text-[var(--grey)]">
@@ -157,7 +157,7 @@ export default async function CityLocationPage({ params }: Props) {
                   </p>
                 </div>
                 <div className="bg-white p-6 border-t-4 border-[var(--accent)]">
-                  <h3 className="text-lg font-bold text-[var(--grey)] mb-3">
+                  <h3 className="text-lg font-semibold text-[var(--grey)] mb-3">
                     Formules flexibles pour les entreprises
                   </h3>
                   <p className="text-[var(--grey)]">
@@ -171,12 +171,12 @@ export default async function CityLocationPage({ params }: Props) {
 
             {/* Service area - city-specific */}
             <div className="mb-16">
-              <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-8">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-8">
                 Zone d&apos;intervention à {cityConfig.name}
               </h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-lg font-bold text-[var(--grey)] mb-2">
+                  <h3 className="text-lg font-semibold text-[var(--grey)] mb-2">
                     {cityConfig.name} et {cityConfig.region}
                   </h3>
                   <p className="text-[var(--grey)]">
@@ -184,7 +184,7 @@ export default async function CityLocationPage({ params }: Props) {
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-[var(--grey)] mb-2">
+                  <h3 className="text-lg font-semibold text-[var(--grey)] mb-2">
                     Autres villes au Maroc
                   </h3>
                   <p className="text-[var(--grey)]">
@@ -198,12 +198,12 @@ export default async function CityLocationPage({ params }: Props) {
 
             {/* FAQ - city-specific */}
             <div className="mb-16">
-              <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-8">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-8">
                 Questions fréquentes – Location chariots {cityConfig.name}
               </h2>
               <div className="space-y-6">
                 <div className="bg-white p-6 border-t-4 border-[var(--accent)]">
-                  <h3 className="text-lg font-bold text-[var(--grey)] mb-3">
+                  <h3 className="text-lg font-semibold text-[var(--grey)] mb-3">
                     Quel est le tarif de location d&apos;un chariot à{' '}
                     {cityConfig.name} ?
                   </h3>
@@ -214,7 +214,7 @@ export default async function CityLocationPage({ params }: Props) {
                   </p>
                 </div>
                 <div className="bg-white p-6 border-t-4 border-[var(--accent)]">
-                  <h3 className="text-lg font-bold text-[var(--grey)] mb-3">
+                  <h3 className="text-lg font-semibold text-[var(--grey)] mb-3">
                     Livrez-vous des chariots à {cityConfig.name} ?
                   </h3>
                   <p className="text-[var(--grey)]">
@@ -227,7 +227,7 @@ export default async function CityLocationPage({ params }: Props) {
 
             {/* Other cities - internal links */}
             <div className="mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-[var(--grey)] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--grey)] mb-6">
                 Location chariots dans d&apos;autres villes
               </h2>
               <div className="flex flex-wrap gap-3">
@@ -254,7 +254,7 @@ export default async function CityLocationPage({ params }: Props) {
         {/* CTA */}
         <section className="py-12 md:py-16 bg-[var(--accent)]">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white mb-3 sm:mb-4">
               Devis location chariots {cityConfig.name}
             </h2>
             <p className="text-white/90 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">

@@ -28,7 +28,7 @@ export function ProductImageGallery({ images, alt, sold = false }: ProductImageG
         {sold && (
           <div className="absolute top-0 right-0 w-[6.5rem] h-[6.5rem] overflow-hidden pointer-events-none z-10">
             <div
-              className="absolute left-0 top-0 w-48 bg-red-600 flex items-center justify-center py-3 text-white text-sm font-bold uppercase tracking-widest"
+              className="absolute left-0 top-0 w-48 bg-red-600 flex items-center justify-center py-3 text-white text-sm font-semibold uppercase tracking-widest"
               style={{
                 transform: 'translate(-20px, 20px) rotate(45deg)',
                 boxShadow: '0 2px 4px rgba(0,0,0,0.3)',

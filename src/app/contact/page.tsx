@@ -26,7 +26,7 @@ export default function ContactPage() {
             {/* Contact Info */}
             <div className="lg:col-span-1">
               <div className="bg-white p-5 sm:p-6 border-t-4 border-[var(--accent)]">
-                <h3 className="font-bold text-[#333333] text-lg mb-6">
+                <h3 className="font-semibold text-[#333333] text-lg mb-6">
                   Informations de contact
                 </h3>
                 <div className="space-y-5">
@@ -110,7 +110,7 @@ export default function ContactPage() {
             {/* Contact Form */}
             <div className="lg:col-span-2">
               <div className="bg-white p-5 sm:p-6 md:p-8 border-t-4 border-[var(--accent)]">
-                <h3 className="font-bold text-[#333333] text-lg mb-4">
+                <h3 className="font-semibold text-[#333333] text-lg mb-4">
                   Envoyez-nous un message
                 </h3>
                 <p className="text-[#666666] text-sm mb-6">

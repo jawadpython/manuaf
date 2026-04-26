@@ -26,10 +26,10 @@ export default function Error({
   return (
     <div className="bg-[#f5f5f5] min-h-screen flex items-center justify-center pt-[72px] md:pt-[96px]">
       <div className="max-w-2xl mx-auto px-6 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold text-red-600 mb-4">
+        <h1 className="text-4xl md:text-6xl font-semibold text-red-600 mb-4">
           Oups !
         </h1>
-        <h2 className="text-xl md:text-2xl font-bold text-[var(--grey)] mb-4">
+        <h2 className="text-xl md:text-2xl font-semibold text-[var(--grey)] mb-4">
           Une erreur s&apos;est produite
         </h2>
         <p className="text-[var(--grey)] mb-8">

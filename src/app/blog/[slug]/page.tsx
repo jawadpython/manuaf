@@ -103,7 +103,7 @@ export default async function ArticlePage({ params }: Props) {
               <p className="text-[#999999] text-sm mb-3">
                 {formatDate(post.createdAt)}
               </p>
-              <h1 className="text-2xl md:text-3xl font-bold text-[#333333] mb-4">
+              <h1 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-4">
                 {String(post.title ?? '')}
               </h1>
               <div className="w-16 h-1 bg-[var(--accent)] mb-8"></div>

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { MegaMenuPanelKey, MegaMenuPanelPayload } from '@/lib/megaMenuPanelDefaults'
 import { MEGA_MENU_PANEL_KEYS } from '@/lib/megaMenuPanelDefaults'
+import { ADMIN_IMAGE_MAX_EDGE, uploadAdminImage } from '@/lib/adminImageUpload'
 
 const LABELS: Record<MegaMenuPanelKey, string> = {
   transpalette_manuel: 'Colonne droite — Transpalette manuel',
@@ -17,6 +18,8 @@ type Props = {
 export function MegaMenuPanelsForm({ initialPanels }: Props) {
   const [panels, setPanels] = useState(initialPanels)
   const [status, setStatus] = useState<'idle' | 'saving' | 'ok' | 'err'>('idle')
+  const [uploadingKey, setUploadingKey] = useState<MegaMenuPanelKey | null>(null)
+  const [uploadError, setUploadError] = useState<Partial<Record<MegaMenuPanelKey, string>>>({})
 
   function updatePanel(key: MegaMenuPanelKey, field: keyof MegaMenuPanelPayload, value: string) {
     setPanels((p) => ({
@@ -27,6 +30,12 @@ export function MegaMenuPanelsForm({ initialPanels }: Props) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    for (const key of MEGA_MENU_PANEL_KEYS) {
+      if (!panels[key].imageSrc?.trim()) {
+        alert(`Image requise : ${LABELS[key]}`)
+        return
+      }
+    }
     setStatus('saving')
     try {
       const res = await fetch('/api/admin/mega-menu-panels', {
@@ -72,16 +81,84 @@ export function MegaMenuPanelsForm({ initialPanels }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label className="block text-xs font-medium text-[var(--foreground-muted)] uppercase tracking-wider mb-1">
-                URL de l&apos;image *
+                Image *
               </label>
-              <input
-                type="text"
-                required
-                value={panels[key].imageSrc}
-                onChange={(e) => updatePanel(key, 'imageSrc', e.target.value)}
-                className="w-full rounded-lg border border-[var(--border)] px-3 py-2 text-sm"
-                placeholder="/images/..."
-              />
+              <div className="flex flex-wrap items-center gap-3">
+                <label className="cursor-pointer inline-flex">
+                  <span className="inline-flex items-center rounded-lg border border-[var(--border)] bg-[var(--background-alt)] px-4 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--background-muted)] transition-colors">
+                    {panels[key].imageSrc ? "Changer l'image" : "Télécharger depuis l'ordinateur"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                    className="sr-only"
+                    disabled={uploadingKey !== null}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+                      e.target.value = ''
+                      if (!file) return
+                      setUploadingKey(key)
+                      setUploadError((err) => {
+                        const next = { ...err }
+                        delete next[key]
+                        return next
+                      })
+                      const result = await uploadAdminImage(file)
+                      setUploadingKey(null)
+                      if (result.ok) {
+                        updatePanel(key, 'imageSrc', result.url)
+                        setUploadError((err) => {
+                          const next = { ...err }
+                          delete next[key]
+                          return next
+                        })
+                      } else {
+                        setUploadError((err) => ({ ...err, [key]: result.error }))
+                      }
+                    }}
+                  />
+                </label>
+                {uploadingKey === key && (
+                  <span className="text-xs text-[var(--foreground-muted)]">Téléchargement…</span>
+                )}
+                {panels[key].imageSrc && uploadingKey !== key && (
+                  <button
+                    type="button"
+                    className="text-xs font-medium text-red-600 hover:underline"
+                    onClick={() => {
+                      updatePanel(key, 'imageSrc', '')
+                      setUploadError((err) => {
+                        const next = { ...err }
+                        delete next[key]
+                        return next
+                      })
+                    }}
+                  >
+                    {"Supprimer l'image"}
+                  </button>
+                )}
+              </div>
+              {uploadError[key] && (
+                <p className="mt-2 text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+                  {uploadError[key]}
+                </p>
+              )}
+              {panels[key].imageSrc && !uploadError[key] && (
+                <div className="mt-3 flex items-start gap-3">
+                  <img
+                    src={panels[key].imageSrc}
+                    alt=""
+                    className="max-h-36 rounded-lg border border-[var(--border)] object-contain bg-[var(--background-muted)]"
+                  />
+                  <p className="text-xs text-[var(--foreground-muted)] break-all max-w-md pt-1">
+                    {panels[key].imageSrc}
+                  </p>
+                </div>
+              )}
+              <p className="mt-1.5 text-xs text-[var(--foreground-muted)]">
+                JPEG, PNG, WebP ou GIF — réduction automatique côté navigateur (max.{' '}
+                {ADMIN_IMAGE_MAX_EDGE}px côté long), puis envoi comme pour les autres formulaires admin (max. 10&nbsp;Mo).
+              </p>
             </div>
             <div className="md:col-span-2">
               <label className="block text-xs font-medium text-[var(--foreground-muted)] uppercase tracking-wider mb-1">

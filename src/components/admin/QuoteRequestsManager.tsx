@@ -42,7 +42,6 @@ function QuoteRequestDetail({
       : valueKeys.length > 0
         ? valueKeys
         : ['chariotType', 'heures', 'capacite']
-  const hasCustom = keysToShow.some((k) => values[k])
 
   function handleSave() {
     const customData: Record<string, string | null> = {}

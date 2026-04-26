@@ -27,7 +27,7 @@ export default function BatteriesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
                 Batteries pour chariots électriques
               </h2>
               <p className="text-[var(--grey)] mb-6">
@@ -63,7 +63,7 @@ export default function BatteriesPage() {
               </ul>
             </div>
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
                 Chargeurs de batteries
               </h2>
               <p className="text-[var(--grey)] mb-6">
@@ -105,7 +105,7 @@ export default function BatteriesPage() {
 
           {/* Service Section */}
           <div className="bg-white p-6 md:p-8 border-t-4 border-[var(--accent)] mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
               Nos services
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -115,7 +115,7 @@ export default function BatteriesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Garantie</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Garantie</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Toutes nos batteries sont garanties avec certificat de conformité
                 </p>
@@ -127,7 +127,7 @@ export default function BatteriesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Installation</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Installation</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Installation professionnelle par nos techniciens certifiés
                 </p>
@@ -138,7 +138,7 @@ export default function BatteriesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#333333] mb-2">Maintenance</h3>
+                <h3 className="font-semibold text-[#333333] mb-2">Maintenance</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Service de maintenance et réparation de batteries et chargeurs
                 </p>
@@ -151,7 +151,7 @@ export default function BatteriesPage() {
       {/* CTA Section */}
       <section className="py-12 md:py-16 bg-[var(--accent)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white mb-3 sm:mb-4">
             Besoin d&apos;une batterie ou d&apos;un chargeur ?
           </h2>
           <p className="text-white/90 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">

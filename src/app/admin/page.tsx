@@ -144,10 +144,10 @@ export default async function AdminDashboardPage() {
                 {card.icon}
               </span>
               <div className="min-w-0">
-                <h2 className="font-semibold text-[var(--foreground)] text-xs group-hover:text-[var(--accent)] transition-colors">
+                <h2 className="text-sm font-semibold leading-snug text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
                   {card.title}
                 </h2>
-                <p className="mt-0.5 text-[11px] text-[var(--foreground-muted)]">
+                <p className="mt-0.5 text-xs leading-snug text-[var(--foreground-muted)]">
                   {card.description}
                 </p>
               </div>

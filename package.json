@@ -18,7 +18,7 @@
     "build": "(prisma generate || echo Prisma generate skipped) && next build",
     "build:next": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "postinstall": "prisma generate"
   },
   "dependencies": {

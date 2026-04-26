@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, startTransition } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ChariotsMegaMenuColumns } from './ChariotsMegaMenuColumns'
@@ -180,14 +180,18 @@ export function MegaMenuOverlay({
 
   useEffect(() => {
     if (!open) return
-    setIsVisible(true)
-    setIsClosing(false)
-    if (!isShell) setActiveIndex(0)
+    startTransition(() => {
+      setIsVisible(true)
+      setIsClosing(false)
+      if (!isShell) setActiveIndex(0)
+    })
   }, [open, title, items, isShell])
 
   useEffect(() => {
     if (!open && isVisible) {
-      setIsClosing(true)
+      startTransition(() => {
+        setIsClosing(true)
+      })
       if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
       closeTimeoutRef.current = setTimeout(() => {
         setIsVisible(false)

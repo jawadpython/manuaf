@@ -368,7 +368,7 @@ export function Header() {
                 onError={() => setLogoError(true)}
               />
             ) : (
-              <span className="text-xl md:text-2xl font-bold text-white tracking-tight font-display">
+              <span className="text-xl md:text-2xl font-semibold text-white tracking-tight font-display">
                 MANUAF
               </span>
             )}
@@ -421,7 +421,7 @@ export function Header() {
         <div className={headerStyles.drawerContent}>
             <Link
               href="/"
-              className="block py-3 text-white font-bold uppercase text-sm border-b border-white/10 transition-colors duration-200 cursor-pointer"
+              className="block py-3 text-white font-semibold uppercase text-sm border-b border-white/10 transition-colors duration-200 cursor-pointer"
               onClick={closeAll}
             >
               Accueil
@@ -547,7 +547,7 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="block py-3 text-white font-bold uppercase text-sm border-b border-white/10 transition-colors duration-200 cursor-pointer"
+                className="block py-3 text-white font-semibold uppercase text-sm border-b border-white/10 transition-colors duration-200 cursor-pointer"
                 onClick={closeAll}
               >
                 {link.label}
@@ -555,7 +555,7 @@ export function Header() {
             ))}
           <Link
             href="/contact"
-            className="flex mt-4 px-4 py-3 bg-[var(--accent)] text-[var(--foreground)] font-bold justify-center rounded cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] transition-colors duration-200"
+            className="flex mt-4 px-4 py-3 bg-[var(--accent)] text-[var(--foreground)] font-semibold justify-center rounded cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] transition-colors duration-200"
             onClick={closeAll}
           >
             Demande de devis
