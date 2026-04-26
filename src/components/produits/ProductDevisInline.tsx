@@ -40,28 +40,32 @@ export function ProductDevisInline({ productName, label = 'Demander un devis', c
   const formContext = rentalDevisFormContext(categorySlug, parentCategorySlug)
   const devisType = resolveDevisTypeForSubmit(categorySlug, parentCategorySlug, formContext)
   const [showForm, setShowForm] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
   const previousActiveRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
-    if (showForm) {
+    if (showForm || showSuccess) {
       document.body.style.overflow = 'hidden'
-      previousActiveRef.current = document.activeElement as HTMLElement | null
+      if (showForm) previousActiveRef.current = document.activeElement as HTMLElement | null
     } else {
       document.body.style.overflow = ''
       previousActiveRef.current?.focus?.()
     }
-    return () => { document.body.style.overflow = '' }
-  }, [showForm])
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [showForm, showSuccess])
 
   useEffect(() => {
-    if (!showForm) return
+    if (!showForm && !showSuccess) return
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setShowForm(false)
+        setShowSuccess(false)
         return
       }
-      if (e.key !== 'Tab') return
+      if (!showForm || e.key !== 'Tab') return
       const el = modalRef.current
       if (!el) return
       const focusable = el.querySelectorAll<HTMLElement>(
@@ -80,7 +84,7 @@ export function ProductDevisInline({ productName, label = 'Demander un devis', c
     }
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [showForm])
+  }, [showForm, showSuccess])
 
   const initialMessage = `Je souhaite obtenir un devis pour le produit suivant : ${productName}.\n\nMerci de me recontacter avec les détails et conditions.`
 
@@ -90,7 +94,11 @@ export function ProductDevisInline({ productName, label = 'Demander un devis', c
         <button
           type="button"
           disabled={sold}
-          onClick={() => !sold && setShowForm(true)}
+          onClick={() => {
+            if (sold) return
+            setShowSuccess(false)
+            setShowForm(true)
+          }}
           className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[var(--accent)] text-[#1a1a1a] font-semibold text-xs uppercase tracking-wider hover:bg-[var(--accent-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--accent)]"
         >
           {sold ? 'Produit vendu' : label}
@@ -137,10 +145,52 @@ export function ProductDevisInline({ productName, label = 'Demander un devis', c
                 productName={productName}
                 formContext={formContext}
                 initialFormFields={initialFormFields}
-                variant={initialFormFields?.length ? 'location' : 'default'}
+                variant={formContext ? 'location' : 'default'}
                 devisType={devisType}
+                onSuccess={() => {
+                  setShowForm(false)
+                  setShowSuccess(true)
+                }}
               />
             </div>
+          </div>
+        </div>
+      )}
+
+      {showSuccess && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+          onClick={() => setShowSuccess(false)}
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="devis-success-title"
+          aria-describedby="devis-success-desc"
+        >
+          <div
+            className="bg-white rounded-xl shadow-xl w-full max-w-md p-8 text-center border border-[var(--border)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"
+              aria-hidden
+            >
+              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 id="devis-success-title" className="text-xl font-semibold text-[var(--grey)]">
+              Demande envoyée
+            </h3>
+            <p id="devis-success-desc" className="mt-3 text-sm text-[#666666] leading-relaxed">
+              Merci pour votre demande. Notre équipe vous recontactera sous 48h.
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowSuccess(false)}
+              className="mt-8 w-full sm:w-auto px-8 py-3 rounded-lg bg-[var(--grey)] text-white font-semibold text-sm hover:bg-[var(--grey-dark)] transition-colors"
+            >
+              Fermer
+            </button>
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { formatLocationDurationFr, todayIsoLocal } from '@/lib/locationRentalDates'
 
 interface FormFieldConfig {
   id: string
@@ -12,6 +13,13 @@ interface FormFieldConfig {
   options: { value: string; label: string }[] | null
 }
 
+/** Admin “durée” text/select fields are replaced by Début / Fin date pickers on location devis. */
+function isReplacedByDurationDatePickers(f: FormFieldConfig): boolean {
+  if (f.key === 'duree_location' || f.key === 'dureeLocation') return true
+  const l = f.label.replace(/\*/g, '').trim().toLowerCase()
+  return l === 'durée de location'
+}
+
 export function ContactForm({
   initialMessage = '',
   productName,
@@ -19,6 +27,7 @@ export function ContactForm({
   initialFormFields,
   variant = 'default',
   devisType,
+  onSuccess,
 }: {
   initialMessage?: string
   productName?: string
@@ -28,9 +37,14 @@ export function ContactForm({
   variant?: 'default' | 'location'
   /** Persisted on QuoteRequest for admin filters */
   devisType?: string
+  /** Called after a successful submit (e.g. parent closes a modal). */
+  onSuccess?: () => void
 }) {
   const [message, setMessage] = useState(initialMessage)
   const [formFields, setFormFields] = useState<FormFieldConfig[]>(initialFormFields ?? [])
+  const [locationStart, setLocationStart] = useState('')
+  const [locationEnd, setLocationEnd] = useState('')
+  const [fieldError, setFieldError] = useState('')
 
   useEffect(() => {
     if (!formContext) return
@@ -45,17 +59,37 @@ export function ContactForm({
     'idle'
   )
 
+  const isLocation = variant === 'location'
+  const visibleCustomFields = formFields.filter((f) => !(isLocation && isReplacedByDurationDatePickers(f)))
+  const todayMin = todayIsoLocal()
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setStatus('loading')
+    setFieldError('')
 
     const form = e.currentTarget
     const formData = new FormData(form)
 
     const customData: Record<string, string | null> = {}
     for (const f of formFields) {
+      if (isLocation && isReplacedByDurationDatePickers(f)) continue
       const val = formData.get(`field_${f.key}`)
       customData[f.key] = val ? String(val).trim() || null : null
+    }
+
+    if (isLocation) {
+      if (!locationStart || !locationEnd) {
+        setStatus('idle')
+        setFieldError('Indiquez la date de début et la date de fin de location.')
+        return
+      }
+      if (locationEnd < locationStart) {
+        setStatus('idle')
+        setFieldError('La date de fin doit être le même jour ou après la date de début.')
+        return
+      }
+      customData.duree_location = formatLocationDurationFr(locationStart, locationEnd)
     }
 
     const payload = {
@@ -82,6 +116,9 @@ export function ContactForm({
         setStatus('success')
         form.reset()
         setMessage('')
+        setLocationStart('')
+        setLocationEnd('')
+        onSuccess?.()
       } else {
         setStatus('error')
       }
@@ -90,7 +127,6 @@ export function ContactForm({
     }
   }
 
-  const isLocation = variant === 'location'
   const inputClass = isLocation
     ? 'w-full bg-[#f8f9fa] border border-[var(--border)] px-5 py-3.5 text-[#333333] text-base placeholder-[#999999] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all rounded-lg'
     : 'w-full bg-[#f5f5f5] border-0 px-4 py-3 text-[#333333] text-sm placeholder-[#999999] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition-all'
@@ -161,53 +197,103 @@ export function ContactForm({
         </div>
       </div>
 
-      {formFields.length > 0 && (
-        <div className={`${isLocation ? 'bg-[#f8f9fa] p-5 sm:p-6 rounded-xl border border-[var(--border)]' : ''}`}>
+      {(isLocation || formFields.length > 0) && (
+        <div
+          className={`${isLocation ? 'bg-[#f8f9fa] p-5 sm:p-6 rounded-xl border border-[var(--border)]' : ''}`}
+        >
           {isLocation && (
-            <h4 className="text-base font-semibold text-[#333333] mb-4">{characteristicsHeading}</h4>
+            <>
+              <p className={labelClass}>Durée de location *</p>
+              <div className={`grid grid-cols-1 sm:grid-cols-2 ${gridGap} ${visibleCustomFields.length > 0 ? 'mb-6' : ''}`}>
+                <div>
+                  <label htmlFor="devis_location_start" className={labelClass}>
+                    Début
+                  </label>
+                  <input
+                    id="devis_location_start"
+                    name="devis_location_start"
+                    type="date"
+                    required
+                    min={todayMin}
+                    value={locationStart}
+                    onChange={(e) => {
+                      const v = e.target.value
+                      setLocationStart(v)
+                      setLocationEnd((prev) => (prev && v && prev < v ? v : prev))
+                    }}
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="devis_location_end" className={labelClass}>
+                    Fin
+                  </label>
+                  <input
+                    id="devis_location_end"
+                    name="devis_location_end"
+                    type="date"
+                    required
+                    min={locationStart || todayMin}
+                    value={locationEnd}
+                    onChange={(e) => setLocationEnd(e.target.value)}
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+            </>
           )}
-          <div className={`grid grid-cols-1 sm:grid-cols-2 ${formFields.length >= 3 ? 'lg:grid-cols-3' : ''} ${gridGap}`}>
-          {formFields.map((f) => (
-            <div key={f.id} className={f.type === 'textarea' ? 'sm:col-span-2 lg:col-span-3' : ''}>
-              <label htmlFor={`field_${f.key}`} className={labelClass}>
-                {f.label} {f.required && '*'}
-              </label>
-              {f.type === 'select' ? (
-                <select
-                  id={`field_${f.key}`}
-                  name={`field_${f.key}`}
-                  required={f.required}
-                  className={inputClass}
-                >
-                  <option value="">Sélectionnez...</option>
-                  {(f.options || []).map((o) => (
-                    <option key={o.value} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
-              ) : f.type === 'textarea' ? (
-                <textarea
-                  id={`field_${f.key}`}
-                  name={`field_${f.key}`}
-                  required={f.required}
-                  rows={3}
-                  className={inputClass + ' resize-none'}
-                  placeholder={f.placeholder || ''}
-                />
-              ) : (
-                <input
-                  id={`field_${f.key}`}
-                  name={`field_${f.key}`}
-                  type={f.type === 'number' ? 'number' : 'text'}
-                  required={f.required}
-                  className={inputClass}
-                  placeholder={f.placeholder || ''}
-                />
+
+          {visibleCustomFields.length > 0 && (
+            <>
+              {isLocation && (
+                <h4 className="text-base font-semibold text-[#333333] mb-4">{characteristicsHeading}</h4>
               )}
-            </div>
-          ))}
-          </div>
+              <div
+                className={`grid grid-cols-1 sm:grid-cols-2 ${visibleCustomFields.length >= 3 ? 'lg:grid-cols-3' : ''} ${gridGap}`}
+              >
+                {visibleCustomFields.map((f) => (
+                  <div key={f.id} className={f.type === 'textarea' ? 'sm:col-span-2 lg:col-span-3' : ''}>
+                    <label htmlFor={`field_${f.key}`} className={labelClass}>
+                      {f.label} {f.required && '*'}
+                    </label>
+                    {f.type === 'select' ? (
+                      <select
+                        id={`field_${f.key}`}
+                        name={`field_${f.key}`}
+                        required={f.required}
+                        className={inputClass}
+                      >
+                        <option value="">Sélectionnez...</option>
+                        {(f.options || []).map((o) => (
+                          <option key={o.value} value={o.value}>
+                            {o.label}
+                          </option>
+                        ))}
+                      </select>
+                    ) : f.type === 'textarea' ? (
+                      <textarea
+                        id={`field_${f.key}`}
+                        name={`field_${f.key}`}
+                        required={f.required}
+                        rows={3}
+                        className={inputClass + ' resize-none'}
+                        placeholder={f.placeholder || ''}
+                      />
+                    ) : (
+                      <input
+                        id={`field_${f.key}`}
+                        name={`field_${f.key}`}
+                        type={f.type === 'number' ? 'number' : 'text'}
+                        required={f.required}
+                        className={inputClass}
+                        placeholder={f.placeholder || ''}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
 
@@ -225,7 +311,12 @@ export function ContactForm({
         />
       </div>
 
-      {status === 'success' && (
+      {fieldError && (
+        <p className="text-red-600 text-sm font-medium" role="alert">
+          {fieldError}
+        </p>
+      )}
+      {status === 'success' && !onSuccess && (
         <p className="text-green-600 text-sm font-medium">
           Message envoyé. Nous vous recontacterons sous 48h.
         </p>

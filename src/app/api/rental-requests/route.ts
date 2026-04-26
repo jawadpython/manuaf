@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendRentalRequestEmail } from '@/lib/email'
 import { sanitizeInput, sanitizeTextarea } from '@/lib/utils'
+import { formatLocationDurationFr, isValidIsoDateOnly } from '@/lib/locationRentalDates'
 
 const MOTORISATION_VALUES = ['electrique', 'thermique']
 
@@ -18,7 +19,31 @@ export async function POST(request: Request) {
     const capacite_kg = body.capacite_kg != null ? Math.max(0, Math.min(10000, Number(body.capacite_kg) || 0)) : null
     const hauteur_m = body.hauteur_m != null ? Math.max(0, Math.min(20, parseFloat(String(body.hauteur_m)) || 0)) : null
     const ville = sanitizeInput(body.ville) || null
-    const duree_location = sanitizeInput(body.duree_location) || null
+
+    const startRaw = sanitizeInput(body.location_start)
+    const endRaw = sanitizeInput(body.location_end)
+    let duree_location: string | null = null
+
+    if (startRaw || endRaw) {
+      if (!startRaw || !endRaw) {
+        return NextResponse.json(
+          { error: 'Indiquez la date de début et la date de fin de location.' },
+          { status: 400 }
+        )
+      }
+      if (!isValidIsoDateOnly(startRaw) || !isValidIsoDateOnly(endRaw)) {
+        return NextResponse.json({ error: 'Dates invalides.' }, { status: 400 })
+      }
+      if (endRaw < startRaw) {
+        return NextResponse.json(
+          { error: 'La date de fin doit être le même jour ou après la date de début.' },
+          { status: 400 }
+        )
+      }
+      duree_location = formatLocationDurationFr(startRaw, endRaw)
+    } else {
+      duree_location = sanitizeInput(body.duree_location) || null
+    }
     const type_roues = sanitizeInput(body.type_roues) || null
     const type_mat = sanitizeInput(body.type_mat) || null
     const notes = sanitizeTextarea(body.notes) || null

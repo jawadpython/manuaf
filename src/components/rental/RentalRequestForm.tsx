@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { todayIsoLocal } from '@/lib/locationRentalDates'
 
 type Props = {
   defaultChariotType?: string
@@ -12,6 +13,9 @@ type Props = {
 export function RentalRequestForm({ defaultChariotType = '', onSuccess, compact = false }: Props) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const [locationStart, setLocationStart] = useState('')
+  const [locationEnd, setLocationEnd] = useState('')
+  const todayMin = todayIsoLocal()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -21,13 +25,25 @@ export function RentalRequestForm({ defaultChariotType = '', onSuccess, compact 
     const form = e.currentTarget
     const formData = new FormData(form)
 
+    if (!locationStart || !locationEnd) {
+      setStatus('error')
+      setErrorMsg('Indiquez la date de début et la date de fin de location.')
+      return
+    }
+    if (locationEnd < locationStart) {
+      setStatus('error')
+      setErrorMsg('La date de fin doit être le même jour ou après la date de début.')
+      return
+    }
+
     const payload = {
       chariot_type: formData.get('chariot_type') as string,
       motorisation: formData.get('motorisation') as string,
       capacite_kg: formData.get('capacite_kg') ? parseInt(formData.get('capacite_kg') as string, 10) : null,
       hauteur_m: formData.get('hauteur_m') ? parseFloat(formData.get('hauteur_m') as string) : null,
       ville: (formData.get('ville') as string) || null,
-      duree_location: (formData.get('duree_location') as string) || null,
+      location_start: locationStart,
+      location_end: locationEnd,
       notes: (formData.get('notes') as string) || null,
       client_name: formData.get('client_name') as string,
       client_phone: formData.get('client_phone') as string,
@@ -44,6 +60,8 @@ export function RentalRequestForm({ defaultChariotType = '', onSuccess, compact 
       if (res.ok) {
         setStatus('success')
         form.reset()
+        setLocationStart('')
+        setLocationEnd('')
         onSuccess?.()
       } else {
         setStatus('error')
@@ -115,34 +133,59 @@ export function RentalRequestForm({ defaultChariotType = '', onSuccess, compact 
 
       <div className={`${compact ? 'pt-2' : 'pt-3'} border-t border-[var(--border)] ${compact ? 'space-y-2.5' : 'space-y-3'}`}>
         <h3 className={sectionHeadingClass}>Location</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="space-y-3">
           <div>
             <label htmlFor="ville" className={labelClass}>
               Ville *
             </label>
-          <input
-            id="ville"
-            name="ville"
-            type="text"
-            required
-            maxLength={100}
-            className={inputClass}
-            placeholder="Ex: Casablanca, Rabat..."
-          />
+            <input
+              id="ville"
+              name="ville"
+              type="text"
+              required
+              maxLength={100}
+              className={inputClass}
+              placeholder="Ex: Casablanca, Rabat..."
+            />
           </div>
           <div>
-            <label htmlFor="duree_location" className={labelClass}>
-              Durée de location *
-            </label>
-        <input
-          id="duree_location"
-          name="duree_location"
-          type="text"
-          required
-          maxLength={100}
-          className={inputClass}
-          placeholder="Ex: 1 mois, 3 semaines, 6 mois..."
-        />
+            <p className={`${labelClass} mb-1.5`}>Durée de location *</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label htmlFor="location_start" className={labelClass}>
+                  Début
+                </label>
+                <input
+                  id="location_start"
+                  name="location_start"
+                  type="date"
+                  required
+                  min={todayMin}
+                  value={locationStart}
+                  onChange={(e) => {
+                    const v = e.target.value
+                    setLocationStart(v)
+                    setLocationEnd((prev) => (prev && v && prev < v ? v : prev))
+                  }}
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label htmlFor="location_end" className={labelClass}>
+                  Fin
+                </label>
+                <input
+                  id="location_end"
+                  name="location_end"
+                  type="date"
+                  required
+                  min={locationStart || todayMin}
+                  value={locationEnd}
+                  onChange={(e) => setLocationEnd(e.target.value)}
+                  className={inputClass}
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div>
