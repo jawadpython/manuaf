@@ -1,8 +1,17 @@
 import { NextResponse } from 'next/server'
+import { sendContactFormEmail } from '@/lib/email'
+import { allowPublicApiRequest } from '@/lib/rateLimit'
 import { sanitizeInput, sanitizeTextarea, isValidEmail } from '@/lib/utils'
 
 export async function POST(request: Request) {
   try {
+    if (!allowPublicApiRequest(request, 'contact')) {
+      return NextResponse.json(
+        { error: 'Trop de demandes. Réessayez dans quelques minutes.' },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
     const name = sanitizeInput(body.name)
     const email = sanitizeInput(body.email)
@@ -35,11 +44,16 @@ export async function POST(request: Request) {
       )
     }
 
-    // En production : envoyer l'email via un service (Resend, SendGrid, etc.)
-    // Pour l'instant, on simule un envoi réussi
-    // In production, replace this with actual email sending service
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Contact form submission:', { name, email, company, phone, message })
+    try {
+      await sendContactFormEmail({ name, email, company, phone, message })
+    } catch (err) {
+      console.error('Contact form email failed:', err)
+      if (process.env.RESEND_API_KEY) {
+        return NextResponse.json(
+          { error: 'Impossible d\'envoyer le message pour le moment. Réessayez plus tard ou appelez-nous.' },
+          { status: 503 }
+        )
+      }
     }
 
     return NextResponse.json({ success: true, message: 'Message envoyé' })

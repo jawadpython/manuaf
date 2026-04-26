@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import type { MegaMenuPanelKey, MegaMenuPanelPayload } from '@/lib/megaMenuPanelDefaults'
 import { MEGA_MENU_PANEL_KEYS } from '@/lib/megaMenuPanelDefaults'
-import { ADMIN_IMAGE_MAX_EDGE, uploadAdminImage } from '@/lib/adminImageUpload'
+import { MEGA_MENU_IMAGE_MAX_EDGE, uploadAdminImage } from '@/lib/adminImageUpload'
 
 const LABELS: Record<MegaMenuPanelKey, string> = {
   transpalette_manuel: 'Colonne droite — Transpalette manuel',
@@ -103,7 +103,7 @@ export function MegaMenuPanelsForm({ initialPanels }: Props) {
                         delete next[key]
                         return next
                       })
-                      const result = await uploadAdminImage(file)
+                      const result = await uploadAdminImage(file, { preset: 'megaMenu' })
                       setUploadingKey(null)
                       if (result.ok) {
                         updatePanel(key, 'imageSrc', result.url)
@@ -156,8 +156,8 @@ export function MegaMenuPanelsForm({ initialPanels }: Props) {
                 </div>
               )}
               <p className="mt-1.5 text-xs text-[var(--foreground-muted)]">
-                JPEG, PNG, WebP ou GIF — réduction automatique côté navigateur (max.{' '}
-                {ADMIN_IMAGE_MAX_EDGE}px côté long), puis envoi comme pour les autres formulaires admin (max. 10&nbsp;Mo).
+                JPEG, PNG, WebP ou GIF — image optimisée pour le menu (max. {MEGA_MENU_IMAGE_MAX_EDGE}px côté long,
+                JPEG ~82&nbsp;% qualité côté serveur) pour un chargement rapide. Max. 10&nbsp;Mo à l&apos;envoi.
               </p>
             </div>
             <div className="md:col-span-2">

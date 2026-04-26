@@ -23,16 +23,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     })),
     { url: `${base}/produits/chariots/occasion`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${base}/produits/nacelles/location`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${base}/produits/nacelles/occasion`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${base}/produits/transpalette-manuel`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.85 },
     { url: `${base}/produits/pieces`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85 },
     { url: `${base}/produits/pieces/batteries`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/produits/pieces/commandes`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/produits/pieces/accessoires`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    // Services
+    // Services (canonical URLs match next.config permanent redirects)
     { url: `${base}/services`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${base}/services/location`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.85 },
-    { url: `${base}/services/maintenance`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.85 },
-    { url: `${base}/services/reconditionnement`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.85 },
+    { url: `${base}/services?service=location`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.85 },
+    { url: `${base}/services?service=maintenance`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.85 },
+    { url: `${base}/services?service=reconditionnement`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.85 },
     // Other
     { url: `${base}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85 },
     { url: `${base}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },

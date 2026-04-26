@@ -1,10 +1,20 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { sendQuoteRequestEmail } from '@/lib/email'
+import { allowPublicApiRequest } from '@/lib/rateLimit'
+import { sanitizeQuoteCustomData } from '@/lib/sanitizeQuoteCustomData'
 import { sanitizeInput, sanitizeTextarea, isValidEmail } from '@/lib/utils'
 import { isValidDevisType } from '@/lib/devisTypes'
 
 export async function POST(request: Request) {
   try {
+    if (!allowPublicApiRequest(request, 'quote')) {
+      return NextResponse.json(
+        { error: 'Trop de demandes. Réessayez dans quelques minutes.' },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
     const name = sanitizeInput(body.name)
     const email = sanitizeInput(body.email)
@@ -41,11 +51,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const mergedCustom: Record<string, unknown> =
-      customData && typeof customData === 'object' && !Array.isArray(customData)
-        ? { ...(customData as Record<string, unknown>) }
-        : {}
-    if (devisType) mergedCustom.devisType = devisType
+    const mergedCustom = sanitizeQuoteCustomData(customData, devisType)
 
     const quote = await prisma.quoteRequest.create({
       data: {
@@ -57,6 +63,10 @@ export async function POST(request: Request) {
         product: product || undefined,
         ...(Object.keys(mergedCustom).length > 0 ? { customData: mergedCustom as object } : {}),
       },
+    })
+
+    await sendQuoteRequestEmail(quote).catch((err) => {
+      console.error('Quote request email notification failed:', err)
     })
 
     return NextResponse.json({ success: true, id: quote.id })

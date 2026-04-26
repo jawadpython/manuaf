@@ -89,7 +89,7 @@ export function CategoryForm({
     setUploadError(null)
 
     try {
-      const result = await uploadAdminImage(file)
+      const result = await uploadAdminImage(file, { preset: 'megaMenu' })
       if (result.ok) {
         setImage(result.url)
         setUploadError(null)

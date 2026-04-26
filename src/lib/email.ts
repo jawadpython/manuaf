@@ -1,6 +1,33 @@
-import type { RentalRequest } from '@prisma/client'
+import type { QuoteRequest, RentalRequest } from '@prisma/client'
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.CONTACT_EMAIL || 'contact@manuaf.com'
+
+async function deliverAdminNotification(subject: string, body: string): Promise<void> {
+  if (process.env.RESEND_API_KEY) {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
+        to: ADMIN_EMAIL,
+        subject,
+        text: body,
+      }),
+    })
+    if (!res.ok) throw new Error(`Resend API error: ${await res.text()}`)
+    return
+  }
+  if (process.env.SMTP_HOST) {
+    console.log('Email (SMTP not implemented, log only):', subject)
+    console.log(body)
+    return
+  }
+  console.log('[MANUAF]', subject)
+  console.log(body)
+}
 
 export async function sendRentalRequestEmail(rental: RentalRequest): Promise<void> {
   const subject = `[MANUAF] Nouvelle demande de location - ${rental.client_name}`
@@ -27,27 +54,59 @@ ID: ${rental.id}
 Date: ${rental.createdAt.toISOString()}
 `.trim()
 
-  if (process.env.RESEND_API_KEY) {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
-        to: ADMIN_EMAIL,
-        subject,
-        text: body,
-      }),
-    })
-    if (!res.ok) throw new Error(`Resend API error: ${await res.text()}`)
-  } else if (process.env.SMTP_HOST) {
-    // Optional: nodemailer if SMTP configured
-    console.log('Email (SMTP not implemented, log only):', subject)
-    console.log(body)
-  } else {
-    console.log('[MANUAF] Rental request:', subject)
-    console.log(body)
+  await deliverAdminNotification(subject, body)
+}
+
+export async function sendContactFormEmail(payload: {
+  name: string
+  email: string
+  company: string | null
+  phone: string | null
+  message: string
+}): Promise<void> {
+  const subject = `[MANUAF] Contact site - ${payload.name}`
+  const body = `
+Message depuis le formulaire Contact
+
+Nom: ${payload.name}
+Email: ${payload.email}
+Société: ${payload.company ?? '-'}
+Téléphone: ${payload.phone ?? '-'}
+
+Message:
+${payload.message}
+`.trim()
+
+  await deliverAdminNotification(subject, body)
+}
+
+export async function sendQuoteRequestEmail(quote: QuoteRequest): Promise<void> {
+  const subject = `[MANUAF] Demande de devis - ${quote.name}`
+  let customBlock = '-'
+  if (quote.customData && typeof quote.customData === 'object' && !Array.isArray(quote.customData)) {
+    customBlock = Object.entries(quote.customData as Record<string, unknown>)
+      .map(([k, v]) => `${k}: ${v == null ? '-' : String(v)}`)
+      .join('\n')
   }
+  const body = `
+Nouvelle demande de devis
+
+Nom: ${quote.name}
+Email: ${quote.email}
+Société: ${quote.company ?? '-'}
+Téléphone: ${quote.phone ?? '-'}
+Produit / contexte: ${quote.product ?? '-'}
+
+Message:
+${quote.message}
+
+Champs personnalisés:
+${customBlock}
+
+---
+ID: ${quote.id}
+Date: ${quote.createdAt.toISOString()}
+`.trim()
+
+  await deliverAdminNotification(subject, body)
 }

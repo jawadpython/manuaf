@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendRentalRequestEmail } from '@/lib/email'
+import { allowPublicApiRequest } from '@/lib/rateLimit'
 import { sanitizeInput, sanitizeTextarea } from '@/lib/utils'
 import { formatLocationDurationFr, isValidIsoDateOnly } from '@/lib/locationRentalDates'
 
@@ -8,6 +9,13 @@ const MOTORISATION_VALUES = ['electrique', 'thermique']
 
 export async function POST(request: Request) {
   try {
+    if (!allowPublicApiRequest(request, 'rental')) {
+      return NextResponse.json(
+        { error: 'Trop de demandes. Réessayez dans quelques minutes.' },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
 
     const chariot_type = sanitizeInput(body.chariot_type) || 'Non spécifié'

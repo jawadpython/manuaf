@@ -3,7 +3,49 @@ import { NextResponse } from 'next/server'
 import { put } from '@vercel/blob'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
+import sharp from 'sharp'
 import { authOptions } from '@/lib/auth'
+import { ADMIN_IMAGE_MAX_EDGE, MEGA_MENU_IMAGE_MAX_EDGE } from '@/lib/adminImageUpload'
+
+/** Resize + re-encode every raster admin upload (GIF skipped — animation). */
+async function optimizeRasterUpload(
+  input: Buffer,
+  preset: 'default' | 'megaMenu'
+): Promise<{ buffer: Buffer; mime: string; ext: string } | null> {
+  try {
+    if (preset === 'megaMenu') {
+      const out = await sharp(input)
+        .rotate()
+        .resize(MEGA_MENU_IMAGE_MAX_EDGE, MEGA_MENU_IMAGE_MAX_EDGE, {
+          fit: 'inside',
+          withoutEnlargement: true,
+        })
+        .flatten({ background: { r: 255, g: 255, b: 255 } })
+        .jpeg({ mozjpeg: true, quality: 82 })
+        .toBuffer()
+      return { buffer: Buffer.from(out), mime: 'image/jpeg', ext: 'jpg' }
+    }
+
+    const meta = await sharp(input).metadata()
+    const pipeline = sharp(input)
+      .rotate()
+      .resize(ADMIN_IMAGE_MAX_EDGE, ADMIN_IMAGE_MAX_EDGE, {
+        fit: 'inside',
+        withoutEnlargement: true,
+      })
+
+    if (meta.hasAlpha) {
+      const out = await pipeline.png({ compressionLevel: 9, effort: 9 }).toBuffer()
+      return { buffer: Buffer.from(out), mime: 'image/png', ext: 'png' }
+    }
+
+    const out = await pipeline.jpeg({ mozjpeg: true, quality: 85 }).toBuffer()
+    return { buffer: Buffer.from(out), mime: 'image/jpeg', ext: 'jpg' }
+  } catch (err) {
+    console.error('Admin upload image optimize failed:', err)
+    return null
+  }
+}
 
 async function uploadToCloudinary(file: File): Promise<string | null> {
   if (!process.env.CLOUDINARY_CLOUD_NAME) {
@@ -74,12 +116,30 @@ export async function POST(request: Request) {
     )
   }
 
-  const ext = file.name.split('.').pop() || 'jpg'
+  const presetRaw = formData.get('preset')
+  const preset: 'default' | 'megaMenu' =
+    typeof presetRaw === 'string' && presetRaw === 'megaMenu' ? 'megaMenu' : 'default'
+
+  const originalBuffer = Buffer.from(await file.arrayBuffer())
+  let uploadBuffer = originalBuffer
+  let uploadMime = file.type
+  let ext = file.name.split('.').pop() || 'jpg'
+
+  if (file.type !== 'image/gif') {
+    const optimized = await optimizeRasterUpload(originalBuffer, preset)
+    if (optimized) {
+      uploadBuffer = Buffer.from(optimized.buffer)
+      uploadMime = optimized.mime
+      ext = optimized.ext
+    }
+  }
+
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const fileForStorage = new File([uploadBuffer], filename, { type: uploadMime })
 
   // Priority 1: Cloudinary (if configured)
   if (process.env.CLOUDINARY_CLOUD_NAME) {
-    const cloudinaryUrl = await uploadToCloudinary(file)
+    const cloudinaryUrl = await uploadToCloudinary(fileForStorage)
     if (cloudinaryUrl) {
       return NextResponse.json({ url: cloudinaryUrl })
     }
@@ -88,7 +148,7 @@ export async function POST(request: Request) {
   // Priority 2: Vercel Blob (if configured)
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
-      const blob = await put(filename, file, { access: 'public' })
+      const blob = await put(filename, fileForStorage, { access: 'public' })
       return NextResponse.json({ url: blob.url })
     } catch (error) {
       console.error('Vercel Blob upload failed:', error)
@@ -109,8 +169,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    const buffer = uploadBuffer
     const uploadDir = join(process.cwd(), 'public', 'uploads')
     await mkdir(uploadDir, { recursive: true })
     const filepath = join(uploadDir, filename)

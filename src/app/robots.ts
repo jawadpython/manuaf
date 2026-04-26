@@ -1,8 +1,7 @@
 import { MetadataRoute } from 'next'
+import { SITE_URL } from '@/lib/seo'
 
 export default function robots(): MetadataRoute.Robots {
-  const base = process.env.NEXTAUTH_URL || 'https://manuaf.com'
-
   return {
     rules: [
       {
@@ -11,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/'],
       },
     ],
-    sitemap: `${base}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
   }
 }
