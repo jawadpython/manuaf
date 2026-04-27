@@ -18,7 +18,7 @@ export default async function ChariotsOccasionPage() {
   ])
 
   return (
-    <div className="bg-[#f5f5f5] min-h-screen">
+    <div className="bg-[var(--surface-page)] min-h-screen">
       <PageHero
         label="Occasion"
         title="Chariots élévateurs d'occasion"

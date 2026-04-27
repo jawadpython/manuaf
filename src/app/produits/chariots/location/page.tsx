@@ -59,7 +59,7 @@ export default async function ChariotsLocationPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(LOCAL_BUSINESS_JSON_LD) }}
       />
-      <div className="bg-[#f5f5f5] min-h-screen">
+      <div className="bg-[var(--surface-page)] min-h-screen">
         <PageHero
           label="Location"
           title="Location de chariots élévateurs électriques à Casablanca"

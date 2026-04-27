@@ -74,6 +74,18 @@ export function AdminNav() {
                 Log / Statut DB
               </Link>
             </li>
+            <li>
+              <Link
+                href="/admin/backup"
+                className={`block px-4 py-3 text-sm rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
+                  pathname === '/admin/backup'
+                    ? 'bg-[var(--accent)]/15 text-[var(--accent)] font-semibold'
+                    : 'text-[var(--foreground-muted)] hover:bg-[var(--background-alt)] hover:text-[var(--foreground)]'
+                }`}
+              >
+                Sauvegarde
+              </Link>
+            </li>
           </ul>
         </div>
 

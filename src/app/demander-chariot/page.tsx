@@ -55,7 +55,7 @@ export default async function DemanderChariotPage({
     : 'Remplissez le formulaire et notre équipe vous répondra sous 24h'
 
   return (
-    <div className="bg-[#f5f5f5] min-h-screen">
+    <div className="bg-[var(--surface-page)] min-h-screen">
       <PageHero
         label="Demande de devis"
         title="Demander un devis"
@@ -77,13 +77,13 @@ export default async function DemanderChariotPage({
             }`}
           >
             <h3
-              className={`font-semibold text-[#333333] mb-4 ${
+              className={`font-semibold text-[var(--surface-contrast)] mb-4 ${
                 isRentalLocationForm ? 'text-xl md:text-2xl' : 'text-lg'
               }`}
             >
               Demande de devis {isRentalLocationForm && '— Location'}
             </h3>
-            <p className="text-[#666666] text-sm mb-6">
+            <p className="text-[var(--body-muted)] text-sm mb-6">
               Pour toute autre question ou demande d&apos;information,{' '}
               <Link href="/contact" className="text-[var(--accent)] font-medium hover:underline">
                 contactez-nous directement

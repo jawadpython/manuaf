@@ -13,7 +13,7 @@ export const metadata = createMetadata({
 
 export default function CommandesPage() {
   return (
-    <div className="bg-[#f5f5f5] min-h-screen">
+    <div className="bg-[var(--surface-page)] min-h-screen">
       <PiecesBreadcrumb currentLabel="Commandes de pièces" />
       <PageHero
         label="Pièces de rechange"
@@ -27,7 +27,7 @@ export default function CommandesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
             <div>
-              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--surface-contrast)] mb-6">
                 Comment commander ?
               </h2>
               <div className="space-y-6">
@@ -38,8 +38,8 @@ export default function CommandesPage() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#333333] mb-2">Identifiez votre pièce</h3>
-                    <p className="text-[#666666] text-sm">
+                    <h3 className="font-semibold text-[var(--surface-contrast)] mb-2">Identifiez votre pièce</h3>
+                    <p className="text-[var(--body-muted)] text-sm">
                       Fournissez-nous la référence de votre chariot ou le numéro de série. 
                       Nos experts identifieront la pièce exacte dont vous avez besoin.
                     </p>
@@ -52,8 +52,8 @@ export default function CommandesPage() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#333333] mb-2">Demandez un devis</h3>
-                    <p className="text-[#666666] text-sm">
+                    <h3 className="font-semibold text-[var(--surface-contrast)] mb-2">Demandez un devis</h3>
+                    <p className="text-[var(--body-muted)] text-sm">
                       Contactez-nous par téléphone, email ou via notre formulaire de contact. 
                       Nous vous enverrons un devis détaillé sous 24h.
                     </p>
@@ -66,8 +66,8 @@ export default function CommandesPage() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#333333] mb-2">Validation et livraison</h3>
-                    <p className="text-[#666666] text-sm">
+                    <h3 className="font-semibold text-[var(--surface-contrast)] mb-2">Validation et livraison</h3>
+                    <p className="text-[var(--body-muted)] text-sm">
                       Après validation de votre commande, nous procédons à la livraison 
                       dans les meilleurs délais partout au Maroc.
                     </p>
@@ -76,7 +76,7 @@ export default function CommandesPage() {
               </div>
             </div>
             <div>
-              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--surface-contrast)] mb-6">
                 Types de pièces disponibles
               </h2>
               <div className="bg-white p-6 border-t-4 border-[var(--accent)]">
@@ -85,43 +85,43 @@ export default function CommandesPage() {
                     <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-[#666666]">Pièces moteur et transmission</span>
+                    <span className="text-[var(--body-muted)]">Pièces moteur et transmission</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-[#666666]">Pièces hydrauliques (pompes, vérins, flexibles)</span>
+                    <span className="text-[var(--body-muted)]">Pièces hydrauliques (pompes, vérins, flexibles)</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-[#666666]">Pièces électriques et électroniques</span>
+                    <span className="text-[var(--body-muted)]">Pièces électriques et électroniques</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-[#666666]">Filtres (huile, air, carburant, hydraulique)</span>
+                    <span className="text-[var(--body-muted)]">Filtres (huile, air, carburant, hydraulique)</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-[#666666]">Pneus et roues</span>
+                    <span className="text-[var(--body-muted)]">Pneus et roues</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-[#666666]">Pièces de carrosserie et cabine</span>
+                    <span className="text-[var(--body-muted)]">Pièces de carrosserie et cabine</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <svg className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-[#666666]">Pièces de sécurité et signalisation</span>
+                    <span className="text-[var(--body-muted)]">Pièces de sécurité et signalisation</span>
                   </li>
                 </ul>
               </div>
@@ -134,7 +134,7 @@ export default function CommandesPage() {
 
           {/* Service Section */}
           <div className="bg-white p-6 md:p-8 border-t-4 border-[var(--accent)] mb-8">
-            <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[var(--surface-contrast)] mb-6">
               Nos avantages
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -144,8 +144,8 @@ export default function CommandesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-[#333333] mb-2">Livraison rapide</h3>
-                <p className="text-[#666666] text-sm">
+                <h3 className="font-semibold text-[var(--surface-contrast)] mb-2">Livraison rapide</h3>
+                <p className="text-[var(--body-muted)] text-sm">
                   Stock important et livraison express disponible
                 </p>
               </div>
@@ -155,8 +155,8 @@ export default function CommandesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-[#333333] mb-2">Pièces d&apos;origine</h3>
-                <p className="text-[#666666] text-sm">
+                <h3 className="font-semibold text-[var(--surface-contrast)] mb-2">Pièces d&apos;origine</h3>
+                <p className="text-[var(--body-muted)] text-sm">
                   Pièces d&apos;origine et compatibles, toutes marques
                 </p>
               </div>
@@ -166,8 +166,8 @@ export default function CommandesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-[#333333] mb-2">Meilleurs prix</h3>
-                <p className="text-[#666666] text-sm">
+                <h3 className="font-semibold text-[var(--surface-contrast)] mb-2">Meilleurs prix</h3>
+                <p className="text-[var(--body-muted)] text-sm">
                   Tarifs compétitifs et devis gratuits
                 </p>
               </div>
@@ -187,7 +187,7 @@ export default function CommandesPage() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-white text-[#333333] font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
+            className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-white text-[var(--surface-contrast)] font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
           >
             Commander une pièce
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

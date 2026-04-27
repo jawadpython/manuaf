@@ -9,7 +9,7 @@ export const metadata = createMetadata({
 
 export default function ConfidentialitePage() {
   return (
-    <div className="bg-[#f5f5f5] min-h-screen">
+    <div className="bg-[var(--surface-page)] min-h-screen">
       <PageHero
         title="Politique de confidentialité"
         imageIndex={9}
@@ -18,7 +18,7 @@ export default function ConfidentialitePage() {
       <section className="py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-6">
           <div className="bg-white p-8 md:p-12 border-t-4 border-[var(--accent)]">
-            <div className="text-[#666666] space-y-6">
+            <div className="text-[var(--body-muted)] space-y-6">
               <p>
                 MANUAF s&apos;engage à protéger les données personnelles des
                 utilisateurs de ce site. Les informations collectées via le formulaire

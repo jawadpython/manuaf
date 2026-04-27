@@ -36,7 +36,7 @@ function SolutionCard({ title, image, href }: { title: string; image: string; hr
 
 export function SolutionsSection() {
   return (
-    <section className="py-12 md:py-16 lg:py-24 bg-[#F3F5F7] relative overflow-hidden">
+    <section className="py-12 md:py-16 lg:py-24 bg-[var(--surface-section)] relative overflow-hidden">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14">

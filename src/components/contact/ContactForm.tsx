@@ -128,8 +128,8 @@ export function ContactForm({
   }
 
   const inputClass = isLocation
-    ? 'w-full bg-[#f8f9fa] border border-[var(--border)] px-5 py-3.5 text-[#333333] text-base placeholder-[#999999] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all rounded-lg'
-    : 'w-full bg-[#f5f5f5] border-0 px-4 py-3 text-[#333333] text-sm placeholder-[#999999] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition-all'
+    ? 'w-full bg-[#f8f9fa] border border-[var(--border)] px-5 py-3.5 text-[var(--surface-contrast)] text-base placeholder-[#999999] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all rounded-lg'
+    : 'w-full bg-[var(--surface-page)] border-0 px-4 py-3 text-[var(--surface-contrast)] text-sm placeholder-[#999999] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition-all'
   const labelClass = isLocation
     ? 'block text-sm font-medium text-[#555555] mb-2'
     : 'block text-xs text-[#999999] uppercase tracking-wider mb-2'
@@ -166,12 +166,12 @@ export function ContactForm({
           </p>
           <p
             className={
-              isLocation ? 'text-xl md:text-2xl font-semibold text-[#1a1a1a] leading-snug' : 'text-lg font-semibold text-[#333333]'
+              isLocation ? 'text-xl md:text-2xl font-semibold text-[#1a1a1a] leading-snug' : 'text-lg font-semibold text-[var(--surface-contrast)]'
             }
           >
             {productName}
           </p>
-          <p className="text-sm text-[#666666] mt-2 max-w-2xl">{selectedProductHint}</p>
+          <p className="text-sm text-[var(--body-muted)] mt-2 max-w-2xl">{selectedProductHint}</p>
         </div>
       )}
 
@@ -246,7 +246,7 @@ export function ContactForm({
           {visibleCustomFields.length > 0 && (
             <>
               {isLocation && (
-                <h4 className="text-base font-semibold text-[#333333] mb-4">{characteristicsHeading}</h4>
+                <h4 className="text-base font-semibold text-[var(--surface-contrast)] mb-4">{characteristicsHeading}</h4>
               )}
               <div
                 className={`grid grid-cols-1 sm:grid-cols-2 ${visibleCustomFields.length >= 3 ? 'lg:grid-cols-3' : ''} ${gridGap}`}

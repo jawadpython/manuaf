@@ -13,7 +13,7 @@ export const metadata = createMetadata({
 
 export default function BatteriesPage() {
   return (
-    <div className="bg-[#f5f5f5] min-h-screen">
+    <div className="bg-[var(--surface-page)] min-h-screen">
       <PiecesBreadcrumb currentLabel="Batteries et chargeurs" />
       <PageHero
         label="Pièces de rechange"
@@ -27,7 +27,7 @@ export default function BatteriesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
             <div>
-              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--surface-contrast)] mb-6">
                 Batteries pour chariots électriques
               </h2>
               <p className="text-[var(--grey)] mb-6">
@@ -63,7 +63,7 @@ export default function BatteriesPage() {
               </ul>
             </div>
             <div>
-              <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[var(--surface-contrast)] mb-6">
                 Chargeurs de batteries
               </h2>
               <p className="text-[var(--grey)] mb-6">
@@ -105,7 +105,7 @@ export default function BatteriesPage() {
 
           {/* Service Section */}
           <div className="bg-white p-6 md:p-8 border-t-4 border-[var(--accent)] mb-8">
-            <h2 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-6">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[var(--surface-contrast)] mb-6">
               Nos services
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -115,7 +115,7 @@ export default function BatteriesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-[#333333] mb-2">Garantie</h3>
+                <h3 className="font-semibold text-[var(--surface-contrast)] mb-2">Garantie</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Toutes nos batteries sont garanties avec certificat de conformité
                 </p>
@@ -127,7 +127,7 @@ export default function BatteriesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-[#333333] mb-2">Installation</h3>
+                <h3 className="font-semibold text-[var(--surface-contrast)] mb-2">Installation</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Installation professionnelle par nos techniciens certifiés
                 </p>
@@ -138,7 +138,7 @@ export default function BatteriesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-[#333333] mb-2">Maintenance</h3>
+                <h3 className="font-semibold text-[var(--surface-contrast)] mb-2">Maintenance</h3>
                 <p className="text-[var(--grey)] text-sm">
                   Service de maintenance et réparation de batteries et chargeurs
                 </p>
@@ -159,7 +159,7 @@ export default function BatteriesPage() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-white text-[#333333] font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
+            className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-white text-[var(--surface-contrast)] font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
           >
             Nous contacter
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

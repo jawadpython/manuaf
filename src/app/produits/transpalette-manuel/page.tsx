@@ -40,7 +40,7 @@ export default async function TranspaletteManuelPage() {
   const heroSubtitle = altNorm && altNorm !== titleNorm ? panel.imageAlt : undefined
 
   return (
-    <div className="bg-[#f5f5f5] min-h-screen">
+    <div className="bg-[var(--surface-page)] min-h-screen">
       <PageHero
         label="Produits"
         title={panel.title}

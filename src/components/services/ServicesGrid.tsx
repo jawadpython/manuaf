@@ -68,7 +68,7 @@ export function ServicesGrid() {
   }, [selectedService])
 
   return (
-    <section className="py-12 md:py-16 lg:py-24 bg-[#F3F5F7] relative overflow-hidden">
+    <section className="py-12 md:py-16 lg:py-24 bg-[var(--surface-section)] relative overflow-hidden">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Solutions-style grid — image cards with overlay */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 items-stretch">
@@ -80,7 +80,7 @@ export function ServicesGrid() {
                 setSelectedService(card.id)
                 window.history.replaceState(null, '', `/services?service=${card.id}`)
               }}
-              className={`block w-full text-left relative overflow-hidden aspect-[2/1] ring-2 ring-offset-2 ring-offset-[#F3F5F7] ${
+              className={`block w-full text-left relative overflow-hidden aspect-[2/1] ring-2 ring-offset-2 ring-offset-[var(--surface-section)] ${
                 selectedService === card.id ? 'ring-[var(--accent)] ring-offset-4' : 'ring-transparent'
               }`}
             >

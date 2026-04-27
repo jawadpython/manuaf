@@ -17,7 +17,7 @@ export function PiecesRelatedLinks({ currentSlug }: PiecesRelatedLinksProps) {
 
   return (
     <div className="bg-white p-6 border-t-4 border-[var(--accent)]">
-      <h3 className="font-semibold text-[#333333] mb-4">Voir aussi</h3>
+      <h3 className="font-semibold text-[var(--surface-contrast)] mb-4">Voir aussi</h3>
       <ul className="flex flex-wrap gap-3">
         <li>
           <Link

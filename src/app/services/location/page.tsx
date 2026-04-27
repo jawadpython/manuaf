@@ -12,7 +12,7 @@ export const metadata = createMetadata({
 
 export default function LocationPage() {
   return (
-    <div className="bg-[#f5f5f5] min-h-screen pt-[56px] md:pt-[96px]">
+    <div className="bg-[var(--surface-page)] min-h-screen pt-[56px] md:pt-[96px]">
       {/* Hero Section */}
       <section className="relative py-12 md:py-16 lg:py-24 bg-[var(--grey)] overflow-hidden">
         <div className="absolute inset-0">
@@ -160,7 +160,7 @@ export default function LocationPage() {
           </div>
 
           <div className="bg-white p-6 border-t-4 border-[var(--accent)] mb-8">
-            <h2 className="font-semibold text-[#333333] mb-4">Voir aussi</h2>
+            <h2 className="font-semibold text-[var(--surface-contrast)] mb-4">Voir aussi</h2>
             <p className="text-[var(--grey)] text-sm mb-3">
               Consultez nos{' '}
               <Link href="/produits/chariots/location" className="text-[var(--accent)] font-medium hover:underline">

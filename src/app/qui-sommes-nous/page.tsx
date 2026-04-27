@@ -13,7 +13,7 @@ export const metadata = createMetadata({
 
 export default function QuiSommesNousPage() {
   return (
-    <div className="bg-[#f5f5f5] min-h-screen">
+    <div className="bg-[var(--surface-page)] min-h-screen">
       <PageHero
         label="À propos"
         title="Qui sommes-nous ?"

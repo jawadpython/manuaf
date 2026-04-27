@@ -12,7 +12,7 @@ export const metadata = createMetadata({
 
 export default function ContactPage() {
   return (
-    <div className="bg-[#f5f5f5] min-h-screen">
+    <div className="bg-[var(--surface-page)] min-h-screen">
       <PageHero
         label="Nous contacter"
         title="Contact"
@@ -26,7 +26,7 @@ export default function ContactPage() {
             {/* Contact Info */}
             <div className="lg:col-span-1">
               <div className="bg-white p-5 sm:p-6 border-t-4 border-[var(--accent)]">
-                <h3 className="font-semibold text-[#333333] text-lg mb-6">
+                <h3 className="font-semibold text-[var(--surface-contrast)] text-lg mb-6">
                   Informations de contact
                 </h3>
                 <div className="space-y-5">
@@ -39,7 +39,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-xs text-[#999999] uppercase tracking-wider mb-1">Adresse</p>
-                      <p className="text-[#666666] text-sm">
+                      <p className="text-[var(--body-muted)] text-sm">
                         26, Avenue Mers Sultan<br />
                         Appt N°3 Etage 1<br />
                         Casablanca, Maroc
@@ -58,13 +58,13 @@ export default function ContactPage() {
                       <div className="space-y-1">
                         <a
                           href="tel:+212670085699"
-                          className="block text-[#666666] text-sm hover:text-[var(--accent)] transition-colors"
+                          className="block text-[var(--body-muted)] text-sm hover:text-[var(--accent)] transition-colors"
                         >
                           +212 670 085 699
                         </a>
                         <a
                           href="tel:+212631995242"
-                          className="block text-[#666666] text-sm hover:text-[var(--accent)] transition-colors"
+                          className="block text-[var(--body-muted)] text-sm hover:text-[var(--accent)] transition-colors"
                         >
                           +212 631 995 242
                         </a>
@@ -82,7 +82,7 @@ export default function ContactPage() {
                       <p className="text-xs text-[#999999] uppercase tracking-wider mb-1">Email</p>
                       <a
                         href="mailto:Contact@manuaf.com"
-                        className="text-[#666666] text-sm hover:text-[var(--accent)] transition-colors"
+                        className="text-[var(--body-muted)] text-sm hover:text-[var(--accent)] transition-colors"
                       >
                         Contact@manuaf.com
                       </a>
@@ -97,7 +97,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-xs text-[#999999] uppercase tracking-wider mb-1">Horaires</p>
-                      <p className="text-[#666666] text-sm">
+                      <p className="text-[var(--body-muted)] text-sm">
                         Lundi - Vendredi<br />
                         8h30 - 18h00
                       </p>
@@ -110,10 +110,10 @@ export default function ContactPage() {
             {/* Contact Form */}
             <div className="lg:col-span-2">
               <div className="bg-white p-5 sm:p-6 md:p-8 border-t-4 border-[var(--accent)]">
-                <h3 className="font-semibold text-[#333333] text-lg mb-4">
+                <h3 className="font-semibold text-[var(--surface-contrast)] text-lg mb-4">
                   Envoyez-nous un message
                 </h3>
-                <p className="text-[#666666] text-sm mb-6">
+                <p className="text-[var(--body-muted)] text-sm mb-6">
                   Besoin d&apos;un devis pour la{' '}
                   <Link href="/produits/chariots/location" className="text-[var(--accent)] font-medium hover:underline">
                     location

@@ -24,6 +24,7 @@
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "@vercel/blob": "^0.25.0",
+    "fflate": "^0.8.2",
     "next": "16.1.6",
     "next-auth": "^4.24.13",
     "react": "19.2.3",

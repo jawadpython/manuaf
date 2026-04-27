@@ -68,7 +68,7 @@ export default async function CategoryPage({ params }: Props) {
     categoryType === 'chariots' ? 'Chariots' : categoryType === 'nacelles' ? 'Nacelles' : 'Pièces de rechange'
 
   return (
-    <div className="bg-[#f5f5f5] min-h-screen">
+    <div className="bg-[var(--surface-page)] min-h-screen">
       <PageHero
         label={heroLabel}
         title={category.name}

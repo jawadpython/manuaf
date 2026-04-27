@@ -15,7 +15,7 @@ export function ProductImageGallery({ images, alt, sold = false }: ProductImageG
 
   return (
     <div className="space-y-3">
-      <div className="relative aspect-[4/3] w-full bg-[#f5f5f5] overflow-hidden rounded">
+      <div className="relative aspect-[4/3] w-full bg-[var(--surface-page)] overflow-hidden rounded">
         <Image
           src={displayImages[selectedIndex] || displayImages[0]!}
           alt={alt}

@@ -26,7 +26,7 @@ export default async function BlogPage() {
   const hasPosts = posts.length > 0
 
   return (
-    <div className="bg-[#f5f5f5] min-h-screen">
+    <div className="bg-[var(--surface-page)] min-h-screen">
       <PageHero
         label="Actualités & Conseils"
         title="Notre Blog"
@@ -42,7 +42,7 @@ export default async function BlogPage() {
               <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-1 sm:mb-2">
                 À la une
               </p>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#333333]">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[var(--surface-contrast)]">
                 Article en vedette
               </h2>
             </div>
@@ -75,10 +75,10 @@ export default async function BlogPage() {
                       {formatDate(featuredPost.createdAt)}
                     </span>
                   </div>
-                  <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold text-[#333333] mb-2 sm:mb-4 group-hover:text-[var(--accent)] transition-colors leading-tight">
+                  <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold text-[var(--surface-contrast)] mb-2 sm:mb-4 group-hover:text-[var(--accent)] transition-colors leading-tight">
                     {featuredPost.title}
                   </h3>
-                  <p className="text-[#666666] mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base line-clamp-3">
+                  <p className="text-[var(--body-muted)] mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base line-clamp-3">
                     {featuredPost.excerpt}
                   </p>
                   <span className="inline-flex items-center gap-2 sm:gap-3 text-[var(--accent)] font-semibold uppercase tracking-wider group-hover:gap-3 sm:group-hover:gap-4 transition-all text-xs sm:text-sm">
@@ -99,12 +99,12 @@ export default async function BlogPage() {
         <section className="py-16 md:py-24 lg:py-28 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col items-center justify-center py-12 md:py-16 rounded-lg border-2 border-dashed border-[#e5e7eb] text-center bg-[#fafafa]">
-              <div className="w-20 h-20 rounded-full bg-[#f5f5f5] flex items-center justify-center mb-6">
+              <div className="w-20 h-20 rounded-full bg-[var(--surface-page)] flex items-center justify-center mb-6">
                 <svg className="w-10 h-10 text-[#9ca3af]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                 </svg>
               </div>
-              <h2 className="text-xl md:text-2xl font-semibold text-[#333333] mb-2">Aucun article pour le moment</h2>
+              <h2 className="text-xl md:text-2xl font-semibold text-[var(--surface-contrast)] mb-2">Aucun article pour le moment</h2>
               <p className="text-[#6b7280] max-w-md mb-4">
                 Les articles de blog seront ajoutés prochainement via le panneau d&apos;administration.
               </p>
@@ -121,7 +121,7 @@ export default async function BlogPage() {
               <p className="text-[var(--accent)] font-semibold text-xs sm:text-sm uppercase tracking-wider mb-1 sm:mb-2">
                 Tous nos articles
               </p>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#333333]">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[var(--surface-contrast)]">
                 Articles récents
               </h2>
             </div>
@@ -131,7 +131,7 @@ export default async function BlogPage() {
                 <Link
                   key={post.id}
                   href={`/blog/${post.slug}`}
-                  className="group block bg-[#f5f5f5] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                  className="group block bg-[var(--surface-page)] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
                 >
                   {/* Image */}
                   <div className="relative aspect-[16/10] overflow-hidden">
@@ -156,10 +156,10 @@ export default async function BlogPage() {
                       </svg>
                       {formatDate(post.createdAt)}
                     </p>
-                    <h3 className="font-semibold text-[#333333] text-sm sm:text-base md:text-lg mb-2 sm:mb-3 group-hover:text-[var(--accent)] transition-colors leading-tight line-clamp-2">
+                    <h3 className="font-semibold text-[var(--surface-contrast)] text-sm sm:text-base md:text-lg mb-2 sm:mb-3 group-hover:text-[var(--accent)] transition-colors leading-tight line-clamp-2">
                       {post.title}
                     </h3>
-                    <p className="text-[#666666] text-xs sm:text-sm line-clamp-2 mb-3 sm:mb-4">
+                    <p className="text-[var(--body-muted)] text-xs sm:text-sm line-clamp-2 mb-3 sm:mb-4">
                       {post.excerpt}
                     </p>
                     <span className="inline-flex items-center gap-1 sm:gap-2 text-[var(--accent)] text-xs sm:text-sm font-semibold uppercase tracking-wider group-hover:gap-2 sm:group-hover:gap-3 transition-all">
@@ -177,7 +177,7 @@ export default async function BlogPage() {
       )}
 
       {/* Newsletter CTA */}
-      <section className="py-12 md:py-16 lg:py-20 bg-[#333333]">
+      <section className="py-12 md:py-16 lg:py-20 bg-[var(--surface-contrast)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[var(--accent)] rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
             <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

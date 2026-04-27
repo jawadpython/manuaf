@@ -57,7 +57,7 @@ export default async function ArticlePage({ params }: Props) {
   const heroImage = img || RANDOM_IMAGES[2]
 
   return (
-    <article className="bg-[#f5f5f5] min-h-screen">
+    <article className="bg-[var(--surface-page)] min-h-screen">
       <PageHero
         label="Blog"
         title={String(post.title ?? '')}
@@ -68,7 +68,7 @@ export default async function ArticlePage({ params }: Props) {
         <div className="max-w-4xl mx-auto px-6">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-[#666666] hover:text-[var(--accent)] text-sm mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-[var(--body-muted)] hover:text-[var(--accent)] text-sm mb-6 transition-colors"
           >
             <svg
               className="w-4 h-4"
@@ -103,18 +103,18 @@ export default async function ArticlePage({ params }: Props) {
               <p className="text-[#999999] text-sm mb-3">
                 {formatDate(post.createdAt)}
               </p>
-              <h1 className="text-2xl md:text-3xl font-semibold text-[#333333] mb-4">
+              <h1 className="text-2xl md:text-3xl font-semibold text-[var(--surface-contrast)] mb-4">
                 {String(post.title ?? '')}
               </h1>
               <div className="w-16 h-1 bg-[var(--accent)] mb-8"></div>
 
               <div className="prose prose-lg max-w-none">
-                <p className="text-[#666666] text-lg leading-relaxed mb-6">
+                <p className="text-[var(--body-muted)] text-lg leading-relaxed mb-6">
                   {String(post.excerpt ?? '')}
                 </p>
                 {post.content ? (
                   <div
-                    className="text-[#666666] leading-relaxed space-y-4"
+                    className="text-[var(--body-muted)] leading-relaxed space-y-4"
                     dangerouslySetInnerHTML={{
                       __html: sanitizeHtml(typeof post.content === 'string' ? post.content : String(post.content ?? '')),
                     }}

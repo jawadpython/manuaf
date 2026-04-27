@@ -5,6 +5,22 @@ import Link from 'next/link'
 
 const dashboardCards = [
   {
+    href: '/admin/backup',
+    title: 'Sauvegarde & restauration',
+    description: 'Exporter / importer toute la base et les images locales',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M8 4h4l2 2h2a2 2 0 012 2v6H6V6a2 2 0 012-2z"
+        />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 20l-2-2m0 0l2-2m-2 2h12" />
+      </svg>
+    ),
+  },
+  {
     href: '/admin/mega-menu',
     title: 'Mega-menu Produits',
     description: 'Texte et visuels (transpalette, occasion, nacelle)',

@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export function NewsletterSection() {
   return (
-    <section className="py-12 md:py-16 lg:py-20 bg-[#333333]" aria-labelledby="newsletter-heading">
+    <section className="py-12 md:py-16 lg:py-20 bg-[var(--surface-contrast)]" aria-labelledby="newsletter-heading">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
         <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[var(--accent)] rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
           <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

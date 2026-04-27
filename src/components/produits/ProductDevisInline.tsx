@@ -181,7 +181,7 @@ export function ProductDevisInline({ productName, label = 'Demander un devis', c
             <h3 id="devis-success-title" className="text-xl font-semibold text-[var(--grey)]">
               Demande envoyée
             </h3>
-            <p id="devis-success-desc" className="mt-3 text-sm text-[#666666] leading-relaxed">
+            <p id="devis-success-desc" className="mt-3 text-sm text-[var(--body-muted)] leading-relaxed">
               Merci pour votre demande. Notre équipe vous recontactera sous 48h.
             </p>
             <button

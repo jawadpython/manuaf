@@ -24,7 +24,7 @@ export default function Error({
     (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('debug') === '1')
 
   return (
-    <div className="bg-[#f5f5f5] min-h-screen flex items-center justify-center pt-[72px] md:pt-[96px]">
+    <div className="bg-[var(--surface-page)] min-h-screen flex items-center justify-center pt-[72px] md:pt-[96px]">
       <div className="max-w-2xl mx-auto px-6 text-center">
         <h1 className="text-4xl md:text-6xl font-semibold text-red-600 mb-4">
           Oups !

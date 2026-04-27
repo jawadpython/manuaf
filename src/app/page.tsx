@@ -26,7 +26,7 @@ const CTASection = dynamic(
 
 function SolutionsSectionSkeleton() {
   return (
-    <section className="py-12 md:py-16 lg:py-24 bg-[#F3F5F7]" aria-hidden>
+    <section className="py-12 md:py-16 lg:py-24 bg-[var(--surface-section)]" aria-hidden>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="h-32 mb-10 bg-[var(--grey)]/10 rounded animate-pulse" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -63,7 +63,7 @@ function FeaturedProductsSkeleton() {
 
 function NewsletterSectionSkeleton() {
   return (
-    <section className="py-12 md:py-16 lg:py-20 bg-[#333333]" aria-hidden>
+    <section className="py-12 md:py-16 lg:py-20 bg-[var(--surface-contrast)]" aria-hidden>
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="h-16 w-16 bg-[var(--grey)]/20 rounded-full mx-auto mb-6 animate-pulse" />
         <div className="h-8 w-64 bg-white/10 rounded mx-auto mb-4 animate-pulse" />
