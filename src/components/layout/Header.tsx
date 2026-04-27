@@ -62,6 +62,13 @@ const servicesFeatured: FeaturedContent = {
   image: '/images/services/maintenance.webp',
 }
 
+/** Hub URLs when clicking main nav items (hover still opens the mega-menu on desktop). */
+const MEGA_LINK_HREF = {
+  produits: '/produits/chariots',
+  pieces: '/produits/pieces',
+  services: '/services',
+} as const
+
 export function Header() {
   const [open, setOpen] = useState(false)
   const [chariotsOpen, setChariotsOpen] = useState(false)
@@ -251,84 +258,87 @@ export function Header() {
                 buttonLeaveDelayRef.current = t
               } : undefined}
             >
-            <button
-              type="button"
-              aria-haspopup="true"
-              aria-expanded={chariotsOpen}
-              aria-controls="mega-chariots"
+            <div
+              className="inline-flex"
               onMouseEnter={isDesktop ? () => scheduleOpen(openChariots) : undefined}
-              onClick={() => {
-                setChariotsOpen((v) => !v)
-                setPiecesOpen(false)
-                setServicesOpen(false)
-              }}
-              className={`flex items-center gap-1 px-3 py-2 text-[12px] font-semibold uppercase tracking-wide rounded cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-300 ease-out ${
-                chariotsOpen ? 'text-[var(--accent)]' : 'text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)]'
-              }`}
             >
-              Produits
-              <svg
-                className={`w-3.5 h-3.5 transition-transform duration-300 ease-out ${chariotsOpen ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden
+              <Link
+                href={MEGA_LINK_HREF.produits}
+                aria-haspopup="true"
+                aria-expanded={chariotsOpen}
+                aria-controls="mega-chariots"
+                onClick={closeAll}
+                onFocus={isDesktop ? openChariots : undefined}
+                className={`flex items-center gap-1 px-3 py-2 text-[12px] font-semibold uppercase tracking-wide rounded cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-300 ease-out ${
+                  chariotsOpen ? 'text-[var(--accent)]' : 'text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)]'
+                }`}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              aria-haspopup="true"
-              aria-expanded={piecesOpen}
-              aria-controls="mega-pieces"
+                Produits
+                <svg
+                  className={`w-3.5 h-3.5 transition-transform duration-300 ease-out ${chariotsOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </Link>
+            </div>
+            <div
+              className="inline-flex"
               onMouseEnter={isDesktop ? () => scheduleOpen(openPieces) : undefined}
-              onClick={() => {
-                setPiecesOpen((v) => !v)
-                setChariotsOpen(false)
-                setServicesOpen(false)
-              }}
-              className={`flex items-center gap-1 px-3 py-2 text-[12px] font-semibold uppercase tracking-wide rounded cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-300 ease-out ${
-                piecesOpen ? 'text-[var(--accent)]' : 'text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)]'
-              }`}
             >
-              Pièces de rechange
-              <svg
-                className={`w-3.5 h-3.5 transition-transform duration-300 ease-out ${piecesOpen ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden
+              <Link
+                href={MEGA_LINK_HREF.pieces}
+                aria-haspopup="true"
+                aria-expanded={piecesOpen}
+                aria-controls="mega-pieces"
+                onClick={closeAll}
+                onFocus={isDesktop ? openPieces : undefined}
+                className={`flex items-center gap-1 px-3 py-2 text-[12px] font-semibold uppercase tracking-wide rounded cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-300 ease-out ${
+                  piecesOpen ? 'text-[var(--accent)]' : 'text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)]'
+                }`}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              aria-haspopup="true"
-              aria-expanded={servicesOpen}
-              aria-controls="mega-services"
+                Pièces de rechange
+                <svg
+                  className={`w-3.5 h-3.5 transition-transform duration-300 ease-out ${piecesOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </Link>
+            </div>
+            <div
+              className="inline-flex"
               onMouseEnter={isDesktop ? () => scheduleOpen(openServices) : undefined}
-              onClick={() => {
-                setServicesOpen((v) => !v)
-                setChariotsOpen(false)
-                setPiecesOpen(false)
-              }}
-              className={`flex items-center gap-1 px-3 py-2 text-[12px] font-semibold uppercase tracking-wide rounded cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-300 ease-out ${
-                servicesOpen ? 'text-[var(--accent)]' : 'text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)]'
-              }`}
             >
-              Services
-              <svg
-                className={`w-3.5 h-3.5 transition-transform duration-300 ease-out ${servicesOpen ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden
+              <Link
+                href={MEGA_LINK_HREF.services}
+                aria-haspopup="true"
+                aria-expanded={servicesOpen}
+                aria-controls="mega-services"
+                onClick={closeAll}
+                onFocus={isDesktop ? openServices : undefined}
+                className={`flex items-center gap-1 px-3 py-2 text-[12px] font-semibold uppercase tracking-wide rounded cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-300 ease-out ${
+                  servicesOpen ? 'text-[var(--accent)]' : 'text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover)]'
+                }`}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+                Services
+                <svg
+                  className={`w-3.5 h-3.5 transition-transform duration-300 ease-out ${servicesOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </Link>
+            </div>
             </div>
             {topLevelLinks
               .filter((l) => l.href !== '/' && l.href !== '/contact')
@@ -425,26 +435,35 @@ export function Header() {
               Accueil
             </Link>
 
-          {/* Accordion: Produits */}
+          {/* Accordion: Produits — lien principal + chevron pour déplier */}
           <div className="border-b border-white/10">
-            <button
-              type="button"
-              className="flex items-center justify-between w-full py-3 text-left text-white/60 text-xs font-semibold uppercase tracking-wider cursor-pointer"
-              onClick={() => setMobileChariotsExpanded((v) => !v)}
-              aria-expanded={mobileChariotsExpanded}
-              aria-controls="mobile-chariots-list"
-            >
-              Produits
-              <svg
-                className={`w-5 h-5 transition-transform duration-200 ${mobileChariotsExpanded ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden
+            <div className="flex items-stretch w-full">
+              <Link
+                href={MEGA_LINK_HREF.produits}
+                className="flex-1 min-w-0 flex items-center py-3 pl-0 pr-2 text-left text-white/90 text-xs font-semibold uppercase tracking-wider cursor-pointer"
+                onClick={closeAll}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+                Produits
+              </Link>
+              <button
+                type="button"
+                className="shrink-0 flex w-12 items-center justify-center text-white/60 cursor-pointer"
+                onClick={() => setMobileChariotsExpanded((v) => !v)}
+                aria-expanded={mobileChariotsExpanded}
+                aria-controls="mobile-chariots-list"
+                aria-label="Afficher le sous-menu Produits"
+              >
+                <svg
+                  className={`w-5 h-5 transition-transform duration-200 ${mobileChariotsExpanded ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
             <ul id="mobile-chariots-list" className={mobileChariotsExpanded ? 'block pb-2' : 'hidden'} role="list">
               {PRODUITS_NAV_ITEMS.map((link) => (
                 <li key={link.href}>
@@ -465,24 +484,33 @@ export function Header() {
 
           {/* Accordion: Pièces de rechange */}
           <div className="border-b border-white/10">
-            <button
-              type="button"
-              className="flex items-center justify-between w-full py-3 text-left text-white/60 text-xs font-semibold uppercase tracking-wider cursor-pointer"
-              onClick={() => setMobilePiecesExpanded((v) => !v)}
-              aria-expanded={mobilePiecesExpanded}
-              aria-controls="mobile-pieces-list"
-            >
-              Pièces de rechange
-              <svg
-                className={`w-5 h-5 transition-transform duration-200 ${mobilePiecesExpanded ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden
+            <div className="flex items-stretch w-full">
+              <Link
+                href={MEGA_LINK_HREF.pieces}
+                className="flex-1 min-w-0 flex items-center py-3 pl-0 pr-2 text-left text-white/90 text-xs font-semibold uppercase tracking-wider cursor-pointer"
+                onClick={closeAll}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+                Pièces de rechange
+              </Link>
+              <button
+                type="button"
+                className="shrink-0 flex w-12 items-center justify-center text-white/60 cursor-pointer"
+                onClick={() => setMobilePiecesExpanded((v) => !v)}
+                aria-expanded={mobilePiecesExpanded}
+                aria-controls="mobile-pieces-list"
+                aria-label="Afficher le sous-menu Pièces de rechange"
+              >
+                <svg
+                  className={`w-5 h-5 transition-transform duration-200 ${mobilePiecesExpanded ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
             <ul id="mobile-pieces-list" className={mobilePiecesExpanded ? 'block pb-2' : 'hidden'} role="list">
               {piecesGroup.map((link) => (
                 <li key={link.href}>
@@ -503,24 +531,33 @@ export function Header() {
 
           {/* Accordion: Services */}
           <div className="border-b border-white/10">
-            <button
-              type="button"
-              className="flex items-center justify-between w-full py-3 text-left text-white/60 text-xs font-semibold uppercase tracking-wider cursor-pointer"
-              onClick={() => setMobileServicesExpanded((v) => !v)}
-              aria-expanded={mobileServicesExpanded}
-              aria-controls="mobile-services-list"
-            >
-              Services
-              <svg
-                className={`w-5 h-5 transition-transform duration-200 ${mobileServicesExpanded ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden
+            <div className="flex items-stretch w-full">
+              <Link
+                href={MEGA_LINK_HREF.services}
+                className="flex-1 min-w-0 flex items-center py-3 pl-0 pr-2 text-left text-white/90 text-xs font-semibold uppercase tracking-wider cursor-pointer"
+                onClick={closeAll}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+                Services
+              </Link>
+              <button
+                type="button"
+                className="shrink-0 flex w-12 items-center justify-center text-white/60 cursor-pointer"
+                onClick={() => setMobileServicesExpanded((v) => !v)}
+                aria-expanded={mobileServicesExpanded}
+                aria-controls="mobile-services-list"
+                aria-label="Afficher le sous-menu Services"
+              >
+                <svg
+                  className={`w-5 h-5 transition-transform duration-200 ${mobileServicesExpanded ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
             <ul id="mobile-services-list" className={mobileServicesExpanded ? 'block pb-2' : 'hidden'} role="list">
               {servicesGroup.map((link) => (
                 <li key={link.href}>

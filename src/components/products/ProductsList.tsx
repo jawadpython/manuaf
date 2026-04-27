@@ -26,6 +26,18 @@ interface Product {
   sold?: boolean
 }
 
+/** Plain excerpt for cards (DB may contain HTML). */
+function excerptPlain(text: string, maxLen = 140): string {
+  const plain = text
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&[a-z]+;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  if (plain.length <= maxLen) return plain
+  return `${plain.slice(0, maxLen).trim()}…`
+}
+
 /** Collect category id and all descendant ids recursively */
 function getAllDescendantIds(categories: Category[], categoryId: string): Set<string> {
   const ids = new Set<string>([categoryId])
@@ -344,8 +356,8 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
     <div className="flex flex-col lg:flex-row gap-6">
       {/* Left Sidebar Menu */}
       {showSidebar && (
-      <aside className="w-full lg:w-80 lg:-ml-[2cm] flex-shrink-0">
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden lg:sticky lg:top-6 shadow-sm" role="region" aria-label="Filtres de produits">
+      <aside className="w-full lg:w-72 xl:w-80 flex-shrink-0">
+        <div className="bg-white border border-[var(--border)] rounded-xl overflow-hidden lg:sticky lg:top-24 shadow-sm" role="region" aria-label="Filtres de produits">
           {/* Header */}
           <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
             <span className="flex h-8 w-1 shrink-0 rounded-full bg-[var(--accent)]" aria-hidden />
@@ -451,7 +463,7 @@ export function ProductsList({ initialProducts, categories, defaultType = 'all',
       <div className="flex-1 min-w-0">
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -481,63 +493,60 @@ function ProductCard({ product }: { product: Product }) {
     : typeof product.category === 'string'
     ? product.category
     : 'Non catégorisé'
-  
+
   const isSold = product.sold || false
 
   const imageUrls = product.image
     ? product.image.split(/[|\r\n]+/).map((u) => u.trim()).filter(Boolean)
     : []
   const mainImage = imageUrls[0] || '/images/products/chr5-min-276x300.jpg'
+  const descriptionPreview = excerptPlain(product.description || '', 160)
 
   return (
     <Link
       href={`/produits/${product.slug}`}
-      className={`group block bg-white overflow-hidden transition-shadow duration-300 hover:shadow-xl ${isSold ? 'opacity-75' : ''}`}
+      className={`group flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-[var(--border)] bg-white shadow-sm transition-shadow duration-200 hover:shadow-md ${isSold ? 'opacity-80' : ''}`}
     >
-      {/* Image */}
-      <div className="relative w-full h-[420px] sm:h-[480px] md:h-[540px] overflow-hidden bg-[#f8f8f8]">
+      {/* Image — compact 4:3, no oversized vertical strip */}
+      <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-[#f3f4f6]">
         <Image
           src={mainImage}
           alt={product.name}
           fill
-          className="object-contain p-3 sm:p-4 md:p-6 transition-transform duration-300 group-hover:scale-105"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
+          className="object-contain p-2.5 sm:p-3 transition-transform duration-200 group-hover:scale-[1.02]"
+          sizes="(max-width: 480px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
           unoptimized={mainImage.startsWith('http') || mainImage.startsWith('/uploads')}
         />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-[var(--accent)]/0 group-hover:bg-[var(--accent)]/10 transition-all duration-300"></div>
-        {/* Category Badge */}
-        <span className="absolute top-2 left-2 sm:top-4 sm:left-4 px-2 sm:px-3 py-1 bg-[var(--accent)] text-white text-[10px] sm:text-xs font-semibold uppercase tracking-wider">
+        <div
+          className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5"
+          aria-hidden
+        />
+        <span
+          className="absolute left-2 top-2 z-[1] max-w-[calc(100%-0.5rem)] truncate rounded bg-[var(--accent)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white sm:left-2.5 sm:top-2.5 sm:px-2.5 sm:text-[11px]"
+          title={categoryName}
+        >
           {categoryName}
         </span>
-        {/* Sold Badge */}
         {isSold && (
-          <div className="absolute top-0 right-0 w-[6.5rem] h-[6.5rem] overflow-hidden pointer-events-none z-10">
-            <div
-              className="absolute left-0 top-0 w-48 bg-red-600 flex items-center justify-center py-3 text-white text-sm font-semibold uppercase tracking-widest"
-              style={{
-                transform: 'translate(-20px, 20px) rotate(45deg)',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                textShadow: '0 0 1px rgba(0,0,0,0.5)',
-              }}
-            >
-              Vendu
-            </div>
-          </div>
+          <span className="absolute bottom-2 right-2 z-[1] rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow">
+            Vendu
+          </span>
         )}
       </div>
 
-      {/* Content */}
-      <div className="p-3 sm:p-4 md:p-5 border-t-4 border-[var(--accent)]">
-        <h3 className="text-[var(--grey)] text-xs md:text-sm font-semibold mb-1 sm:mb-2 group-hover:text-[var(--accent)] transition-colors duration-200 leading-tight line-clamp-2">
+      {/* Text — line-clamp so long HTML/txt never blows the card */}
+      <div className="flex min-h-0 flex-1 flex-col border-t-2 border-[var(--accent)] p-3 sm:p-4">
+        <h3 className="mb-1.5 line-clamp-2 min-h-0 text-sm font-semibold leading-snug text-[var(--foreground)] group-hover:text-[var(--accent)] sm:text-base">
           {product.name}
         </h3>
-        <p className="text-[var(--grey)] text-[10px] sm:text-xs md:text-sm mb-2 sm:mb-4 line-clamp-2 hidden sm:block">
-          {product.description}
-        </p>
-        <span className="en-savoir-plus inline-flex items-center gap-1 sm:gap-2 text-[var(--accent)] text-[10px] sm:text-[11px] md:text-xs font-semibold uppercase tracking-wider group-hover:gap-2 sm:group-hover:gap-3 transition-all duration-200">
+        {descriptionPreview ? (
+          <p className="mb-2 line-clamp-3 min-h-0 text-xs leading-relaxed text-[var(--foreground-muted)] sm:mb-3 sm:text-sm">
+            {descriptionPreview}
+          </p>
+        ) : null}
+        <span className="mt-auto inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">
           En savoir plus
-          <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
         </span>

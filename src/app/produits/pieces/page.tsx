@@ -33,10 +33,10 @@ export default async function PiecesPage({ searchParams }: Props) {
   return (
     <div className="bg-[var(--surface-page)] min-h-screen">
       <PageHero
-        label="Pièces de rechange"
         title="Pièces de rechange"
-        subtitle="Batteries, accessoires et éléments de commande pour vos équipements"
+        subtitle="Batteries, accessoires et éléments de commande pour vos équipements de manutention."
         imageIndex={1}
+        compactTitle
       />
 
       {/* Products Section */}
